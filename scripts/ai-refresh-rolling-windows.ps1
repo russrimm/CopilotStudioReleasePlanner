@@ -186,14 +186,15 @@ function Invoke-AzureOpenAIRequest {
     }
     $useSchema = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_USE_JSON_SCHEMA')
     if ($useSchema -and $useSchema -match '^(?i:true|1|yes|on)$') {
-      $respPayloadObj.response_format = @{
-        type = 'json_schema'
+      # New Responses API format: use text.format = json_schema (deprecates response_format)
+      $respPayloadObj.text = @{
+        format = 'json_schema'
         json_schema = @{
           name = 'RollingWindowTables'
           schema = @{ type='object'; additionalProperties=$false; required=@('last30_table','next30_table'); properties=@{ last30_table=@{ type='string' }; next30_table=@{ type='string' } } }
         }
       }
-      Write-DebugInfo 'Added response_format json_schema for strict output.'
+      Write-DebugInfo 'Added text.format=json_schema for strict output.'
     } else {
       $respPayloadObj.input += "`n`nReturn ONLY a single JSON object with keys last30_table and next30_table."
     }
@@ -213,6 +214,22 @@ function Invoke-AzureOpenAIRequest {
     elseif ($errRecord.Exception.Response -and $errRecord.Exception.Response.ContentLength -gt 0) { try { $reader = New-Object IO.StreamReader($errRecord.Exception.Response.GetResponseStream()); $rawBody = $reader.ReadToEnd() } catch {} }
     if ($rawBody) {
       try { $parsed = $rawBody | ConvertFrom-Json -ErrorAction Stop; if ($parsed.error) { $code=$parsed.error.code; $message=$parsed.error.message } } catch {}
+    }
+    # Adaptive retry if text.format json_schema not yet supported in this environment
+    if ($UseResponsesEndpoint -and $code -eq 'unsupported_parameter' -and $rawBody -match 'text.format') {
+      Write-DebugInfo 'Adaptive retry: removing text.format json_schema and appending explicit JSON instruction.'
+      try {
+        $retryObj = $respPayloadObj
+        if ($retryObj.text) { $retryObj.Remove('text') | Out-Null }
+        if (-not ($retryObj.input -match 'Return ONLY a single JSON object')) {
+          $retryObj.input += "`n`nReturn ONLY a single JSON object with keys last30_table and next30_table."
+        }
+        $retryBody = $retryObj | ConvertTo-Json -Depth 4
+        $r2 = Invoke-RestMethod -Method Post -Uri $localUri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $retryBody -TimeoutSec 120 -ResponseHeadersVariable responseHeaders
+        return @{ success=$true; response=$r2; headers=$responseHeaders; uri=$localUri; adaptiveRetry='removed_text.format' }
+      } catch {
+        # Fall through to original failure return
+      }
     }
     return @{ success=$false; status=$statusCode; reason=$reasonPhrase; body=$rawBody; code=$code; message=$message; uri=$localUri; responsesTried=$UseResponsesEndpoint }
   }
