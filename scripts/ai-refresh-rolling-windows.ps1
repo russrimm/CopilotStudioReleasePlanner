@@ -62,6 +62,8 @@ if ($Offline) {
 $endpoint   = Require-Env 'AZURE_OPENAI_ENDPOINT'
 $apiKey     = Require-Env 'AZURE_OPENAI_KEY'
 $deployment = Require-Env 'AZURE_OPENAI_DEPLOYMENT'
+$apiVersion = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION')
+if ([string]::IsNullOrWhiteSpace($apiVersion)) { $apiVersion = '2024-02-15-preview' }
 
 Write-DebugInfo "Env present: ENDPOINT=$([string]::IsNullOrWhiteSpace($endpoint) -eq $false); KEY=$([string]::IsNullOrWhiteSpace($apiKey) -eq $false); DEPLOYMENT=$deployment"
 
@@ -104,14 +106,36 @@ Write-DebugInfo ("Payload bytes: " + ([Text.Encoding]::UTF8.GetByteCount($payloa
 Write-DebugInfo "Payload preview (first 300 chars): "
 if ($DebugMode) { $payload.Substring(0, [Math]::Min(300, $payload.Length)) | Write-Host }
 
-$uri = "$endpoint/openai/deployments/$deployment/chat/completions?api-version=2024-02-15-preview"
+$normalizedEndpoint = $endpoint.TrimEnd('/')
+$uri = "$normalizedEndpoint/openai/deployments/$deployment/chat/completions?api-version=$apiVersion"
+Write-DebugInfo "Request URI: $uri"
 
 try {
-  $resp = Invoke-RestMethod -Method Post -Uri $uri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $payload -TimeoutSec 120
-  Write-DebugInfo "HTTP call succeeded."
+  $responseHeaders = @{}
+  $resp = Invoke-RestMethod -Method Post -Uri $uri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $payload -TimeoutSec 120 -ResponseHeadersVariable responseHeaders
+  Write-DebugInfo ("HTTP call succeeded. Status: 200. RequestId: " + ($responseHeaders['x-ms-request-id']))
 } catch {
-  Write-Error "Azure OpenAI request failed: $($_.Exception.GetType().FullName): $($_.Exception.Message)" 
-  if ($_.ErrorDetails.Message) { Write-Host '[error details raw] ' + $_.ErrorDetails.Message }
+  Write-Error "Azure OpenAI request failed: $($_.Exception.GetType().FullName): $($_.Exception.Message)"
+  # Attempt to extract response details
+  $errRecord = $_
+  $rawBody = $null
+  if ($errRecord.ErrorDetails -and $errRecord.ErrorDetails.Message) { $rawBody = $errRecord.ErrorDetails.Message }
+  elseif ($errRecord.Exception.Response -and $errRecord.Exception.Response.ContentLength -gt 0) {
+    try { $reader = New-Object IO.StreamReader($errRecord.Exception.Response.GetResponseStream()); $rawBody = $reader.ReadToEnd() } catch {}
+  }
+  if ($rawBody) {
+    $display = if ($rawBody.Length -gt 2000) { $rawBody.Substring(0,2000) + '...' } else { $rawBody }
+    Write-Host '[error response snippet]' 
+    Write-Host $display
+    try {
+      $errJson = $rawBody | ConvertFrom-Json -ErrorAction Stop
+      if ($errJson.error) {
+        Write-Host ("[error.code] " + $errJson.error.code)
+        Write-Host ("[error.message] " + $errJson.error.message)
+      }
+    } catch {}
+  }
+  Write-Host "[debug] Endpoint=$normalizedEndpoint Deployment=$deployment APIVersion=$apiVersion"
   exit 1
 }
 
