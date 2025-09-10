@@ -74,10 +74,10 @@ if ($deployment -match '[\?=&\s]') {
 }
 <#
 Version Strategy (Simplified by directive)
-Per user directive, ONLY api-version '2024-12-01-preview' shall be used.
+Per user directive, ONLY api-version '2025-01-01-preview' shall be used.
 All environment overrides and fallback logic have been disabled.
 #>
-$apiVersion = '2024-12-01-preview'
+$apiVersion = '2025-01-01-preview'
 Write-DebugInfo "Using fixed apiVersion=$apiVersion (fallback disabled)."
 
 Write-DebugInfo "Env present: ENDPOINT=$([string]::IsNullOrWhiteSpace($endpoint) -eq $false); KEY=$([string]::IsNullOrWhiteSpace($apiKey) -eq $false); DEPLOYMENT=$deployment"
