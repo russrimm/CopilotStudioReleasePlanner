@@ -2,7 +2,7 @@
 title: Copilot Studio Rolling Updates Hub
 lastUpdated: 2025-09-10
 description: Rolling 30‑day changes plus concise future roadmap summary.
-version: 1.1
+version: 1.2
 ---
 
 # Copilot Studio – Rolling Updates Hub
@@ -35,6 +35,8 @@ Sources: Microsoft Learn "What's new" + public Power Platform release plans + li
 <!-- END:AT_A_GLANCE -->
 _Counts auto-maintained; modify via refresh script._
 
+Status: ![GA](https://img.shields.io/badge/GA-6-brightgreen) ![Preview](https://img.shields.io/badge/Preview-5-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-1-blue) ![TBD](https://img.shields.io/badge/TBD-6-lightgrey)
+
 ---
 
 ## Last 30 Days Feature Changes (2025-08-12 to 2025-09-10)
@@ -51,10 +53,10 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 | [Discover & install Microsoft-built agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent) | Phased GA | 2025-08 | Catalog experience maturing | In-product reuse of curated agents reduces duplicate build effort | Define review checklist (security, data scope, ownership) before catalog adoption. |
 | [Use up to 1000 files per agent uploads](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-08-18 | Preview availability | Scales knowledge ingestion dramatically | Plan taxonomy & retention policy early; avoid dumping uncurated content. |
 | [Block maker-provided credentials for authentication](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-09 | New preview control | Reduces credential sprawl & shadow auth risk | Inventory existing agents using maker creds; schedule migration to managed auth. |
-| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Preview (Planned GA Sep 2025) | 2025-08→09 | Stabilizing ahead of GA window | Expands external reach to mobile-first audiences | Define messaging policy + rate limiting; test content localization. |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Preview (Planned GA Sep 2025) | Aug–Sep 2025 | Stabilizing ahead of GA window | Expands mobile-first channel reach | Finalize messaging policy; set rate limits; test localization. |
 | [MIP sensitivity label surfacing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio) | Preview | 2025-08 (ongoing) | Incremental preview refinements | Prevents oversharing; enforces data classification boundaries | Map label taxonomy to agent knowledge sources; pilot with high-sensitivity set. |
 | SSO Consent Card (inline consent) | Preview | 2025-08 (expanding) | Wider tenant rollout | Reduces friction & support tickets for OAuth flows | Update onboarding docs to remove legacy redirect instructions. |
-| Agent catalog + governance tagging (internal refinement) | Preview→GA | 2025-08 | Metadata enrichment & search improvements | Faster discovery & reduces duplicate agent logic | Define required metadata (owner, data scope, PII flags) for catalog entries. |
+| Agent catalog + governance tagging (internal refinement) | Preview → GA | 2025-08 | Metadata enrichment & search improvements | Speeds discovery; reduces duplicate logic | Enforce required metadata (owner, data scope, PII flags). |
 <!-- END:LAST30_TABLE -->
 
 ### Key Adoption Themes (30 Days)
@@ -78,6 +80,15 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 - [ ] Run localization QA on WhatsApp variants (fallback & error prompts).
 - [ ] Establish sensitivity label mapping validation workflow (MIP preview).
 
+### Fast Win Candidates (Low Effort / High Impact)
+| Feature | Why Quick Win | Action (Imperative) |
+|---------|---------------|---------------------|
+| File groups GA | Immediate organization & grounding precision | Refactor scattered single files into logical groups |
+| Answer quality analytics | Direct visibility to improvement backlog | Stand up weekly triage & remediation flow |
+| MCP guided connection | Reduces extensibility friction | Standardize tool naming & tagging conventions |
+| Code interpreter | Rapid data transformation prototype value | Pilot with sandbox policies + execution limits |
+| Catalog governance tagging | Prevents future sprawl | Enforce metadata schema via PR checklist |
+
 ## Security & Compliance Focus
 <details open>
 <summary>Recent items impacting governance posture</summary>
@@ -89,6 +100,13 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 | Catalog Governance | Metadata enrichment (Preview→GA) | Orphaned / non-compliant agents | Enforce required metadata schema |
 
 </details>
+
+### No Security Posture Change Items (Recent)
+| Feature | Note |
+|---------|------|
+| Code interpreter GA | Operational governance required but no inherent platform security model change |
+| File groups GA | Structural organization feature only |
+| Image/file pipeline GA expansion | Increases surface; posture unchanged (govern via content policies) |
 
 ## Churn Spotlight (Recent Status Transitions)
 | Feature | From → To | Month | Adoption Note |
@@ -104,6 +122,35 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 | P2 | File taxonomy & grouping | Prevents knowledge dilution | Approve naming & archival policy |
 | P2 | Multimodal governance | Avoids uncontrolled cost / data spread | Define execution guardrails |
 | P3 | Deep reasoning model prep | Future complexity gains | Curate candidate workflows & eval rubric |
+
+## Readiness Tags Reference
+| Tag | Meaning | Example Use |
+|-----|---------|-------------|
+| Governance | Requires policy / metadata work | Credential blocking control |
+| Data | Needs curated datasets | Deep reasoning models, BYO Models |
+| Localization | Multilingual planning required | WhatsApp channel, Multilingual orchestration |
+| Performance | Latency / cost benchmarking needed | GPT‑4.1 mini experimental model |
+| Security | Direct impact on auth / classification | MIP labels, credential blocking |
+
+## KPI Suggestions by Category
+| Category | KPI | Rationale |
+|----------|-----|-----------|
+| Knowledge | Grounded answer % | Measures retrieval quality |
+| Quality | Answer gap closure cycle time | Tracks remediation velocity |
+| Governance | % assets with complete metadata | Ensures catalog hygiene |
+| Security | Maker credentials remaining (#) | Progress toward managed auth |
+| Multimodal | Avg execution cost per code run | Cost governance for interpreter |
+| Channels | Message delivery success % (WhatsApp) | Channel reliability |
+| Models | Latency p95 (experimental models) | Performance validation |
+
+## Risk Watchlist
+| Feature | Risk Vector | Mitigation / Owner |
+|---------|------------|--------------------|
+| Maker credential blocking (Preview) | Stalled migration leaves shadow secrets | Credential inventory & phased cutover (Security Ops) |
+| 1000-file scale | Knowledge dilution / irrelevant grounding | Enforce grouping + periodic pruning (Knowledge Lead) |
+| Deep reasoning models | Higher operational complexity & hallucination risk | Evaluation rubric & guardrail prompts (AI Team) |
+| BYO Models | Cost overrun / drift | Budget alerts + retrain cadence (FinOps + ML) |
+| Multilingual orchestration | Quality variance across locales | Locale-specific prompt QA (Localization) |
 
 ## Delta Since Last Refresh
 <!-- BEGIN:DELTA -->
@@ -154,4 +201,4 @@ High‑signal publicly disclosed upcoming items. Full backlog + categorization i
 - Individual feature docs (examples): Azure AI Search knowledge, Model Context Protocol, Code Interpreter, File Groups, Adaptive Card designer, Customer Managed Keys.
 
 ---
-_Last updated: 2025-09-10 (enhanced layout, automation markers v1.1)_
+_Last updated: 2025-09-10 (automation: scheduled refresh, metrics & diff v1.2)_
