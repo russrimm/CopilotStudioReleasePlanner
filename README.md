@@ -1,22 +1,44 @@
+---
+title: Copilot Studio Rolling Updates Hub
+lastUpdated: 2025-09-10
+description: Rolling 30‑day changes plus concise future roadmap summary.
+version: 1.1
+---
+
 # Copilot Studio – Rolling Updates Hub
 
-Concise operational view of Copilot Studio evolution:
+Operational flight deck for Copilot Studio evolution:
 1. Last 30 days shipped changes (retrospective)
-2. Future planned changes (all publicly disclosed forward items – replaces former "next 30 days")
+2. Concise future planned changes (supersedes narrow "next 30 days")
 
 Extended references:
 • Full 12‑Month Catalog: [Last 12 Months](./archive/Last_12_Months_Features.md)  
-• 6‑Month Snapshot (historical lens): [Last 6 Months](./archive/Last_6_Months_Features.md)  
-• Full Future Planned Detail: [All Future Planned Features](./Future_Planned_Features.md)
+• 6‑Month Snapshot: [Last 6 Months](./archive/Last_6_Months_Features.md)  
+• Full Future Detail: [All Future Planned Features](./Future_Planned_Features.md)
 
 Legend: **GA** = Generally Available, **Preview** = Public preview / early access, **Planned GA** = published target (month/date), **TBD** = not yet published.
 
-Sources: Official Microsoft Learn "What's new in Copilot Studio" + current/public Power Platform release plans + linked public feature docs. Validate forward dates before gating dependencies.
+Sources: Microsoft Learn "What's new" + public Power Platform release plans + linked feature docs. Re‑verify forward dates before gating dependencies.
+
+## Navigation
+[At a Glance](#at-a-glance) • [Last 30 Days](#last-30-days-feature-changes-2025-08-12-to-2025-09-10) • [Future Summary](#future-planned-changes-concise-summary) • [Immediate Actions](#immediate-actions-checklist) • [Security Focus](#security--compliance-focus) • [Churn Spotlight](#churn-spotlight-recent-status-transitions) • [Prep Matrix](#prep-priority-matrix) • [Delta Since Last Refresh](#delta-since-last-refresh) • [Sources](#source-references)
+
+## At a Glance
+<!-- BEGIN:AT_A_GLANCE -->
+| Metric | Count | Notes |
+|--------|-------|-------|
+| GA features (last 30d window) | 6 | Newly GA or GA confirmations |
+| Preview items (last 30d window) | 5 | Active evaluation required |
+| Preview → GA transitions (window) | 1 | File groups |
+| Security / Governance related updates | 3 | Credentials control, sensitivity labels, catalog metadata |
+| Multimodal / Execution updates | 2 | Code interpreter, file/image pipeline |
+<!-- END:AT_A_GLANCE -->
+_Counts auto-maintained; modify via refresh script._
 
 ---
 
 ## Last 30 Days Feature Changes (2025-08-12 to 2025-09-10)
-Focused digest of Copilot Studio updates, promotions, and new previews in the most recent 30‑day window. (Date range auto-updated daily by workflow.)
+Digest of promotions, launches, and new previews inside the rolling 30‑day window. (Date range auto-updated daily by workflow.)
 
 <!-- BEGIN:LAST30_TABLE -->
 | Feature | Status (Now) | Change Date (Approx) | What Changed | Why It Matters | Recommended Action |
@@ -36,22 +58,60 @@ Focused digest of Copilot Studio updates, promotions, and new previews in the mo
 <!-- END:LAST30_TABLE -->
 
 ### Key Adoption Themes (30 Days)
-1. Multimodal + Execution: Code interpreter & image/file pipeline unlock compound automation (consider cost & governance).  
-2. Knowledge Scale & Structure: File groups + high file count preview necessitate taxonomy strategy to avoid dilution.  
-3. Quality Feedback Loop: New analytics (answer gaps) enables measurable iteration cadence.  
-4. Secure Extensibility: MCP guided connection + credential blocking preview tighten external integration posture.  
-5. Channel Expansion: WhatsApp preview drives need for concise, locale-ready conversational design.  
+<details open>
+<summary>Expand / collapse themes</summary>
+
+1. Multimodal & Execution – Code interpreter + image/file pipeline enable compound transformations (govern cost & data scope).  
+2. Knowledge Scale & Structure – File groups + high file count preview require taxonomy & pruning discipline.  
+3. Quality Feedback Loop – New answer quality analytics institutionalize weekly remediation cycles.  
+4. Secure Extensibility – MCP guided connection + credential blocking preview harden integration posture.  
+5. Channel Expansion – WhatsApp preview drives concise, locale-aware conversational design patterns.  
+
+</details>
 
 ### Immediate Actions Checklist
-- [ ] Stand up weekly “Answer Quality” review using new analytics dashboard.
-- [ ] Draft file grouping & naming convention before bulk 1000-file ingestion preview scales.
-- [ ] Audit maker-owned credentials; prepare migration runbook for preview credential blocking control.
-- [ ] Pilot code interpreter in a sandbox; log execution metrics & outliers.
-- [ ] Tag all MCP-added tools with owner + data sensitivity metadata.
-- [ ] Run localization QA on WhatsApp message variants (fallback & error prompts). 
+- [ ] Stand up weekly "Answer Quality" review using analytics dashboard.
+- [ ] Finalize file grouping & naming convention before scaling ingestion (1000-file preview).
+- [ ] Audit maker-owned credentials; draft migration runbook for credential blocking control.
+- [ ] Pilot code interpreter in sandbox; capture execution metrics & outliers.
+- [ ] Tag MCP-added tools with owner + data sensitivity metadata.
+- [ ] Run localization QA on WhatsApp variants (fallback & error prompts).
+- [ ] Establish sensitivity label mapping validation workflow (MIP preview).
+
+## Security & Compliance Focus
+<details open>
+<summary>Recent items impacting governance posture</summary>
+
+| Area | Change | Risk Mitigated | Action |
+|------|--------|----------------|--------|
+| Credentials | Maker-provided credential blocking (Preview) | Secret sprawl / unmanaged auth | Inventory & migrate to managed auth patterns |
+| Data Classification | MIP label surfacing (Preview) | Oversharing sensitive content | Map labels → knowledge sources & test gating |
+| Catalog Governance | Metadata enrichment (Preview→GA) | Orphaned / non-compliant agents | Enforce required metadata schema |
+
+</details>
+
+## Churn Spotlight (Recent Status Transitions)
+| Feature | From → To | Month | Adoption Note |
+|---------|----------|-------|---------------|
+| File groups | Preview → GA | Aug 2025 | Refactor ad hoc file sets into scoped groups |
+| (Watching) WhatsApp channel publishing | Preview → Planned GA | Sep 2025 | Prepare localization & compliance review |
+
+## Prep Priority Matrix
+| Priority | Driver | Why | Next Step |
+|----------|--------|-----|----------|
+| P1 | Credential governance | Blocks secure scale | Execute migration runbook |
+| P1 | Quality analytics loop | Accelerates improvement | Operationalize weekly triage |
+| P2 | File taxonomy & grouping | Prevents knowledge dilution | Approve naming & archival policy |
+| P2 | Multimodal governance | Avoids uncontrolled cost / data spread | Define execution guardrails |
+| P3 | Deep reasoning model prep | Future complexity gains | Curate candidate workflows & eval rubric |
+
+## Delta Since Last Refresh
+<!-- BEGIN:DELTA -->
+Initial baseline established; no prior delta.
+<!-- END:DELTA -->
 
 ## Future Planned Changes (Concise Summary)
-High‑signal upcoming items (publicly disclosed) with practical preparation focus. Full expanded table (with broader preview backlog & TBD GA targets) lives in [All Future Planned Features](./Future_Planned_Features.md).
+High‑signal publicly disclosed upcoming items. Full backlog + categorization in [All Future Planned Features](./Future_Planned_Features.md).
 
 <!-- BEGIN:FUTURE_SUMMARY -->
 | Item (Summary) | Target (If Published) | Current Status | Why It Matters | Immediate Prep |
@@ -69,16 +129,22 @@ High‑signal upcoming items (publicly disclosed) with practical preparation foc
 | Reusable component collections | TBD | Preview | Modular reuse accelerates build velocity | Identify high‑reuse patterns to refactor |
 <!-- END:FUTURE_SUMMARY -->
 
-Key Guidance:
-1. Treat all TBD & Planned GA labels as provisional; re‑verify before hard dependencies.  
-2. Focus prep on governance (credentials, catalog metadata) and quality loops (analytics instrumentation).  
-3. For advanced models/features (deep reasoning, BYO models, tuning) start with scoping + data readiness rather than early production coupling.
+<details open>
+<summary>Key Guidance</summary>
+
+1. Treat TBD / Planned GA as provisional; re‑verify before dependency commitments.  
+2. Governance first: credentials, catalog metadata, sensitivity labeling.  
+3. Quality instrumentation precedes scale—baseline before rollout.  
+4. Advanced models (deep reasoning, BYO, tuning) need curated high-quality datasets & evaluation matrices.  
+5. Avoid knowledge bloat—prune low-signal files before exploiting 1000-file scale.  
+
+</details>
 
 ## Notes & Disclaimers
-– Planned GA dates may shift; always verify against live release plans.  
-– Preview items are not production‑SLA unless explicitly approved internally.  
-– Transitioned features show current status even if initial preview earlier.  
-– Future list excludes confidential or undisclosed roadmap content.
+– Planned GA dates can shift; always re‑validate.  
+– Preview items lack production SLAs unless explicitly approved.  
+– Status reflects current state (initial preview date may differ).  
+– Future list excludes confidential / undisclosed roadmap content.
 
 ## Source References
 - What's new in Copilot Studio: https://learn.microsoft.com/en-us/microsoft-copilot-studio/whats-new
@@ -88,4 +154,4 @@ Key Guidance:
 - Individual feature docs (examples): Azure AI Search knowledge, Model Context Protocol, Code Interpreter, File Groups, Adaptive Card designer, Customer Managed Keys.
 
 ---
-_Last updated: 2025-09-10 (rolling windows – future section refactored)_
+_Last updated: 2025-09-10 (enhanced layout, automation markers v1.1)_

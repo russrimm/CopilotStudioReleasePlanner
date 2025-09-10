@@ -81,35 +81,37 @@ Legend: **GA** = Generally Available, **Preview** = Public preview / early acces
 
 ## Purpose Summaries
 
-- **Generative answers cite non‑text**: Improves transparency by referencing images/annotations in answers.
-- **Voice-optimized responses**: Ensures spoken output is concise and citation-friendly.
-- **Direct M365 publish**: Removes deployment friction; surfaces agents inside core productivity hubs.
-- **Low-code creation experience**: Empowers non-technical makers to rapidly prototype agents.
-- **Reusable component collections**: Drives modular design and accelerates enterprise reuse (preview).
-- **Solution explorer**: Consolidates ALM activities (versioning, packaging) within the Studio UI.
-- **Model updates (GPT‑4o / 4.1 mini)**: Upgrades reasoning fidelity and performance tiers.
-- **Autonomous agents**: Enables background, trigger-based operation for long-running tasks.
-- **Azure AI Search knowledge**: High-quality hybrid retrieval for grounded, factual responses.
-- **Real-time connectors**: Keeps knowledge fresh with live system-of-record data.
-- **Multilingual & voice**: Broader global and accessibility reach.
-- **Security scan / XPIA mitigation**: Proactively identifies vulnerabilities and injection vectors.
-- **Audit logs & DLP enforcement**: Strengthens compliance posture out-of-the-box.
-- **AI response generated trigger**: Gives makers a post-processing interception point.
-- **Generative orchestration & deep reasoning (preview)**: Coordinated multi-step reasoning across tools.
-- **Agent flows & tool UX overhaul**: Reduces context switching; improves author productivity.
-- **Customer Managed Keys**: Customer sovereignty over encryption keys for sensitive industries.
-- **Viva Insights ROI analytics**: Connects agent usage to measurable business outcomes.
-- **Adaptive Card designer**: Rich, localized interactive responses without leaving Studio.
-- **BYO Models & Copilot Tuning**: Domain adaptation and customized model integration.
-- **Un/Structured knowledge expansion (tabular, unstructured, file groups)**: Comprehensive retrieval coverage with flexible grouping & scoping.
-- **Federated Identity Credentials & SSO Consent Card**: Streamlined secure auth flows.
-- **Advanced NLU customization**: Higher accuracy by leveraging customer data to shape intents/entities.
-- **Global search / ROI / feedback analytics**: Faster iteration & continuous quality improvement loop.
-- **MIP label surfacing & sensitivity awareness**: Data loss prevention in generative contexts.
-- **WhatsApp, SharePoint, Microsoft 365 channels**: Omnichannel reach.
-- **Code interpreter & multimodal uploads**: Expands action surface (data transformation, image/file reasoning).
-- **MCP integration & guided server connection**: Standardized extensibility for external capability injection.
-- **Catalog discovery of Microsoft-built agents**: Encourages curated reuse with governance.
+| Feature | Purpose (Concise) |
+|---------|-------------------|
+| Generative answers cite non‑text | Improves transparency by referencing images/annotations in answers. |
+| Voice-optimized responses | Ensures spoken output is concise and citation-friendly. |
+| Direct M365 publish | Removes deployment friction; surfaces agents inside core productivity hubs. |
+| Low-code creation experience | Empowers non-technical makers to rapidly prototype agents. |
+| Reusable component collections | Drives modular design and accelerates enterprise reuse (preview). |
+| Solution explorer | Consolidates ALM activities (versioning, packaging) within the Studio UI. |
+| Model updates (GPT‑4o / 4.1 mini) | Upgrades reasoning fidelity and performance tiers. |
+| Autonomous agents | Enables background, trigger-based operation for long-running tasks. |
+| Azure AI Search knowledge | High-quality hybrid retrieval for grounded, factual responses. |
+| Real-time connectors | Keeps knowledge fresh with live system-of-record data. |
+| Multilingual & voice | Broader global and accessibility reach. |
+| Security scan / XPIA mitigation | Proactively identifies vulnerabilities and injection vectors. |
+| Audit logs & DLP enforcement | Strengthens compliance posture out-of-the-box. |
+| AI response generated trigger | Gives makers a post-processing interception point. |
+| Generative orchestration & deep reasoning (preview) | Coordinated multi-step reasoning across tools. |
+| Agent flows & tool UX overhaul | Reduces context switching; improves author productivity. |
+| Customer Managed Keys | Customer sovereignty over encryption keys for sensitive industries. |
+| Viva Insights ROI analytics | Connects agent usage to measurable business outcomes. |
+| Adaptive Card designer | Rich, localized interactive responses without leaving Studio. |
+| BYO Models & Copilot Tuning | Domain adaptation and customized model integration. |
+| Un/Structured knowledge expansion (tabular, unstructured, file groups) | Comprehensive retrieval coverage with flexible grouping & scoping. |
+| Federated Identity Credentials & SSO Consent Card | Streamlined secure auth flows. |
+| Advanced NLU customization | Higher accuracy by leveraging customer data to shape intents/entities. |
+| Global search / ROI / feedback analytics | Faster iteration & continuous quality improvement loop. |
+| MIP label surfacing & sensitivity awareness | Data loss prevention in generative contexts. |
+| WhatsApp, SharePoint, Microsoft 365 channels | Omnichannel reach. |
+| Code interpreter & multimodal uploads | Expands action surface (data transformation, image/file reasoning). |
+| MCP integration & guided server connection | Standardized extensibility for external capability injection. |
+| Catalog discovery of Microsoft-built agents | Encourages curated reuse with governance. |
 
 ## Notes & Disclaimers
 - Planned GA dates may shift per official Microsoft communications; always verify in current release plans.

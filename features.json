@@ -1,0 +1,25 @@
+[
+  {
+    "name": "File groups",
+    "currentStatus": "GA",
+    "initialRelease": "2025-06 (Preview)",
+    "gaDate": "2025-08",
+    "category": "Knowledge",
+    "purpose": "Group related files & scope instructions"
+  },
+  {
+    "name": "Code interpreter",
+    "currentStatus": "GA",
+    "initialRelease": "2025-08",
+    "gaDate": "2025-08",
+    "category": "AI Actions",
+    "purpose": "NL to Python execution"
+  },
+  {
+    "name": "WhatsApp channel publishing",
+    "currentStatus": "Preview",
+    "plannedGA": "2025-09",
+    "category": "Channels",
+    "purpose": "Mobile reach channel"
+  }
+]
