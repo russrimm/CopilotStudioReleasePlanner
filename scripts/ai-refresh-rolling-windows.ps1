@@ -83,22 +83,31 @@ Environment override for fallback chain (comma separated): AZURE_OPENAI_API_VERS
 $apiVersion = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION')
 if ([string]::IsNullOrWhiteSpace($apiVersion)) { $apiVersion = '2024-12-01-preview' }
 
-# GPT-5 family requires v1 / preview API per latest docs; auto-correct if a date-based apiVersion was chosen.
-if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5')) -and ($apiVersion -notmatch '(?i)preview' -and $apiVersion -notmatch '^v?1')) {
-  Write-DebugInfo "Auto-switching apiVersion from '$apiVersion' to 'preview' for GPT-5 family deployment/model."
-  $apiVersion = 'preview'
+# GPT-5 family: prefer explicit '2024-12-01-preview' unless user overrides to preview/v1.
+if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5'))) {
+  $gpt5Preferred = '2024-12-01-preview'
+  if ($apiVersion -match '(?i)^v?1$') {
+    Write-DebugInfo "apiVersion '$apiVersion' accepted for GPT-5 (v1 semantic)."
+  } elseif ($apiVersion -match '(?i)preview' -and $apiVersion -ne $gpt5Preferred) {
+    Write-DebugInfo "apiVersion '$apiVersion' is a generic preview; leaving as-is but noting preferred=$gpt5Preferred." 
+  } elseif ($apiVersion -ne $gpt5Preferred) {
+    Write-DebugInfo "Overriding apiVersion from '$apiVersion' to '$gpt5Preferred' for GPT-5 family."
+    $apiVersion = $gpt5Preferred
+  }
 }
 $fallbackEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION_FALLBACKS')
 if ([string]::IsNullOrWhiteSpace($fallbackEnv)) {
   if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5'))) {
-    # GPT-5: include preview plus latest dated previews (some regions may not yet alias 'preview')
-    $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview')
+    # GPT-5: only try preferred then generic preview as a secondary.
+    $fallbackVersions = @('2024-12-01-preview','preview') | Where-Object { $_ -ne $apiVersion }
   } else {
-    $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview')
+    $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview') | Where-Object { $_ -ne $apiVersion }
   }
 } else {
   $fallbackVersions = $fallbackEnv.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' -and $_ -ne $apiVersion }
-  if ($fallbackVersions -notcontains 'preview') { $fallbackVersions = @('preview') + $fallbackVersions }
+  if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5')) -and ($fallbackVersions -notcontains '2024-12-01-preview')) {
+    $fallbackVersions = @('2024-12-01-preview') + $fallbackVersions
+  }
 }
 Write-DebugInfo "Primary apiVersion=$apiVersion Fallbacks=$([string]::Join(',', $fallbackVersions))"
 
