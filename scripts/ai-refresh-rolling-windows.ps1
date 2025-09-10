@@ -73,12 +73,11 @@ if ($deployment -match '[\?=&\s]') {
   Write-Host "[warn] Deployment name '$deployment' contains unexpected characters (? & = or whitespace). This may cause 404 errors. Set AZURE_OPENAI_DEPLOYMENT to the exact deployment id (e.g. 'gpt-4o-mini')."
 }
 <#
-Version Strategy (Simplified by directive)
-Per user directive, ONLY api-version '2025-01-01-preview' shall be used.
-All environment overrides and fallback logic have been disabled.
+Next Generation v1 API (versionless)
+Using Azure OpenAI next-gen "v1" endpoints which do not require api-version.
+All prior api-version logic removed.
 #>
-$apiVersion = '2025-01-01-preview'
-Write-DebugInfo "Using fixed apiVersion=$apiVersion (fallback disabled)."
+Write-DebugInfo 'Using next-gen v1 API (no api-version parameter).'
 
 Write-DebugInfo "Env present: ENDPOINT=$([string]::IsNullOrWhiteSpace($endpoint) -eq $false); KEY=$([string]::IsNullOrWhiteSpace($apiKey) -eq $false); DEPLOYMENT=$deployment"
 
@@ -144,33 +143,20 @@ if ($DebugMode) { $payload.Substring(0, [Math]::Min(300, $payload.Length)) | Wri
 
 function Invoke-AzureOpenAIRequest {
   param(
-    [string]$ApiVersion,
-    [bool]$UseResponsesEndpoint = $false
+    [bool]$UseResponsesEndpoint = $true, # default now responses API
+    [switch]$ChatPathFallback
   )
   $normalizedEndpoint = $endpoint.TrimEnd('/')
-    # Chat Completions keeps the legacy deployments scoped path; Responses uses unified /v1/responses with model in body
-      while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Seconds $interval
-        try {
-          $pollUri = "$normalizedEndpoint/openai/v1/responses/$($resp.id)?api-version=$apiVersion"
-          $polled = Invoke-RestMethod -Method Get -Uri $pollUri -Headers @{ 'api-key'=$apiKey }
-          $status = $polled.status
-          Write-DebugInfo "Poll status=$status"
-          $raw = Get-ResponsesText $polled
-          if ($raw -or ($status -notmatch '^(in_progress|queued)$')) { $resp = $polled; break }
-        } catch {
-          Write-DebugInfo "Polling error: $($_.Exception.Message)"; break
-        }
-      }
-  if ($UseResponsesEndpoint) {
-  $localUri = "$normalizedEndpoint/openai/v1/responses?api-version=$ApiVersion"
+  if ($UseResponsesEndpoint -and -not $ChatPathFallback) {
+    $localUri = "$normalizedEndpoint/openai/v1/responses"
   } else {
-  $localUri = "$normalizedEndpoint/openai/deployments/$deployment/chat/completions?api-version=$ApiVersion"
+    # Legacy chat path fallback (still versionless under next-gen doc guidance)
+    $localUri = "$normalizedEndpoint/openai/v1/chat/completions"
   }
   Write-DebugInfo "Request URI: $localUri"
   $responseHeaders = @{}
   # Prepare body depending on endpoint type
-  if ($UseResponsesEndpoint) {
+  if ($UseResponsesEndpoint -and -not $ChatPathFallback) {
     # Minimal, spec-aligned responses payload (simplify to reduce 400 risk):
     # docs allow either a simple string in "input" or a structured array. We combine instructions + user content.
     $modelForResponses = if ([string]::IsNullOrWhiteSpace($explicitModel)) { $deployment } else { $explicitModel }
@@ -210,28 +196,27 @@ function Write-AttemptResult($res, $apiVer, $usingResponses) {
     Write-Host "[attempt.fail] version=$apiVer endpoint=$([bool]$usingResponses ? 'responses' : 'chat') status=$($res.status) code=$($res.code)"
     if ($res.message) { Write-Host "[attempt.message] $($res.message)" }
     if ($res.status -eq 404 -and -not $usingResponses) {
-      Write-Host "[hint] 404 on chat endpoint often means the deployment name '$deployment' is wrong or the api-version '$apiVer' is unavailable for chat. Will probe deployments before deciding fallback."
+      Write-Host "[hint] 404 on chat endpoint often means the deployment (model) name '$deployment' is incorrect or not enabled."
     }
     if ($DebugMode -and $res.body) { $snippet = if ($res.body.Length -gt 600) { $res.body.Substring(0,600)+'...' } else { $res.body }; Write-Host "[attempt.body.snippet] $snippet" }
   }
 }
 
-<# Simplified single-version attempt logic #>
+<# Next-gen attempt logic (no api-version) #>
  $forceResponsesEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_FORCE_RESPONSES')
- # Default strategy: responses-first unless explicitly disabled
  $preferResponsesFirst = $true
  if ($forceResponsesEnv -and $forceResponsesEnv -match '^(?i:false|0|no)$') { $preferResponsesFirst = $false }
 
 $finalResponse = $null
 if ($preferResponsesFirst) {
-  Write-DebugInfo "Attempting fixed version $apiVersion (responses-first)"; $rResp = Invoke-AzureOpenAIRequest -ApiVersion $apiVersion -UseResponsesEndpoint:$true; Write-AttemptResult $rResp $apiVersion $true; $attempts += $rResp
-  if ($rResp.success) { $finalResponse = @{ version=$apiVersion; responses=$true; data=$rResp.response } }
+  Write-DebugInfo 'Attempting responses primary (versionless v1)'; $rResp = Invoke-AzureOpenAIRequest -UseResponsesEndpoint:$true; Write-AttemptResult $rResp 'v1' $true; $attempts += $rResp
+  if ($rResp.success) { $finalResponse = @{ version='v1'; responses=$true; data=$rResp.response } }
   elseif ($isGpt5) {
     # Adaptive parameter pruning if needed for GPT-5 responses
     if ($rResp.body -match "Unsupported parameter: '?max_output_tokens") {
       Write-DebugInfo 'Adaptive retry removing max_output_tokens.'
       $normalizedEndpoint = $endpoint.TrimEnd('/')
-      $uri = "$normalizedEndpoint/openai/v1/responses?api-version=$apiVersion"
+  $uri = "$normalizedEndpoint/openai/v1/responses"
       $modelForResponses = if ([string]::IsNullOrWhiteSpace($explicitModel)) { $deployment } else { $explicitModel }
       $combinedInput = "SYSTEM:`n$systemPrompt`n`nUSER:`n$userContent"
       $retryObj = @{ model=$modelForResponses; input=$combinedInput }
@@ -239,40 +224,33 @@ if ($preferResponsesFirst) {
       try {
         $rr = Invoke-RestMethod -Method Post -Uri $uri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $retryBody -TimeoutSec 120
         $attempts += @{ success=$true; response=$rr; headers=@{}; uri=$uri }
-        $finalResponse = @{ version=$apiVersion; responses=$true; data=$rr }
+  $finalResponse = @{ version='v1'; responses=$true; data=$rr }
       } catch {
         $attempts += @{ success=$false; status=$_.Exception.Response.StatusCode.value__; body=$_.ErrorDetails.Message; code='adaptive_retry_fail'; message='Adaptive retry failed'; uri=$uri }
       }
     }
-    if (-not $finalResponse) { Write-DebugInfo 'No success after responses + adaptive retry (GPT-5); not attempting chat per strategy.' }
+    if (-not $finalResponse) { Write-DebugInfo 'No success after responses + adaptive retry (GPT-5); not attempting chat fallback (per strategy).' }
   } else {
     if (-not $rResp.success) {
-      Write-DebugInfo 'Responses-first failed; attempting chat fallback.'
-      $rChat = Invoke-AzureOpenAIRequest -ApiVersion $apiVersion -UseResponsesEndpoint:$false; Write-AttemptResult $rChat $apiVersion $false; $attempts += $rChat
-      if ($rChat.success) { $finalResponse = @{ version=$apiVersion; responses=$false; data=$rChat.response } }
+      Write-DebugInfo 'Responses-first failed; attempting chat/completions fallback.'
+      $rChat = Invoke-AzureOpenAIRequest -UseResponsesEndpoint:$false -ChatPathFallback; Write-AttemptResult $rChat 'v1' $false; $attempts += $rChat
+      if ($rChat.success) { $finalResponse = @{ version='v1'; responses=$false; data=$rChat.response } }
     }
   }
 } else {
-  Write-DebugInfo "Attempting fixed version $apiVersion (chat-first)"; $rChatOnly = Invoke-AzureOpenAIRequest -ApiVersion $apiVersion -UseResponsesEndpoint:$false; Write-AttemptResult $rChatOnly $apiVersion $false; $attempts += $rChatOnly
-  if ($rChatOnly.success) { $finalResponse = @{ version=$apiVersion; responses=$false; data=$rChatOnly.response } }
+  Write-DebugInfo 'Attempting chat-first (versionless v1)'; $rChatOnly = Invoke-AzureOpenAIRequest -UseResponsesEndpoint:$false -ChatPathFallback; Write-AttemptResult $rChatOnly 'v1' $false; $attempts += $rChatOnly
+  if ($rChatOnly.success) { $finalResponse = @{ version='v1'; responses=$false; data=$rChatOnly.response } }
   elseif (-not $isGpt5) {
     Write-DebugInfo 'Chat-first failed; attempting responses fallback.'
-    $rResp2 = Invoke-AzureOpenAIRequest -ApiVersion $apiVersion -UseResponsesEndpoint:$true; Write-AttemptResult $rResp2 $apiVersion $true; $attempts += $rResp2
-    if ($rResp2.success) { $finalResponse = @{ version=$apiVersion; responses=$true; data=$rResp2.response } }
+    $rResp2 = Invoke-AzureOpenAIRequest -UseResponsesEndpoint:$true; Write-AttemptResult $rResp2 'v1' $true; $attempts += $rResp2
+    if ($rResp2.success) { $finalResponse = @{ version='v1'; responses=$true; data=$rResp2.response } }
   } else {
     Write-DebugInfo 'Chat-first failed and GPT-5 strategy avoids responses fallback when forced chat-first.'
   }
 }
 
 if (-not $finalResponse) {
-  Write-Error "All attempts failed using fixed api-version $apiVersion (no fallbacks per directive)."
-  try {
-    $probeUri = ($endpoint.TrimEnd('/')) + "/openai/deployments?api-version=$apiVersion"
-    Write-Host "[probe] GET $probeUri"
-    $probe = Invoke-RestMethod -Method Get -Uri $probeUri -Headers @{ 'api-key'=$apiKey }
-    $probeNames = ($probe.data | ForEach-Object { $_.id }) -join ','
-    Write-Host "[probe.result] deployments=$probeNames"
-  } catch { Write-Host "[probe.error] $($_.Exception.Message)" }
+  Write-Error 'All attempts failed (v1 versionless).'
   foreach ($a in $attempts) { if (-not $a.success) { Write-Host "FAILED uri=$($a.uri) status=$($a.status) code=$($a.code)" } }
   exit 1
 }
@@ -315,7 +293,7 @@ if (-not $finalResponse.responses) {
     while ((Get-Date) -lt $deadline) {
       Start-Sleep -Seconds $interval
       try {
-        $pollUri = "$normalizedEndpoint/openai/v1/responses/$($resp.id)?api-version=$apiVersion"
+  $pollUri = "$normalizedEndpoint/openai/v1/responses/$($resp.id)"
         $polled = Invoke-RestMethod -Method Get -Uri $pollUri -Headers @{ 'api-key'=$apiKey }
         $status = $polled.status
         Write-DebugInfo "Poll status=$status"
