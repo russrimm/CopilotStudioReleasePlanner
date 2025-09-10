@@ -21,5 +21,40 @@
     "plannedGA": "2025-09",
     "category": "Channels",
     "purpose": "Mobile reach channel"
+  },
+  {
+    "name": "Block maker-provided credentials",
+    "currentStatus": "Preview",
+    "plannedGA": "2025-09",
+    "category": "Governance",
+    "purpose": "Eliminate unmanaged credentials"
+  },
+  {
+    "name": "Generated answer quality analytics enhancements",
+    "currentStatus": "GA (enhancing)",
+    "initialRelease": "2025-08",
+    "category": "Analytics",
+    "purpose": "Identify low quality answer clusters"
+  },
+  {
+    "name": "Catalog governance tagging enrichment",
+    "currentStatus": "Preview",
+    "plannedGA": "2025-09",
+    "category": "Governance",
+    "purpose": "Metadata for discovery & compliance"
+  },
+  {
+    "name": "Deep reasoning models",
+    "currentStatus": "Preview",
+    "plannedGA": "TBD",
+    "category": "Models",
+    "purpose": "Advanced multi-step reasoning"
+  },
+  {
+    "name": "Bring Your Own Models",
+    "currentStatus": "Preview",
+    "plannedGA": "TBD",
+    "category": "Models",
+    "purpose": "Custom model extensibility"
   }
 ]
