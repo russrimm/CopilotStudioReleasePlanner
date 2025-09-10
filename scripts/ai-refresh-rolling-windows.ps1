@@ -31,9 +31,10 @@ function Write-DebugInfo {
   if ($DebugMode) { Write-Host "[debug] $Message" }
 }
 
-function Require-Env($name) {
-  $val = [Environment]::GetEnvironmentVariable($name)
-  if ([string]::IsNullOrWhiteSpace($val)) { throw "Missing required environment variable: $name" }
+function Get-RequiredEnv {
+  param([string]$Name)
+  $val = [Environment]::GetEnvironmentVariable($Name)
+  if ([string]::IsNullOrWhiteSpace($val)) { throw "Missing required environment variable: $Name" }
   return $val
 }
 
@@ -60,9 +61,16 @@ if ($Offline) {
   exit 0
 }
 
-$endpoint   = Require-Env 'AZURE_OPENAI_ENDPOINT'
-$apiKey     = Require-Env 'AZURE_OPENAI_KEY'
-$deployment = Require-Env 'AZURE_OPENAI_DEPLOYMENT'
+$endpoint   = Get-RequiredEnv 'AZURE_OPENAI_ENDPOINT'
+$apiKey     = Get-RequiredEnv 'AZURE_OPENAI_KEY'
+$deployment = Get-RequiredEnv 'AZURE_OPENAI_DEPLOYMENT'
+# Optional distinct model name for unified Responses API (some tenants use model IDs instead of deployment alias here)
+$explicitModel = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_MODEL')
+
+# Basic sanity validation on deployment name to catch accidental inclusion of query parameters.
+if ($deployment -match '[\?=&\s]') {
+  Write-Host "[warn] Deployment name '$deployment' contains unexpected characters (? & = or whitespace). This may cause 404 errors. Set AZURE_OPENAI_DEPLOYMENT to the exact deployment id (e.g. 'gpt-4o-mini')."
+}
 <#
 Version / Endpoint Strategy
 1. Primary attempt uses explicit AZURE_OPENAI_API_VERSION env var or latest known stable preview (2024-12-01-preview).
@@ -74,11 +82,18 @@ Environment override for fallback chain (comma separated): AZURE_OPENAI_API_VERS
 #>
 $apiVersion = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION')
 if ([string]::IsNullOrWhiteSpace($apiVersion)) { $apiVersion = '2024-12-01-preview' }
+
+# GPT-5 family requires v1 / preview API per latest docs; auto-correct if a date-based apiVersion was chosen.
+if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5')) -and ($apiVersion -notmatch '(?i)preview' -and $apiVersion -notmatch '^v?1')) {
+  Write-DebugInfo "Auto-switching apiVersion from '$apiVersion' to 'preview' for GPT-5 family deployment/model."
+  $apiVersion = 'preview'
+}
 $fallbackEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION_FALLBACKS')
 if ([string]::IsNullOrWhiteSpace($fallbackEnv)) {
-  $fallbackVersions = @('2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview')
+  $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview')
 } else {
   $fallbackVersions = $fallbackEnv.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' -and $_ -ne $apiVersion }
+  if ($fallbackVersions -notcontains 'preview') { $fallbackVersions = @('preview') + $fallbackVersions }
 }
 Write-DebugInfo "Primary apiVersion=$apiVersion Fallbacks=$([string]::Join(',', $fallbackVersions))"
 
@@ -137,21 +152,27 @@ function Invoke-AzureOpenAIRequest {
     [bool]$UseResponsesEndpoint = $false
   )
   $normalizedEndpoint = $endpoint.TrimEnd('/')
-  $path = if ($UseResponsesEndpoint) { 'responses' } else { 'chat/completions' }
-  $localUri = "$normalizedEndpoint/openai/deployments/$deployment/$path?api-version=$ApiVersion"
+  # Chat Completions keeps the legacy deployments scoped path; Responses uses unified /v1/responses with model in body
+  if ($UseResponsesEndpoint) {
+  $localUri = "$normalizedEndpoint/openai/v1/responses?api-version=$ApiVersion"
+  } else {
+  $localUri = "$normalizedEndpoint/openai/deployments/$deployment/chat/completions?api-version=$ApiVersion"
+  }
   Write-DebugInfo "Request URI: $localUri"
   $responseHeaders = @{}
   # Prepare body depending on endpoint type
   if ($UseResponsesEndpoint) {
-    $respPayloadObj = @{ 
-      input = @(
-        @{ role='system'; content = @(@{ type='text'; text=$systemPrompt }) },
-        @{ role='user'; content   = @(@{ type='text'; text=$userContent }) }
-      );
-      temperature = 0.1;
+    # Minimal, spec-aligned responses payload (simplify to reduce 400 risk):
+    # docs allow either a simple string in "input" or a structured array. We combine instructions + user content.
+    $modelForResponses = if ([string]::IsNullOrWhiteSpace($explicitModel)) { $deployment } else { $explicitModel }
+    $combinedInput = "SYSTEM:\n$systemPrompt\n\nUSER:\n$userContent"
+    $respPayloadObj = @{
+      model = $modelForResponses
+      input = $combinedInput
+      temperature = 0.1
       max_output_tokens = 1800
     }
-    $body = $respPayloadObj | ConvertTo-Json -Depth 8
+    $body = $respPayloadObj | ConvertTo-Json -Depth 4
   } else {
     $body = $payload
   }
@@ -174,54 +195,96 @@ function Invoke-AzureOpenAIRequest {
 
 # Attempt sequence
 $attempts = @()
-function Log-AttemptResult($res, $apiVer, $usingResponses) {
+function Write-AttemptResult($res, $apiVer, $usingResponses) {
   if ($res.success) {
     Write-DebugInfo "Success with version=$apiVer endpoint=$([bool]$usingResponses ? 'responses' : 'chat') RequestId=$($res.headers['x-ms-request-id'])"
   } else {
     Write-Host "[attempt.fail] version=$apiVer endpoint=$([bool]$usingResponses ? 'responses' : 'chat') status=$($res.status) code=$($res.code)"
     if ($res.message) { Write-Host "[attempt.message] $($res.message)" }
+    if ($res.status -eq 404 -and -not $usingResponses) {
+      Write-Host "[hint] 404 on chat endpoint often means the deployment name '$deployment' is wrong or the api-version '$apiVer' is unavailable for chat. Will probe deployments before deciding fallback."
+    }
     if ($DebugMode -and $res.body) { $snippet = if ($res.body.Length -gt 600) { $res.body.Substring(0,600)+'...' } else { $res.body }; Write-Host "[attempt.body.snippet] $snippet" }
   }
 }
 
-function Should-RetryResponses($res) {
+function Test-RetryResponses($res) {
   if (-not $res) { return $false }
   if ($res.success) { return $false }
-  if ($res.status -ne 400) { return $false }
+  # Retry responses for 400 (BadRequest) and 404 (possible unsupported chat route / missing deployment path) to probe unified API.
+  if ($res.status -notin @(400,404)) { return $false }
   $msg = ($res.message + ' ' + $res.body)
   if ($msg -match '(?i)responses endpoint' -or $msg -match '(?i)use the responses api' -or $msg -match '(?i)reasoning') { return $true }
-  return $false
+  # Broad heuristic always on to gather evidence while stabilizing.
+  return $true
 }
 
-function Should-FallbackVersion($res) {
+function Test-FallbackVersion($res) {
   if (-not $res) { return $false }
   if ($res.success) { return $false }
-  if ($res.status -ne 400) { return $false }
-  $codesTrigger = @('OperationNotSupported','DeploymentNotFound','ModelNotFound','BadRequest')
-  if ($codesTrigger -contains $res.code) { return $true }
+  # Treat 400 and 404 as potentially version-related (404 often surfaces on newly introduced api-version with legacy path).
+  if ($res.status -notin @(400,404)) { return $false }
+  $codesTrigger = @('OperationNotSupported','DeploymentNotFound','ModelNotFound','BadRequest','404')
+  if ($codesTrigger -contains $res.code) { Write-DebugInfo "FallbackVersion trigger: code=$($res.code)"; return $true }
   $msg = ($res.message + ' ' + $res.body)
-  if ($msg -match '(?i)only for api versions' -or $msg -match '(?i)enabled only for api versions' -or $msg -match '(?i)not supported' ) { return $true }
+  if ($msg -match '(?i)only for api versions' -or $msg -match '(?i)enabled only for api versions' -or $msg -match '(?i)not supported' ) { Write-DebugInfo 'FallbackVersion trigger: message pattern match'; return $true }
   return $false
 }
 
 $allVersions = @($apiVersion)
 if (-not $DisableVersionFallback) { $allVersions += $fallbackVersions }
 
+$forceResponsesEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_FORCE_RESPONSES')
+$preferResponsesFirst = $false
+if ($forceResponsesEnv -and $forceResponsesEnv -match '^(?i:true|1|yes)$') { $preferResponsesFirst = $true }
+if (-not $forceResponsesEnv) { $preferResponsesFirst = $true; Write-DebugInfo 'FORCE_RESPONSES not set; enabling responses-first heuristic due to prior persistent chat 404s.' }
+
 $finalResponse = $null
 foreach ($ver in ($allVersions | Select-Object -Unique)) {
-  Write-DebugInfo "Attempting version $ver (chat)"; $res = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$false; Log-AttemptResult $res $ver $false; $attempts += $res
+  if ($preferResponsesFirst) {
+    Write-DebugInfo "Attempting version $ver (responses-first)"; $rRespFirst = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$true; Write-AttemptResult $rRespFirst $ver $true; $attempts += $rRespFirst
+    if ($rRespFirst.success) { $finalResponse = @{ version=$ver; responses=$true; data=$rRespFirst.response }; break }
+    # If responses attempt fails with non-version issue and we forced it, try chat as fallback
+  Write-DebugInfo "Fallback to chat for version $ver after responses-first failure"; $rChat = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$false; Write-AttemptResult $rChat $ver $false; $attempts += $rChat
+  if ($rChat.success) { $finalResponse = @{ version=$ver; responses=$false; data=$rChat.response }; break }
+  if (-not (Test-FallbackVersion $rChat)) { Write-DebugInfo 'Abort: not classified as version-related after responses-first path.'; break }
+    continue
+  }
+
+  Write-DebugInfo "Attempting version $ver (chat)"; $res = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$false; Write-AttemptResult $res $ver $false; $attempts += $res
+  # If we get a 404 on chat, proactively probe deployments once per version to validate target exists
+  if (-not $res.success -and $res.status -eq 404) {
+    try {
+      $probeUriOn404 = ($endpoint.TrimEnd('/')) + "/openai/deployments?api-version=$ver"
+      Write-DebugInfo "Probing deployments due to 404: $probeUriOn404"
+      $probe404 = Invoke-RestMethod -Method Get -Uri $probeUriOn404 -Headers @{ 'api-key'=$apiKey }
+      $names404 = ($probe404.data | ForEach-Object { $_.id })
+      Write-DebugInfo ("Deployments available: " + ($names404 -join ','))
+      if ($names404 -notcontains $deployment) { Write-Host "[warn] Deployment '$deployment' not found in current listing; verify AZURE_OPENAI_DEPLOYMENT." }
+    } catch { Write-DebugInfo "Probe after 404 failed: $($_.Exception.Message)" }
+  }
   if ($res.success) { $finalResponse = @{ version=$ver; responses=$false; data=$res.response }; break }
-  if (Should-RetryResponses $res) {
-    Write-DebugInfo "Retrying same version $ver via responses endpoint"; $res2 = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$true; Log-AttemptResult $res2 $ver $true; $attempts += $res2
+  # Always consider responses retry on 400 now (broadened heuristic inside Test-RetryResponses)
+  if (Test-RetryResponses $res) {
+    Write-DebugInfo "Retrying same version $ver via responses endpoint"; $res2 = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$true; Write-AttemptResult $res2 $ver $true; $attempts += $res2
     if ($res2.success) { $finalResponse = @{ version=$ver; responses=$true; data=$res2.response }; break }
-    if (-not (Should-FallbackVersion $res2)) { Write-DebugInfo 'Not a version-related error; aborting fallback chain.'; break }
-  } elseif (-not (Should-FallbackVersion $res)) {
-    Write-DebugInfo 'Not a version-related 400; aborting fallback chain.'; break
+    if (-not (Test-FallbackVersion $res2)) { Write-DebugInfo 'Abort: responses attempt not classified version-related; stopping chain.'; break }
+  } elseif (-not (Test-FallbackVersion $res)) {
+    Write-DebugInfo ("Abort: status=$($res.status) not classified version-related; stopping chain."); break
   }
 }
 
 if (-not $finalResponse) {
   Write-Error 'All attempts failed.'
+  # Attempt a lightweight deployments probe for additional diagnostics (non-fatal).
+  try {
+    $probeVer = $apiVersion
+    $probeUri = ($endpoint.TrimEnd('/')) + "/openai/deployments?api-version=$probeVer"
+    Write-Host "[probe] GET $probeUri"
+    $probe = Invoke-RestMethod -Method Get -Uri $probeUri -Headers @{ 'api-key'=$apiKey }
+    $probeNames = ($probe.data | ForEach-Object { $_.id }) -join ','
+    Write-Host "[probe.result] deployments=$probeNames"
+  } catch { Write-Host "[probe.error] $($_.Exception.Message)" }
   foreach ($a in $attempts) {
     if (-not $a.success) {
       Write-Host "FAILED version=$($a.uri) status=$($a.status) code=$($a.code)" 
