@@ -149,7 +149,10 @@ function New-ChatPayload {
       @{ role='system'; content=$SystemPrompt },
       @{ role='user'; content=$UserContent }
     );
-    temperature = 0.1
+  }
+  if (-not $UseCompletionParam) {
+    # For non GPT-5 models keep deterministic low temperature; GPT-5 route removes unsupported parameter risk.
+    $base.temperature = 0.1
   }
   if ($UseCompletionParam) {
     # Newer GPT-5 family expects max_completion_tokens instead of max_tokens
@@ -257,6 +260,53 @@ function Test-FallbackVersion($res) {
 $allVersions = @($apiVersion)
 if (-not $DisableVersionFallback) { $allVersions += $fallbackVersions }
 
+# For GPT-5 family, expand version candidate list aggressively if we hit 'API version not supported'.
+$gpt5VersionCandidates = @(
+  '2025-01-01-preview',
+  '2024-12-01-preview',
+  '2024-11-01-preview',
+  '2024-10-21-preview',
+  '2024-10-15-preview',
+  '2024-10-01-preview',
+  '2024-09-01-preview',
+  '2024-08-01-preview',
+  '2024-07-01-preview',
+  'preview',
+  '2024-06-01'
+) | Select-Object -Unique
+
+if ($isGpt5) {
+  # Prepend candidates not already present
+  foreach ($cand in $gpt5VersionCandidates) { if ($allVersions -notcontains $cand) { $allVersions += $cand } }
+}
+
+if ($isGpt5) { Write-DebugInfo ("GPT-5 version candidate order: " + (($allVersions | Select-Object -Unique) -join ' | ')) }
+
+# Preflight probe: for GPT-5, attempt a quick deployments GET to see which versions return 200; prefer those first.
+if ($isGpt5) {
+  $reachable = @()
+  foreach ($vProbe in ($allVersions | Select-Object -Unique)) {
+    try {
+      $probeUri = ($endpoint.TrimEnd('/')) + "/openai/deployments?api-version=$vProbe"
+      $respProbe = Invoke-RestMethod -Method Get -Uri $probeUri -Headers @{ 'api-key'=$apiKey } -TimeoutSec 30
+      if ($respProbe.data) { $reachable += $vProbe }
+    } catch {
+      # ignore
+    }
+    if ($reachable.Count -ge 3) { break }
+  }
+  if ($reachable.Count -gt 0) {
+    Write-DebugInfo ("Preflight reachable apiVersions (first passes): " + ($reachable -join ','))
+    # Reorder: reachable first, then rest
+    $ordered = @()
+    foreach ($r in $reachable) { if ($ordered -notcontains $r) { $ordered += $r } }
+    foreach ($v in ($allVersions | Select-Object -Unique)) { if ($ordered -notcontains $v) { $ordered += $v } }
+    $allVersions = $ordered
+  } else {
+    Write-DebugInfo 'Preflight probe found no immediately reachable versions; proceeding with full list.'
+  }
+}
+
 $forceResponsesEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_FORCE_RESPONSES')
 $preferResponsesFirst = $false
 if ($forceResponsesEnv -and $forceResponsesEnv -match '^(?i:true|1|yes)$') { $preferResponsesFirst = $true }
@@ -268,6 +318,26 @@ foreach ($ver in ($allVersions | Select-Object -Unique)) {
     Write-DebugInfo "Attempting version $ver (responses-first)"; $rRespFirst = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$true; Write-AttemptResult $rRespFirst $ver $true; $attempts += $rRespFirst
     if ($rRespFirst.success) { $finalResponse = @{ version=$ver; responses=$true; data=$rRespFirst.response }; break }
     if ($isGpt5) {
+      # Adaptive retry removal for unsupported parameter on responses
+      if (-not $rRespFirst.success -and $rRespFirst.body -match 'Unsupported parameter:') {
+        if ($rRespFirst.body -match "Unsupported parameter: '?max_output_tokens" -and $payloadObj.max_completion_tokens) {
+          Write-DebugInfo "Removing max_output_tokens and retrying same version $ver (adaptive parameter pruning)."
+          # Remove the parameter and retry once
+          $script:adaptiveRetried = $true
+          function Invoke-Gpt5AdaptiveRetry($apiVer) {
+            $normalizedEndpoint = $endpoint.TrimEnd('/')
+            $uri = "$normalizedEndpoint/openai/v1/responses?api-version=$apiVer"
+            $modelForResponses = if ([string]::IsNullOrWhiteSpace($explicitModel)) { $deployment } else { $explicitModel }
+            $combinedInput = "SYSTEM:`n$systemPrompt`n`nUSER:`n$userContent"
+            $retryObj = @{ model=$modelForResponses; input=$combinedInput }
+            $retryBody = $retryObj | ConvertTo-Json -Depth 3
+            try { $rr = Invoke-RestMethod -Method Post -Uri $uri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $retryBody -TimeoutSec 120; return @{ success=$true; response=$rr; headers=@{}} } catch { return @{ success=$false; status=$_.Exception.Response.StatusCode.value__; body=$_.ErrorDetails.Message; code='adaptive_retry_fail'; message='Adaptive retry failed' } }
+          }
+          $adaptive = Invoke-Gpt5AdaptiveRetry $ver
+          $attempts += $adaptive
+          if ($adaptive.success) { $finalResponse = @{ version=$ver; responses=$true; data=$adaptive.response }; break }
+        }
+      }
       Write-DebugInfo "Skipping chat fallback for GPT-5 on version $ver; moving to next version if classified as version-related."
       if (-not (Test-FallbackVersion $rRespFirst)) { Write-DebugInfo 'Abort: responses failure not version-related; stopping chain.'; break }
       else { continue }
