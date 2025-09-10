@@ -1,14 +1,17 @@
-# Copilot Studio – Rolling 30-Day Updates
+# Copilot Studio – Rolling Updates Hub
 
-This document focuses on two concise operational windows:
-1. Last 30 days of shipped changes (retrospective)
-2. Next 30 days of planned / targeted items (forward look, subject to change)
+Concise operational view of Copilot Studio evolution:
+1. Last 30 days shipped changes (retrospective)
+2. Future planned changes (all publicly disclosed forward items – replaces former "next 30 days")
 
-Full feature catalog (rolling 12 months + broader context) lives here: [Full Feature Catalog](./archive/Last_12_Months_Features.md)
+Extended references:
+• Full 12‑Month Catalog: [Last 12 Months](./archive/Last_12_Months_Features.md)  
+• 6‑Month Snapshot (historical lens): [Last 6 Months](./archive/Last_6_Months_Features.md)  
+• Full Future Planned Detail: [All Future Planned Features](./Future_Planned_Features.md)
 
 Legend: **GA** = Generally Available, **Preview** = Public preview / early access, **Planned GA** = published target (month/date), **TBD** = not yet published.
 
-Source basis: Official Microsoft Learn "What's new in Copilot Studio" + Power Platform release plans (current waves) + linked public feature docs. Forward-looking items are indicative only—validate dates before dependency commitments.
+Sources: Official Microsoft Learn "What's new in Copilot Studio" + current/public Power Platform release plans + linked public feature docs. Validate forward dates before gating dependencies.
 
 ---
 
@@ -47,28 +50,35 @@ Focused digest of Copilot Studio updates, promotions, and new previews in the mo
 - [ ] Tag all MCP-added tools with owner + data sensitivity metadata.
 - [ ] Run localization QA on WhatsApp message variants (fallback & error prompts). 
 
-## Next 30 Days Planned Changes (2025-09-10 to 2025-10-08)
-Publicly disclosed planned GA / preview milestones expected within the next 30 days. All dates are tentative; verify against the live release plan before production gating.
+## Future Planned Changes (Concise Summary)
+High‑signal upcoming items (publicly disclosed) with practical preparation focus. Full expanded table (with broader preview backlog & TBD GA targets) lives in [All Future Planned Features](./Future_Planned_Features.md).
 
-<!-- BEGIN:NEXT30_TABLE -->
-| Planned Item | Target (Approx) | Expected Status Change | Rationale / Impact | Prep Recommendation |
-|--------------|-----------------|------------------------|--------------------|---------------------|
-| WhatsApp channel publishing | Sep 2025 | Preview → GA (planned) | Broader mobile conversational reach | Finalize localization & rate-limit policies |
-| Block maker-provided credentials for authentication | Sep 2025 | New Preview controls broaden rollout | Tightens credential governance posture | Inventory legacy credentials & draft migration runbook |
-| Generated answer quality iterative analytics enhancements | Sep 2025 | Incremental GA refinements | Finer-grain gap attribution | Align weekly QA dashboard to new metrics |
-| Catalog governance tagging enrichment | Sep 2025 | Preview maturation | Faster compliant reuse of internal agents | Define mandatory metadata schema (owner, PII flag) |
-| (Placeholder) Additional MCP server UX refinements | Late Sep 2025 | Minor GA enhancement | Lowers friction for external tool onboarding | Update internal MCP integration checklist |
-<!-- END:NEXT30_TABLE -->
+<!-- BEGIN:FUTURE_SUMMARY -->
+| Item (Summary) | Target (If Published) | Current Status | Why It Matters | Immediate Prep |
+|----------------|-----------------------|----------------|----------------|----------------|
+| WhatsApp channel publishing | Sep 2025 (Planned GA) | Preview | Mobile / global reach channel expansion | Finalize localization & rate limiting policies |
+| Block maker-provided credentials control | Sep 2025 rollout | Preview | Reduces credential sprawl; governance uplift | Inventory & plan migration off maker creds |
+| Generated answer quality analytics enhancements | Sep 2025 (iterative) | GA (enhancing) | Deeper quality gap attribution | Align dashboard & triage cadence |
+| Catalog governance tagging enrichment | Sep 2025 | Preview → GA maturation | Improves compliant reuse & discovery | Define mandatory metadata schema |
+| MCP server UX refinements | Late 2025 (ongoing) | GA (enhancements) | Lowers friction onboarding external tools | Refresh internal integration checklist |
+| Deep reasoning models | TBD GA | Preview | Advanced multi‑step reasoning scenarios | Identify candidate complex workflows |
+| Microsoft 365 Copilot Tuning | TBD GA | Preview | Domain adaptation for enterprise context | Curate high‑quality, labeled training sets |
+| Bring Your Own Models (Azure AI Foundry) | TBD GA | Preview | Custom model extensibility | Assess governance & cost controls |
+| Multilingual generative orchestration expansion | TBD | Preview | Broader language coverage in planner | Prioritize locales & test prompts |
+| GPT‑4.1 mini experimental model | TBD | Preview | Lower latency experimentation | Define benchmark scenarios & metrics |
+| Reusable component collections | TBD | Preview | Modular reuse accelerates build velocity | Identify high‑reuse patterns to refactor |
+<!-- END:FUTURE_SUMMARY -->
 
-### Forward-Look Notes
-- Future items are intentionally limited to a 30-day horizon to reduce noise.
-- Excludes confidential / undisclosed roadmap content.
-- If no credible public targets exist for the window, this section may collapse to a placeholder note.
+Key Guidance:
+1. Treat all TBD & Planned GA labels as provisional; re‑verify before hard dependencies.  
+2. Focus prep on governance (credentials, catalog metadata) and quality loops (analytics instrumentation).  
+3. For advanced models/features (deep reasoning, BYO models, tuning) start with scoping + data readiness rather than early production coupling.
 
 ## Notes & Disclaimers
-- Planned GA dates may shift per official Microsoft communications; always verify in current release plans.
-- Preview features should not be relied upon for production SLAs until GA unless explicitly approved.
-- Some features (e.g., catalog discovery, file groups) transitioned from preview to GA during the window—table reflects initial release month plus current status.
+– Planned GA dates may shift; always verify against live release plans.  
+– Preview items are not production‑SLA unless explicitly approved internally.  
+– Transitioned features show current status even if initial preview earlier.  
+– Future list excludes confidential or undisclosed roadmap content.
 
 ## Source References
 - What's new in Copilot Studio: https://learn.microsoft.com/en-us/microsoft-copilot-studio/whats-new
@@ -78,4 +88,4 @@ Publicly disclosed planned GA / preview milestones expected within the next 30 d
 - Individual feature docs (examples): Azure AI Search knowledge, Model Context Protocol, Code Interpreter, File Groups, Adaptive Card designer, Customer Managed Keys.
 
 ---
-_Last updated: 2025-09-10 (rolling windows)_
+_Last updated: 2025-09-10 (rolling windows – future section refactored)_

@@ -1,0 +1,35 @@
+name: Validate Docs
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+      - 'scripts/*.ps1'
+  workflow_dispatch:
+    inputs:
+      refreshFuture:
+        description: 'Run future summary refresh'
+        required: false
+        default: 'false'
+
+jobs:
+  link-check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run link checker
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          ./scripts/link-check.ps1 -IncludeArchive
+
+  refresh-future-summary:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.refreshFuture == 'true'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh future summary (no commit)
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          ./scripts/refresh-future-summary.ps1
