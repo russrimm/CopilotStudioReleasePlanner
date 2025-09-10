@@ -90,7 +90,12 @@ if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -matc
 }
 $fallbackEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION_FALLBACKS')
 if ([string]::IsNullOrWhiteSpace($fallbackEnv)) {
-  $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview')
+  if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5'))) {
+    # GPT-5: only preview variant relevant
+    $fallbackVersions = @('preview')
+  } else {
+    $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview')
+  }
 } else {
   $fallbackVersions = $fallbackEnv.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' -and $_ -ne $apiVersion }
   if ($fallbackVersions -notcontains 'preview') { $fallbackVersions = @('preview') + $fallbackVersions }
@@ -127,19 +132,28 @@ $nextTable
 function New-ChatPayload {
   param(
     [string]$SystemPrompt,
-    [string]$UserContent
+    [string]$UserContent,
+    [bool]$UseCompletionParam
   )
-  return @{ 
+  $base = @{ 
     messages = @(
       @{ role='system'; content=$SystemPrompt },
       @{ role='user'; content=$UserContent }
     );
-    temperature = 0.1;
-    max_tokens = 1800
+    temperature = 0.1
   }
+  if ($UseCompletionParam) {
+    # Newer GPT-5 family expects max_completion_tokens instead of max_tokens
+    $base.max_completion_tokens = 1800
+  } else {
+    $base.max_tokens = 1800
+  }
+  return $base
 }
 
-$payloadObj = New-ChatPayload -SystemPrompt $systemPrompt -UserContent $userContent
+$isGpt5 = (($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5'))
+$payloadObj = New-ChatPayload -SystemPrompt $systemPrompt -UserContent $userContent -UseCompletionParam:$isGpt5
+Write-DebugInfo ("Chat payload token param used: " + ($isGpt5 ? 'max_completion_tokens' : 'max_tokens'))
 
 $payload = $payloadObj | ConvertTo-Json -Depth 6
 Write-DebugInfo ("Payload bytes: " + ([Text.Encoding]::UTF8.GetByteCount($payload)))
