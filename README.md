@@ -76,37 +76,38 @@ Legend: **GA** = Generally Available, **Preview** = Public preview / early acces
 
 ---
 
-## Purpose Summaries
+## Last 30 Days Feature Changes (2025-08-10 to 2025-09-09)
+Focused digest of Copilot Studio updates, promotions, and new previews in the most recent 30‑day window. (Date range auto-updated daily by workflow.)
 
-- **Generative answers cite non‑text**: Improves transparency by referencing images/annotations in answers.
-- **Voice-optimized responses**: Ensures spoken output is concise and citation-friendly.
-- **Direct M365 publish**: Removes deployment friction; surfaces agents inside core productivity hubs.
-- **Low-code creation experience**: Empowers non-technical makers to rapidly prototype agents.
-- **Reusable component collections**: Drives modular design and accelerates enterprise reuse (preview).
-- **Solution explorer**: Consolidates ALM activities (versioning, packaging) within the Studio UI.
-- **Model updates (GPT‑4o / 4.1 mini)**: Upgrades reasoning fidelity and performance tiers.
-- **Autonomous agents**: Enables background, trigger-based operation for long-running tasks.
-- **Azure AI Search knowledge**: High-quality hybrid retrieval for grounded, factual responses.
-- **Real-time connectors**: Keeps knowledge fresh with live system-of-record data.
-- **Multilingual & voice**: Broader global and accessibility reach.
-- **Security scan / XPIA mitigation**: Proactively identifies vulnerabilities and injection vectors.
-- **Audit logs & DLP enforcement**: Strengthens compliance posture out-of-the-box.
-- **AI response generated trigger**: Gives makers a post-processing interception point.
-- **Generative orchestration & deep reasoning (preview)**: Coordinated multi-step reasoning across tools.
-- **Agent flows & tool UX overhaul**: Reduces context switching; improves author productivity.
-- **Customer Managed Keys**: Customer sovereignty over encryption keys for sensitive industries.
-- **Viva Insights ROI analytics**: Connects agent usage to measurable business outcomes.
-- **Adaptive Card designer**: Rich, localized interactive responses without leaving Studio.
-- **BYO Models & Copilot Tuning**: Domain adaptation and customized model integration.
-- **Un/Structured knowledge expansion (tabular, unstructured, file groups)**: Comprehensive retrieval coverage with flexible grouping & scoping.
-- **Federated Identity Credentials & SSO Consent Card**: Streamlined secure auth flows.
-- **Advanced NLU customization**: Higher accuracy by leveraging customer data to shape intents/entities.
-- **Global search / ROI / feedback analytics**: Faster iteration & continuous quality improvement loop.
-- **MIP label surfacing & sensitivity awareness**: Data loss prevention in generative contexts.
-- **WhatsApp, SharePoint, Microsoft 365 channels**: Omnichannel reach.
-- **Code interpreter & multimodal uploads**: Expands action surface (data transformation, image/file reasoning).
-- **MCP integration & guided server connection**: Standardized extensibility for external capability injection.
-- **Catalog discovery of Microsoft-built agents**: Encourages curated reuse with governance.
+| Feature | Status (Now) | Change Date (Approx) | What Changed | Why It Matters | Recommended Action |
+|---------|--------------|----------------------|--------------|---------------|-------------------|
+| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | GA | 2025-08 | GA release | Natural language → Python execution for dynamic transformations & actions | Pilot on low-risk analytic tasks; define governance limits (execution time, data scope). |
+| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | GA (was Preview) | 2025-08 | Reached GA | Cohesive organization + scoped instructions for grouped files | Refactor ad hoc single-file sources into logical groups for better grounding precision. |
+| [Generated answer rate & quality analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) | GA | 2025-08 | New analytics section GA | Surfaces unanswered & low-quality clusters | Establish weekly triage; create remediation backlog tied to knowledge gaps. |
+| [Expanded file & image upload pipeline](https://learn.microsoft.com/en-us/microsoft-copilot-studio/image-input-analysis) | GA | 2025-08 | Broader multimodal support & downstream pass-through | Unlocks richer workflows (e.g., image → extraction → action chain) | Add validation step ensuring sensitive images meet compliance before routing. |
+| [MCP server guided connection](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#add-the-mcp-server-in-copilot-studio-recommended) | GA | 2025-08 | Guided add & tool registration GA | Lowers friction to integrate external capabilities | Standardize naming & tagging of MCP tools for searchability. |
+| [Discover & install Microsoft-built agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent) | Phased GA | 2025-08 | Catalog experience maturing | In-product reuse of curated agents reduces duplicate build effort | Define review checklist (security, data scope, ownership) before catalog adoption. |
+| [Use up to 1000 files per agent uploads](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-08-18 | Preview availability | Scales knowledge ingestion dramatically | Plan taxonomy & retention policy early; avoid dumping uncurated content. |
+| [Block maker-provided credentials for authentication](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-09 | New preview control | Reduces credential sprawl & shadow auth risk | Inventory existing agents using maker creds; schedule migration to managed auth. |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Preview (Planned GA Sep 2025) | 2025-08→09 | Stabilizing ahead of GA window | Expands external reach to mobile-first audiences | Define messaging policy + rate limiting; test content localization. |
+| [MIP sensitivity label surfacing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio) | Preview | 2025-08 (ongoing) | Incremental preview refinements | Prevents oversharing; enforces data classification boundaries | Map label taxonomy to agent knowledge sources; pilot with high-sensitivity set. |
+| SSO Consent Card (inline consent) | Preview | 2025-08 (expanding) | Wider tenant rollout | Reduces friction & support tickets for OAuth flows | Update onboarding docs to remove legacy redirect instructions. |
+| Agent catalog + governance tagging (internal refinement) | Preview→GA | 2025-08 | Metadata enrichment & search improvements | Faster discovery & reduces duplicate agent logic | Define required metadata (owner, data scope, PII flags) for catalog entries. |
+
+### Key Adoption Themes (30 Days)
+1. Multimodal + Execution: Code interpreter & image/file pipeline unlock compound automation (consider cost & governance).  
+2. Knowledge Scale & Structure: File groups + high file count preview necessitate taxonomy strategy to avoid dilution.  
+3. Quality Feedback Loop: New analytics (answer gaps) enables measurable iteration cadence.  
+4. Secure Extensibility: MCP guided connection + credential blocking preview tighten external integration posture.  
+5. Channel Expansion: WhatsApp preview drives need for concise, locale-ready conversational design.  
+
+### Immediate Actions Checklist
+- [ ] Stand up weekly “Answer Quality” review using new analytics dashboard.
+- [ ] Draft file grouping & naming convention before bulk 1000-file ingestion preview scales.
+- [ ] Audit maker-owned credentials; prepare migration runbook for preview credential blocking control.
+- [ ] Pilot code interpreter in a sandbox; log execution metrics & outliers.
+- [ ] Tag all MCP-added tools with owner + data sensitivity metadata.
+- [ ] Run localization QA on WhatsApp message variants (fallback & error prompts). 
 
 ## Notes & Disclaimers
 - Planned GA dates may shift per official Microsoft communications; always verify in current release plans.
@@ -121,4 +122,4 @@ Legend: **GA** = Generally Available, **Preview** = Public preview / early acces
 - Individual feature docs (examples): Azure AI Search knowledge, Model Context Protocol, Code Interpreter, File Groups, Adaptive Card designer, Customer Managed Keys.
 
 ---
-_Last updated: 2025-09-09_
+_Last updated: 2025-09-09 (includes 30-day changes section)_

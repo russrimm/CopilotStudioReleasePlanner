@@ -1,0 +1,40 @@
+name: Update 30-Day Window
+
+on:
+  schedule:
+    - cron: '11 4 * * *' # 04:11 UTC daily
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-window:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update 30-day date window
+        shell: pwsh
+        run: |
+          ./scripts/update-30day-window.ps1
+
+      - name: Commit & push if changed
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'actions@users.noreply.github.com'
+          if (git diff --quiet) { echo 'No changes'; exit 0 }
+          git add README.md
+          git commit -m "chore: auto-update 30-day feature window" || exit 0
+          git push
+
+      - name: Open PR if direct push blocked
+        if: failure()
+        shell: pwsh
+        run: |
+          echo 'Fallback PR creation not implemented in this minimal workflow.'
