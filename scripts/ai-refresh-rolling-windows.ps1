@@ -141,8 +141,23 @@ function Invoke-AzureOpenAIRequest {
   $localUri = "$normalizedEndpoint/openai/deployments/$deployment/$path?api-version=$ApiVersion"
   Write-DebugInfo "Request URI: $localUri"
   $responseHeaders = @{}
+  # Prepare body depending on endpoint type
+  if ($UseResponsesEndpoint) {
+    $respPayloadObj = @{ 
+      input = @(
+        @{ role='system'; content = @(@{ type='text'; text=$systemPrompt }) },
+        @{ role='user'; content   = @(@{ type='text'; text=$userContent }) }
+      );
+      temperature = 0.1;
+      max_output_tokens = 1800
+    }
+    $body = $respPayloadObj | ConvertTo-Json -Depth 8
+  } else {
+    $body = $payload
+  }
+  if ($DebugMode) { Write-Host "[debug] body.length=$($body.Length) useResponses=$UseResponsesEndpoint" }
   try {
-    $r = Invoke-RestMethod -Method Post -Uri $localUri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $payload -TimeoutSec 120 -ResponseHeadersVariable responseHeaders
+    $r = Invoke-RestMethod -Method Post -Uri $localUri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $body -TimeoutSec 120 -ResponseHeadersVariable responseHeaders
     return @{ success=$true; response=$r; headers=$responseHeaders; uri=$localUri }
   } catch {
     $errRecord = $_
