@@ -118,6 +118,15 @@ try {
   Write-Error "Azure OpenAI request failed: $($_.Exception.GetType().FullName): $($_.Exception.Message)"
   # Attempt to extract response details
   $errRecord = $_
+  $statusCode = $null
+  $reasonPhrase = $null
+  try {
+    if ($errRecord.Exception.Response) {
+      $statusCode = [int]$errRecord.Exception.Response.StatusCode
+      $reasonPhrase = $errRecord.Exception.Response.ReasonPhrase
+      Write-Host ("[http.status] " + $statusCode + ' ' + $reasonPhrase)
+    }
+  } catch {}
   $rawBody = $null
   if ($errRecord.ErrorDetails -and $errRecord.ErrorDetails.Message) { $rawBody = $errRecord.ErrorDetails.Message }
   elseif ($errRecord.Exception.Response -and $errRecord.Exception.Response.ContentLength -gt 0) {
