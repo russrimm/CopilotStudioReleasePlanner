@@ -198,7 +198,8 @@ function Invoke-AzureOpenAIRequest {
     } else {
       $respPayloadObj.input += "`n`nReturn ONLY a single JSON object with keys last30_table and next30_table."
     }
-    $body = $respPayloadObj | ConvertTo-Json -Depth 4
+  # Increase depth to avoid truncation of nested json_schema structure
+  $body = $respPayloadObj | ConvertTo-Json -Depth 8
   } else {
     $body = $payload
   }
@@ -215,20 +216,26 @@ function Invoke-AzureOpenAIRequest {
     if ($rawBody) {
       try { $parsed = $rawBody | ConvertFrom-Json -ErrorAction Stop; if ($parsed.error) { $code=$parsed.error.code; $message=$parsed.error.message } } catch {}
     }
-    # Adaptive retry if text.format json_schema not yet supported in this environment
-    if ($UseResponsesEndpoint -and $code -eq 'unsupported_parameter' -and $rawBody -match 'text.format') {
-      Write-DebugInfo 'Adaptive retry: removing text.format json_schema and appending explicit JSON instruction.'
+    # Adaptive retry scenarios for evolving Responses API JSON schema formatting.
+    $needsAdaptive = $false
+    $adaptiveReason = $null
+    if ($UseResponsesEndpoint) {
+      if ($code -eq 'unsupported_parameter' -and $rawBody -match 'text.format') { $needsAdaptive = $true; $adaptiveReason = 'unsupported_text.format' }
+      elseif ($code -eq 'unknown_parameter' -and $rawBody -match 'text.json_schema') { $needsAdaptive = $true; $adaptiveReason = 'unknown_text.json_schema' }
+    }
+    if ($needsAdaptive) {
+      Write-DebugInfo "Adaptive retry ($adaptiveReason): removing text.* block and reinforcing JSON instruction." 
       try {
         $retryObj = $respPayloadObj
-        if ($retryObj.text) { $retryObj.Remove('text') | Out-Null }
+        if ($retryObj.ContainsKey('text')) { $retryObj.Remove('text') | Out-Null }
         if (-not ($retryObj.input -match 'Return ONLY a single JSON object')) {
           $retryObj.input += "`n`nReturn ONLY a single JSON object with keys last30_table and next30_table."
         }
-        $retryBody = $retryObj | ConvertTo-Json -Depth 4
+  $retryBody = $retryObj | ConvertTo-Json -Depth 8
         $r2 = Invoke-RestMethod -Method Post -Uri $localUri -Headers @{ 'api-key'=$apiKey; 'Content-Type'='application/json' } -Body $retryBody -TimeoutSec 120 -ResponseHeadersVariable responseHeaders
-        return @{ success=$true; response=$r2; headers=$responseHeaders; uri=$localUri; adaptiveRetry='removed_text.format' }
+        return @{ success=$true; response=$r2; headers=$responseHeaders; uri=$localUri; adaptiveRetry=$adaptiveReason }
       } catch {
-        # Fall through to original failure return
+        Write-DebugInfo "Adaptive retry failed: $($_.Exception.Message)"
       }
     }
     return @{ success=$false; status=$statusCode; reason=$reasonPhrase; body=$rawBody; code=$code; message=$message; uri=$localUri; responsesTried=$UseResponsesEndpoint }
@@ -277,7 +284,11 @@ if ($preferResponsesFirst) {
         $attempts += @{ success=$false; status=$_.Exception.Response.StatusCode.value__; body=$_.ErrorDetails.Message; code='adaptive_retry_fail'; message='Adaptive retry failed'; uri=$uri }
       }
     }
-    if (-not $finalResponse) { Write-DebugInfo 'No success after responses + adaptive retry (GPT-5); not attempting chat fallback (per strategy).' }
+    if (-not $finalResponse) {
+      Write-DebugInfo 'Responses path failed for GPT-5; attempting chat fallback despite GPT-5 strategy.'
+      $rChatG5 = Invoke-AzureOpenAIRequest -UseResponsesEndpoint:$false -ChatPathFallback; Write-AttemptResult $rChatG5 'v1' $false; $attempts += $rChatG5
+      if ($rChatG5.success) { $finalResponse = @{ version='v1'; responses=$false; data=$rChatG5.response } }
+    }
   } else {
     if (-not $rResp.success) {
       Write-DebugInfo 'Responses-first failed; attempting chat/completions fallback.'
