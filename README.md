@@ -2,7 +2,7 @@
 title: Copilot Studio Rolling Updates Hub
 lastUpdated: 2025-09-10
 description: Rolling 30‑day changes plus concise future roadmap summary.
-version: 1.2
+version: 1.3
 ---
 
 # Copilot Studio – Rolling Updates Hub
@@ -21,7 +21,7 @@ Legend: **GA** = Generally Available, **Preview** = Public preview / early acces
 Sources: Microsoft Learn "What's new" + public Power Platform release plans + linked feature docs. Re‑verify forward dates before gating dependencies.
 
 ## Navigation
-[At a Glance](#at-a-glance) • [Last 30 Days](#last-30-days-feature-changes-2025-08-12-to-2025-09-10) • [Future Summary](#future-planned-changes-concise-summary) • [Immediate Actions](#immediate-actions-checklist) • [Security Focus](#security--compliance-focus) • [Churn Spotlight](#churn-spotlight-recent-status-transitions) • [Prep Matrix](#prep-priority-matrix) • [Delta Since Last Refresh](#delta-since-last-refresh) • [Sources](#source-references)
+[At a Glance](#at-a-glance) • [Timeline](#rolling-timeline-strip) • [Last 30 Days](#last-30-days-feature-changes-2025-08-12-to-2025-09-10) • [Future (Near)](#future-planned-changes-near-term-≤60d) • [Future (Horizon)](#future-planned-changes-horizon) • [Lifecycle Funnel](#lifecycle-funnel) • [Immediate Actions](#immediate-actions-checklist) • [Security Focus](#security--compliance-focus) • [Policy Matrix](#policy-coverage-matrix) • [Churn Spotlight](#churn-spotlight-recent-status-transitions) • [Prep Matrix](#prep-priority-matrix) • [Risk Heatmap](#risk-heatmap) • [Delta](#delta-since-last-refresh) • [All Features Flat](#all-features-flattened) • [IDs](#feature-ids) • [Sources](#source-references)
 
 ## At a Glance
 <!-- BEGIN:AT_A_GLANCE -->
@@ -35,7 +35,25 @@ Sources: Microsoft Learn "What's new" + public Power Platform release plans + li
 <!-- END:AT_A_GLANCE -->
 _Counts auto-maintained; modify via refresh script._
 
-Status: ![GA](https://img.shields.io/badge/GA-3-brightgreen) ![Preview](https://img.shields.io/badge/Preview-5-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-3-blue) ![TBD](https://img.shields.io/badge/TBD-2-lightgrey)
+Status: ![GA](https://img.shields.io/badge/GA-3-brightgreen) ![Preview](https://img.shields.io/badge/Preview-5-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-3-blue) ![TBD](https://img.shields.io/badge/TBD-2-lightgrey) ![Freshness](https://img.shields.io/badge/Data_Freshness-0d-success) ![Source_Coverage](https://img.shields.io/badge/Source_Coverage-100%25-blue)
+
+Lifecycle: ✅ GA • 🧪 Preview • 📅 Planned • 🔍 Enhancing • 💤 Dormant • ⚠ Stale (>180d Preview)
+
+---
+
+## Rolling Timeline Strip
+<small>Visual month-by-month status glyph view (last 4 months + current + next 2 months).</small>
+<!-- BEGIN:TIMELINE_STRIP -->
+| Month | Key Moves |
+|-------|-----------|
+| 2025-06 | 🧪 File groups preview |
+| 2025-07 | (quiet) |
+| 2025-08 | ✅ File groups GA; 🧪 1000 files; ✅ Code interpreter; 🧪 MIP labels |
+| 2025-09 | 🧪 Credential blocking; 🧪 WhatsApp (GA prep) |
+| 2025-10 | (forecast) 📅 Governance tagging GA |
+| 2025-11 | (forecast) 🔍 MCP UX enhancements |
+<!-- END:TIMELINE_STRIP -->
+_Auto-generated; edit via scripts or manifest._
 
 ---
 
@@ -160,21 +178,32 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 ## Future Planned Changes (Concise Summary)
 High‑signal publicly disclosed upcoming items. Full backlog + categorization in [All Future Planned Features](./Future_Planned_Features.md).
 
-<!-- BEGIN:FUTURE_SUMMARY -->
-| Item (Summary) | Target (If Published) | Current Status | Why It Matters | Immediate Prep |
-|----------------|-----------------------|----------------|----------------|----------------|
-| WhatsApp channel publishing | Sep 2025 (Planned GA) | Preview | Mobile / global reach channel expansion | Finalize localization & rate limiting policies |
-| Block maker-provided credentials control | Sep 2025 rollout | Preview | Reduces credential sprawl; governance uplift | Inventory & plan migration off maker creds |
-| Generated answer quality analytics enhancements | Sep 2025 (iterative) | GA (enhancing) | Deeper quality gap attribution | Align dashboard & triage cadence |
-| Catalog governance tagging enrichment | Sep 2025 | Preview → GA maturation | Improves compliant reuse & discovery | Define mandatory metadata schema |
-| MCP server UX refinements | Late 2025 (ongoing) | GA (enhancements) | Lowers friction onboarding external tools | Refresh internal integration checklist |
-| Deep reasoning models | TBD GA | Preview | Advanced multi‑step reasoning scenarios | Identify candidate complex workflows |
-| Microsoft 365 Copilot Tuning | TBD GA | Preview | Domain adaptation for enterprise context | Curate high‑quality, labeled training sets |
-| Bring Your Own Models (Azure AI Foundry) | TBD GA | Preview | Custom model extensibility | Assess governance & cost controls |
-| Multilingual generative orchestration expansion | TBD | Preview | Broader language coverage in planner | Prioritize locales & test prompts |
-| GPT‑4.1 mini experimental model | TBD | Preview | Lower latency experimentation | Define benchmark scenarios & metrics |
-| Reusable component collections | TBD | Preview | Modular reuse accelerates build velocity | Identify high‑reuse patterns to refactor |
-<!-- END:FUTURE_SUMMARY -->
+## Future Planned Changes (Near Term ≤60d)
+High‑signal publicly disclosed upcoming items expected inside ~60 day horizon.
+
+<!-- BEGIN:FUTURE_NEAR -->
+| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Decision Needed By |
+|----------------|--------|--------|----------------|----------------|--------------------|
+| WhatsApp channel publishing | Sep 2025 (Planned GA) | 🧪 Preview | Expand mobile/global reach | Finalize localization & rate limits | 2025-09-20 |
+| Block maker-provided credentials control | Sep 2025 rollout | 🧪 Preview | Reduce credential sprawl | Inventory & migration plan | 2025-09-25 |
+| Catalog governance tagging enrichment | Sep 2025 | 🧪→✅ Transition | Improve compliant discovery | Define metadata schema | 2025-09-30 |
+| Answer quality analytics enhancements | Sep 2025 (iterative) | 🔍 Enhancing | Sharper quality attribution | Align triage cadence | 2025-09-18 |
+<!-- END:FUTURE_NEAR -->
+
+## Future Planned Changes (Horizon)
+Longer horizon / TBD or >60 day items (re‑verify before dependency commitments). Full backlog in [All Future Planned Features](./Future_Planned_Features.md).
+
+<!-- BEGIN:FUTURE_HORIZON -->
+| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
+|----------------|--------|--------|----------------|----------------|--------|
+| MCP server UX refinements | Late 2025 (ongoing) | 🔍 Enhancing | Lower friction for external tools | Refresh integration checklist | – |
+| Deep reasoning models | TBD GA | 🧪 Preview | Multi‑step reasoning scenarios | Identify complex workflows | – |
+| Microsoft 365 Copilot Tuning | TBD GA | 🧪 Preview | Enterprise domain adaptation | Curate labeled datasets | – |
+| Bring Your Own Models (Azure AI Foundry) | TBD GA | 🧪 Preview | Custom model extensibility | Assess governance & cost controls | – |
+| Multilingual generative orchestration expansion | TBD | 🧪 Preview | Broader language coverage | Prioritize locales & test prompts | – |
+| GPT‑4.1 mini experimental model | TBD | 🧪 Preview | Lower latency experimentation | Define benchmark metrics | – |
+| Reusable component collections | TBD | 🧪 Preview | Accelerate modular reuse | Identify high‑reuse patterns | – |
+<!-- END:FUTURE_HORIZON -->
 
 <details open>
 <summary>Key Guidance</summary>
@@ -186,6 +215,64 @@ High‑signal publicly disclosed upcoming items. Full backlog + categorization i
 5. Avoid knowledge bloat—prune low-signal files before exploiting 1000-file scale.  
 
 </details>
+
+## Lifecycle Funnel
+Summary of feature counts by lifecycle stage.
+<!-- BEGIN:LIFECYCLE_FUNNEL -->
+| Stage | Count | Notes |
+|-------|-------|-------|
+| 🧪 Preview | 0 | placeholder |
+| 📅 Planned | 0 | published date, not yet preview |
+| 🔍 Enhancing | 0 | post-GA iteration |
+| ✅ GA | 0 | fully released |
+| 💤 Dormant | 0 | no update >90d |
+| ⚠ Stale Preview | 0 | preview >180d |
+<!-- END:LIFECYCLE_FUNNEL -->
+
+## Policy Coverage Matrix
+Matrix of policy/controls coverage (✓ implemented / – not applicable / ◻ gap).
+<!-- BEGIN:POLICY_MATRIX -->
+| Feature | DLP | CMK | Logging | Labels | Auth Governance |
+|---------|-----|-----|---------|--------|-----------------|
+| File groups | ✓ | – | ✓ | – | – |
+| Credential blocking | ✓ | – | ✓ | – | ✓ |
+| MIP label surfacing | ✓ | – | ✓ | ✓ | – |
+<!-- END:POLICY_MATRIX -->
+
+## Risk Heatmap
+Impact vs likelihood (qualitative quick scan).
+<!-- BEGIN:RISK_HEATMAP -->
+| Impact \ Likelihood | Low | Medium | High |
+|---------------------|-----|--------|------|
+| High |  | 1000-file scale | Deep reasoning models |
+| Medium |  | Credential blocking delay | BYO Models cost drift |
+| Low |  | Localization variance |  |
+<!-- END:RISK_HEATMAP -->
+
+## All Features (Flattened)
+Single list for accessibility / quick grep.
+<!-- BEGIN:FLATTENED_FEATURES -->
+- File groups (✅ GA)
+- Code interpreter (✅ GA)
+- 1000 files per agent (🧪 Preview)
+- Credential blocking (🧪 Preview)
+- WhatsApp channel (🧪 Preview)
+- MIP sensitivity labels (🧪 Preview)
+- Catalog governance tagging (🧪→✅ Transition)
+- Answer quality analytics (✅ GA / 🔍 Enhancing)
+- MCP server UX refinements (🔍 Enhancing)
+- Deep reasoning models (🧪 Preview)
+- BYO Models (🧪 Preview)
+- Multilingual orchestration (🧪 Preview)
+- GPT‑4.1 mini experimental (🧪 Preview)
+- Reusable component collections (🧪 Preview)
+<!-- END:FLATTENED_FEATURES -->
+
+## Feature IDs
+Stable slugs for scripting / referencing.
+<!-- BEGIN:FEATURE_IDS -->
+file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-channel, mip-sensitivity-labels, catalog-governance-tagging, answer-quality-analytics, mcp-server-ux, deep-reasoning-models, byo-models, multilingual-orchestration, gpt41-mini-experimental, reusable-component-collections
+<!-- END:FEATURE_IDS -->
 
 ## Notes & Disclaimers
 – Planned GA dates can shift; always re‑validate.  
