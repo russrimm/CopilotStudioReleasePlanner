@@ -1,0 +1,34 @@
+name: Scheduled Docs Refresh
+
+on:
+  schedule:
+    - cron: '17 3 * * *' # Daily 03:17 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run refresh scripts
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          ./scripts/refresh-future-summary.ps1
+          ./scripts/update-metrics.ps1
+          ./scripts/update-delta.ps1
+      - name: Commit changes if any
+        shell: pwsh
+        run: |
+          git config user.name 'automation-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          if(git status --porcelain){
+            git add README.md .cache/*.txt
+            git commit -m "chore: scheduled docs refresh"
+            git push
+          } else {
+            Write-Host 'No changes to commit.'
+          }
