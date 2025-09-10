@@ -193,7 +193,6 @@ function Invoke-AzureOpenAIRequest {
     $respPayloadObj = @{
       model = $modelForResponses
       input = $combinedInput
-      temperature = 0.1
       max_output_tokens = 1800
     }
     $body = $respPayloadObj | ConvertTo-Json -Depth 4
