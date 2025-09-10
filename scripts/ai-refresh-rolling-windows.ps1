@@ -166,6 +166,19 @@ function Invoke-AzureOpenAIRequest {
       input = $combinedInput
       max_output_tokens = 1800
     }
+    $useSchema = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_USE_JSON_SCHEMA')
+    if ($useSchema -and $useSchema -match '^(?i:true|1|yes|on)$') {
+      $respPayloadObj.response_format = @{
+        type = 'json_schema'
+        json_schema = @{
+          name = 'RollingWindowTables'
+          schema = @{ type='object'; additionalProperties=$false; required=@('last30_table','next30_table'); properties=@{ last30_table=@{ type='string' }; next30_table=@{ type='string' } } }
+        }
+      }
+      Write-DebugInfo 'Added response_format json_schema for strict output.'
+    } else {
+      $respPayloadObj.input += "`n`nReturn ONLY a single JSON object with keys last30_table and next30_table."
+    }
     $body = $respPayloadObj | ConvertTo-Json -Depth 4
   } else {
     $body = $payload
@@ -313,10 +326,41 @@ if (-not $raw) {
   exit 1
 }
 if ($raw -match '(?s)```json(.*?)```') { $raw = $Matches[1].Trim() }
+$raw = $raw -replace '(?s)^```[A-Za-z0-9_-]*\n','' -replace '(?s)```$',''
 Write-DebugInfo "Model raw length: $($raw.Length)"
+Write-DebugInfo ("Model raw preview: " + ($raw.Substring(0, [Math]::Min(160,$raw.Length))))
 
-try { $json = $raw | ConvertFrom-Json -ErrorAction Stop } catch { Write-Error 'Model output not valid JSON.'; if ($raw.Length -lt 1500) { Write-Host $raw } else { Write-Host ($raw.Substring(0,1500) + '...') }; exit 1 }
-if (-not ($json.last30_table) -or -not ($json.next30_table)) { Write-Error 'JSON missing required keys.'; exit 1 }
+function Convert-ModelJsonStrict([string]$text) { try { return ,(@($text | ConvertFrom-Json -ErrorAction Stop)[0]) } catch { return $null } }
+function Get-JsonObjectCandidate([string]$text) {
+  if (-not $text) { return $null }
+  $parsed = Convert-ModelJsonStrict $text; if ($parsed) { return $parsed }
+  $idxKey1 = $text.IndexOf('"last30_table"'); $idxKey2 = $text.IndexOf('"next30_table"')
+  if ($idxKey1 -lt 0 -or $idxKey2 -lt 0) { return $null }
+  $startBrace = $text.LastIndexOf('{', $idxKey1); if ($startBrace -lt 0) { return $null }
+  $braceCount = 0; $candidate = $null
+  for ($i=$startBrace; $i -lt $text.Length; $i++) { $ch=$text[$i]; if ($ch -eq '{') { $braceCount++ } elseif ($ch -eq '}') { $braceCount--; if ($braceCount -eq 0) { $candidate = $text.Substring($startBrace, ($i - $startBrace + 1)); break } } }
+  if (-not $candidate) { return $null }
+  $candidate = $candidate -replace '[“”]','"' -replace '[‘’]','"'
+  $candidate = $candidate -replace ',\s*([}\]])','$1'
+  return (Convert-ModelJsonStrict $candidate)
+}
+function Repair-ModelJson([string]$text) {
+  $try1 = Get-JsonObjectCandidate $text; if ($try1) { return $try1 }
+  if ($text -match '\\n') { $alt = $text -replace '\\n','\n'; $try2 = Get-JsonObjectCandidate $alt; if ($try2) { return $try2 } }
+  return $null
+}
+
+$json = Convert-ModelJsonStrict $raw
+if (-not $json) {
+  Write-DebugInfo 'Strict parse failed; attempting heuristic repair.'
+  $json = Repair-ModelJson $raw
+}
+if (-not $json) {
+  Write-Error 'Model output not valid JSON (after repair attempts).'
+  if ($raw.Length -lt 2000) { Write-Host $raw } else { Write-Host ($raw.Substring(0,2000) + '...') }
+  exit 1
+}
+if (-not ($json.last30_table) -or -not ($json.next30_table)) { Write-Error 'JSON missing required keys after parse.'; exit 1 }
 
 $newLast = ($json.last30_table -replace '\r','').Trim()
 $newNext = ($json.next30_table -replace '\r','').Trim()
