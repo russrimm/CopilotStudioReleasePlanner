@@ -124,7 +124,7 @@ if (-not $raw) {
   Write-Host $trunc
   exit 1 
 }
-if ($raw -match '```json(.*?)```'s) { $raw = $Matches[1].Trim() }
+if ($raw -match '(?s)```json(.*?)```') { $raw = $Matches[1].Trim() }
 Write-DebugInfo "Model raw length: $($raw.Length)"
 
 try { $json = $raw | ConvertFrom-Json -ErrorAction Stop } catch { Write-Error 'Model output not valid JSON.'; if ($raw.Length -lt 1500) { Write-Host $raw } else { Write-Host ($raw.Substring(0,1500) + '...') }; exit 1 }
