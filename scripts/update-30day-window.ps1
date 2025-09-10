@@ -23,9 +23,9 @@ $lastStart = $todayObj.AddDays(-29)
 $lastStartStr = $lastStart.ToString('yyyy-MM-dd')
 $lastEndStr = $today
 
-# Next 30 days forward window: start today (forward look includes today) end = today + 30 days
+# Next 30 days forward window: inclusive span starting today; end = today + 29 days (30 calendar days total)
 $nextStart = $todayObj
-$nextEnd = $todayObj.AddDays(30)
+$nextEnd = $todayObj.AddDays(29)
 $nextStartStr = $nextStart.ToString('yyyy-MM-dd')
 $nextEndStr = $nextEnd.ToString('yyyy-MM-dd')
 
