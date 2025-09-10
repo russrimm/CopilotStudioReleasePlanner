@@ -1,0 +1,37 @@
+name: AI Refresh Rolling Windows
+
+on:
+  schedule:
+    - cron: '5 5 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run AI refresh
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_KEY: ${{ secrets.AZURE_OPENAI_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+        shell: pwsh
+        run: |
+          ./scripts/ai-refresh-rolling-windows.ps1
+
+      - name: Commit & push if changed
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'actions@users.noreply.github.com'
+          if (git diff --quiet) { echo 'No changes'; exit 0 }
+          git add README.md
+          git commit -m 'chore: AI refresh rolling tables'
+          git push

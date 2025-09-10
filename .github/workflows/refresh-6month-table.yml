@@ -1,0 +1,15 @@
+name: DEPRECATED - Refresh 6-Month Feature Table (Disabled)
+
+# This workflow is retained only for historical reference. The 6-month table has been
+# superseded by rolling last/next 30-day automation. To fully remove, delete this file
+# once no longer needed for audit trail. It performs no actions.
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op
+        run: echo "Deprecated workflow - no action performed. Use ai-refresh-rolling-windows.yml instead."
