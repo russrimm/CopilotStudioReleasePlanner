@@ -91,8 +91,8 @@ if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -matc
 $fallbackEnv = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION_FALLBACKS')
 if ([string]::IsNullOrWhiteSpace($fallbackEnv)) {
   if ((($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5'))) {
-    # GPT-5: only preview variant relevant
-    $fallbackVersions = @('preview')
+    # GPT-5: include preview plus latest dated previews (some regions may not yet alias 'preview')
+    $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview')
   } else {
     $fallbackVersions = @('preview','2024-12-01-preview','2024-11-01-preview','2024-08-01-preview','2024-06-01','2024-02-15-preview')
   }
@@ -154,6 +154,7 @@ function New-ChatPayload {
 $isGpt5 = (($deployment -match '^gpt-5') -or ($explicitModel -and $explicitModel -match '^gpt-5'))
 $payloadObj = New-ChatPayload -SystemPrompt $systemPrompt -UserContent $userContent -UseCompletionParam:$isGpt5
 Write-DebugInfo ("Chat payload token param used: " + ($isGpt5 ? 'max_completion_tokens' : 'max_tokens'))
+if ($isGpt5) { Write-DebugInfo 'GPT-5 family detected: chat fallback will be skipped (responses-only strategy).' }
 
 $payload = $payloadObj | ConvertTo-Json -Depth 6
 Write-DebugInfo ("Payload bytes: " + ([Text.Encoding]::UTF8.GetByteCount($payload)))
@@ -258,10 +259,15 @@ foreach ($ver in ($allVersions | Select-Object -Unique)) {
   if ($preferResponsesFirst) {
     Write-DebugInfo "Attempting version $ver (responses-first)"; $rRespFirst = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$true; Write-AttemptResult $rRespFirst $ver $true; $attempts += $rRespFirst
     if ($rRespFirst.success) { $finalResponse = @{ version=$ver; responses=$true; data=$rRespFirst.response }; break }
-    # If responses attempt fails with non-version issue and we forced it, try chat as fallback
-  Write-DebugInfo "Fallback to chat for version $ver after responses-first failure"; $rChat = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$false; Write-AttemptResult $rChat $ver $false; $attempts += $rChat
-  if ($rChat.success) { $finalResponse = @{ version=$ver; responses=$false; data=$rChat.response }; break }
-  if (-not (Test-FallbackVersion $rChat)) { Write-DebugInfo 'Abort: not classified as version-related after responses-first path.'; break }
+    if ($isGpt5) {
+      Write-DebugInfo "Skipping chat fallback for GPT-5 on version $ver; moving to next version if classified as version-related."
+      if (-not (Test-FallbackVersion $rRespFirst)) { Write-DebugInfo 'Abort: responses failure not version-related; stopping chain.'; break }
+      else { continue }
+    }
+    # Non GPT-5 path: try chat fallback
+    Write-DebugInfo "Fallback to chat for version $ver after responses-first failure"; $rChat = Invoke-AzureOpenAIRequest -ApiVersion $ver -UseResponsesEndpoint:$false; Write-AttemptResult $rChat $ver $false; $attempts += $rChat
+    if ($rChat.success) { $finalResponse = @{ version=$ver; responses=$false; data=$rChat.response }; break }
+    if (-not (Test-FallbackVersion $rChat)) { Write-DebugInfo 'Abort: not classified as version-related after responses-first path.'; break }
     continue
   }
 
