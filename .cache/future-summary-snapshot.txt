@@ -1,0 +1,13 @@
+| Item (Summary) | Target (If Published) | Current Status | Why It Matters | Immediate Prep |
+|----------------|-----------------------|----------------|----------------|----------------|
+| WhatsApp channel publishing | Sep 2025 (Planned GA) | Preview | Mobile / global reach channel expansion | Finalize localization & rate limiting policies |
+| Block maker-provided credentials control | Sep 2025 rollout | Preview | Reduces credential sprawl; governance uplift | Inventory & plan migration off maker creds |
+| Generated answer quality analytics enhancements | Sep 2025 (iterative) | GA (enhancing) | Deeper quality gap attribution | Align dashboard & triage cadence |
+| Catalog governance tagging enrichment | Sep 2025 | Preview → GA maturation | Improves compliant reuse & discovery | Define mandatory metadata schema |
+| MCP server UX refinements | Late 2025 (ongoing) | GA (enhancements) | Lowers friction onboarding external tools | Refresh internal integration checklist |
+| Deep reasoning models | TBD GA | Preview | Advanced multi‑step reasoning scenarios | Identify candidate complex workflows |
+| Microsoft 365 Copilot Tuning | TBD GA | Preview | Domain adaptation for enterprise context | Curate high‑quality, labeled training sets |
+| Bring Your Own Models (Azure AI Foundry) | TBD GA | Preview | Custom model extensibility | Assess governance & cost controls |
+| Multilingual generative orchestration expansion | TBD | Preview | Broader language coverage in planner | Prioritize locales & test prompts |
+| GPT‑4.1 mini experimental model | TBD | Preview | Lower latency experimentation | Define benchmark scenarios & metrics |
+| Reusable component collections | TBD | Preview | Modular reuse accelerates build velocity | Identify high‑reuse patterns to refactor |

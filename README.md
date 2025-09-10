@@ -27,15 +27,15 @@ Sources: Microsoft Learn "What's new" + public Power Platform release plans + li
 <!-- BEGIN:AT_A_GLANCE -->
 | Metric | Count | Notes |
 |--------|-------|-------|
-| GA features (last 30d window) | 6 | Newly GA or GA confirmations |
-| Preview items (last 30d window) | 5 | Active evaluation required |
-| Preview → GA transitions (window) | 1 | File groups |
-| Security / Governance related updates | 3 | Credentials control, sensitivity labels, catalog metadata |
-| Multimodal / Execution updates | 2 | Code interpreter, file/image pipeline |
+| GA features (last 30d window) | 5 | Newly GA or GA confirmations |
+| Preview items (last 30d window) | 6 | Active evaluation required |
+| Preview → GA transitions (window) | 2 | Status promotions |
+| Security / Governance related updates | 12 | Auto keyword heuristic |
+| Multimodal / Execution updates | 2 | Interpreter & file/image pipeline |
 <!-- END:AT_A_GLANCE -->
 _Counts auto-maintained; modify via refresh script._
 
-Status: ![GA](https://img.shields.io/badge/GA-6-brightgreen) ![Preview](https://img.shields.io/badge/Preview-5-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-1-blue) ![TBD](https://img.shields.io/badge/TBD-6-lightgrey)
+Status: ![GA](https://img.shields.io/badge/GA-3-brightgreen) ![Preview](https://img.shields.io/badge/Preview-5-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-3-blue) ![TBD](https://img.shields.io/badge/TBD-2-lightgrey)
 
 ---
 
@@ -154,7 +154,7 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 
 ## Delta Since Last Refresh
 <!-- BEGIN:DELTA -->
-Initial baseline established; no prior delta.
+2025-09-10 16:44 UTC - Baseline established; future changes will be tracked.
 <!-- END:DELTA -->
 
 ## Future Planned Changes (Concise Summary)
@@ -202,3 +202,5 @@ High‑signal publicly disclosed upcoming items. Full backlog + categorization i
 
 ---
 _Last updated: 2025-09-10 (automation: scheduled refresh, metrics & diff v1.2)_
+
+

@@ -28,10 +28,12 @@ $windowPreview = ($rows | Where-Object { $_ -match '\|\s*Preview' }).Count
 $transitions = ($rows | Where-Object { $_ -match 'was Preview' -or $_ -match 'Preview → GA' }).Count
 
 # Heuristic counts for thematic categories in window
-$securityTerms = 'credential','sensitivity','governance','label'
-$security = ($rows | Where-Object { $securityTerms | ForEach-Object { if($_ -match $_){ $true } } })
-$securityCount = $security.Count
-$multimodal = ($rows | Where-Object { $_ -match 'image' -or $_ -match 'Code interpreter' -or $_ -match 'file & image' }).Count
+$securityTerms = 'credential','sensitivity label','sensitivity','governance','catalog','label '
+$securityCount = 0
+foreach($r in $rows){
+  if($securityTerms | Where-Object { $r -match $_ }){ $securityCount++ }
+}
+$multimodal = ($rows | Where-Object { $_ -match '(?i)image' -or $_ -match '(?i)interpreter' -or $_ -match 'file & image' }).Count
 
 # Build new AT_A_GLANCE table
 $newTable = @(
