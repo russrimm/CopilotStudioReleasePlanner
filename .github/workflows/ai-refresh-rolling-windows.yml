@@ -17,13 +17,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Update 30-day date window
+        shell: pwsh
+        run: pwsh -NoLogo -File scripts/update-30day-window.ps1
+
       - name: Run AI refresh
         env:
           AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+            
           AZURE_OPENAI_KEY: ${{ secrets.AZURE_OPENAI_KEY }}
           AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
-          AZURE_OPENAI_API_VERSION: 2025-01-01-preview
           AZURE_OPENAI_MODEL: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_FORCE_RESPONSES: 'true'
+          AZURE_OPENAI_USE_JSON_SCHEMA: 'true'
         shell: pwsh
         run: |
           Start-Transcript -Path ai-refresh-log.txt -Force
@@ -45,6 +51,12 @@ jobs:
         run: |
           git config user.name 'github-actions'
           git config user.email 'actions@users.noreply.github.com'
+          if (Test-Path README.md) {
+            $content = Get-Content README.md -Raw
+            $today = (Get-Date -Format 'yyyy-MM-dd')
+            $newContent = [regex]::Replace($content, '_Last updated: .*?_', "_Last updated: $today (rolling windows)_", 'IgnoreCase')
+            if ($newContent -ne $content) { Set-Content README.md -Value $newContent -NoNewline }
+          }
           if (git diff --quiet) { echo 'No changes'; exit 0 }
           git add README.md
           git commit -m 'chore: AI refresh rolling tables'
