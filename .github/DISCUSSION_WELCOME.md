@@ -13,9 +13,9 @@ This repository curates timely, authoritative updates about Microsoft Copilot St
 ## Key Artifacts
 | Artifact | Purpose |
 |----------|---------|
-| `README.md` | Full 12‑month feature table & summaries. |
-| `CopilotStudio_Last_6_Months_Features.md` | Hyperlinked, high-signal recent changes (Mar–Aug 2025). |
-| `CopilotStudio_Last_12_Months_Features.md` | Extended linked catalog (Sept 2024–Aug 2025) including previews. |
+| `README.md` | Rolling 30‑day retrospective & forward (next 30 days) tables. |
+| `archive/Last_6_Months_Features.md` | Hyperlinked recent 6‑month catalog (historical reference). |
+| `archive/Last_12_Months_Features.md` | Extended 12‑month catalog (Sept 2024–Aug 2025) including previews. |
 
 ## Discussion Categories (Recommended Structure)
 | Category | Use Case Examples |
@@ -31,8 +31,9 @@ This repository curates timely, authoritative updates about Microsoft Copilot St
 ## Update Cadence
 | Artifact | Frequency | Trigger |
 |----------|-----------|---------|
-| 6‑Month Table | Weekly (delta append) | New public doc or release note. |
-| 12‑Month Table | Monthly rollover | New month + removal of items >12 months old. |
+| Rolling 30-Day Tables | Daily (automated) | Scheduled workflows (date + AI refresh). |
+| 6‑Month Archive | On demand (manual) | When significant batch of new features GA/preview. |
+| 12‑Month Archive | Monthly (manual) | Month rollover & aging out >12 months. |
 | Discussion Announcements | As needed | Major GA, breaking change, or taxonomy shift. |
 
 ## Tagging Convention

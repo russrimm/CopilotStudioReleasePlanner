@@ -1,10 +1,10 @@
 # Copilot Studio – Rolling 30-Day Updates
 
-This README now focuses on two concise operational windows:
+This document focuses on two concise operational windows:
 1. Last 30 days of shipped changes (retrospective)
 2. Next 30 days of planned / targeted items (forward look, subject to change)
 
-Full feature catalog (rolling 12 months + broader context) lives here: [Full Feature Catalog](./CopilotStudio_Last_12_Months_Features.md)
+Full feature catalog (rolling 12 months + broader context) lives here: [Full Feature Catalog](./archive/Last_12_Months_Features.md)
 
 Legend: **GA** = Generally Available, **Preview** = Public preview / early access, **Planned GA** = published target (month/date), **TBD** = not yet published.
 
@@ -70,7 +70,7 @@ Publicly disclosed planned GA / preview milestones expected within the next 30 d
 - Preview features should not be relied upon for production SLAs until GA unless explicitly approved.
 - Some features (e.g., catalog discovery, file groups) transitioned from preview to GA during the window—table reflects initial release month plus current status.
 
-## Source References (Representative)
+## Source References
 - What's new in Copilot Studio: https://learn.microsoft.com/en-us/microsoft-copilot-studio/whats-new
 - Power Platform Release Plan 2024 Wave 2: https://learn.microsoft.com/en-us/power-platform/release-plan/2024wave2/microsoft-copilot-studio/
 - Power Platform Release Plan 2025 Wave 1: https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave1/microsoft-copilot-studio/
