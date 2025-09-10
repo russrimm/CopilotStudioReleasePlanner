@@ -63,7 +63,7 @@ $endpoint   = Require-Env 'AZURE_OPENAI_ENDPOINT'
 $apiKey     = Require-Env 'AZURE_OPENAI_KEY'
 $deployment = Require-Env 'AZURE_OPENAI_DEPLOYMENT'
 $apiVersion = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_API_VERSION')
-if ([string]::IsNullOrWhiteSpace($apiVersion)) { $apiVersion = '2024-02-15-preview' }
+if ([string]::IsNullOrWhiteSpace($apiVersion)) { $apiVersion = '2024-12-01-preview' }
 
 Write-DebugInfo "Env present: ENDPOINT=$([string]::IsNullOrWhiteSpace($endpoint) -eq $false); KEY=$([string]::IsNullOrWhiteSpace($apiKey) -eq $false); DEPLOYMENT=$deployment"
 
