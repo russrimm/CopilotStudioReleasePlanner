@@ -2,6 +2,8 @@
 
 Coverage window: September 2024 – August 2025 (current date: 2025-09-09)
 
+For a focused view of just the most recent 6 months (Mar–Aug 2025) with hyperlinks for each feature, see: [Last 6 Months Feature Table](./CopilotStudio_Last_6_Months_Features.md).
+
 Legend: **GA** = Generally Available, **Preview** = Public preview / early access, **Planned GA** = published target (month/date), **TBD** = not yet published.
 
 > Source data consolidated from official Microsoft Learn "What's new in Copilot Studio" pages and Power Platform release plans (2024 Wave 2, 2025 Wave 1, 2025 Wave 2 previews) plus related linked docs.

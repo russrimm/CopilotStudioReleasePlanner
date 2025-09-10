@@ -1,0 +1,1 @@
+Always include a title at the top of each page, and include "Created by: Russ Rimmerman, Microsoft Cloud Solution Architect" with a mailto: link of russ.rimmerman@microsoft.com under the title at the top the first page of all documentation.
