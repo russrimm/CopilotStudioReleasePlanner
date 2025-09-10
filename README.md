@@ -78,4 +78,4 @@ Publicly disclosed planned GA / preview milestones expected within the next 30 d
 - Individual feature docs (examples): Azure AI Search knowledge, Model Context Protocol, Code Interpreter, File Groups, Adaptive Card designer, Customer Managed Keys.
 
 ---
-_Last updated: 2025-09-09 (rolling windows)_
+_Last updated: 2025-09-10 (rolling windows)_
