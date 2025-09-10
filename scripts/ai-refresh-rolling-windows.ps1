@@ -365,8 +365,37 @@ if (-not ($json.last30_table) -or -not ($json.next30_table)) { Write-Error 'JSON
 $newLast = ($json.last30_table -replace '\r','').Trim()
 $newNext = ($json.next30_table -replace '\r','').Trim()
 
-if ((Get-Header $newLast) -ne $lastHeader) { Write-Error ('Last30 header changed; aborting. Expected: ' + $lastHeader + ' Got: ' + (Get-Header $newLast)); exit 2 }
-if ((Get-Header $newNext) -ne $nextHeader) { Write-Error ('Next30 header changed; aborting. Expected: ' + $nextHeader + ' Got: ' + (Get-Header $newNext)); exit 2 }
+function Get-HeaderColumns([string]$h) {
+  if (-not $h) { return @() }
+  return ($h -split '\|') | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+}
+function Headers-Equivalent($expected, $candidate) {
+  $c1 = Get-HeaderColumns $expected
+  $c2 = Get-HeaderColumns $candidate
+  if ($c1.Count -ne $c2.Count) { return $false }
+  for ($i=0; $i -lt $c1.Count; $i++) { if ($c1[$i] -ne $c2[$i]) { return $false } }
+  return $true
+}
+
+$newLastHeader = Get-Header $newLast
+if ($newLastHeader -ne $lastHeader) {
+  if (Headers-Equivalent $lastHeader $newLastHeader) {
+    Write-DebugInfo 'Last30 header differs only by formatting; normalizing to original.'
+    $lines = $newLast -split "`n"; if ($lines.Length -gt 0) { $lines[0] = $lastHeader; $newLast = ($lines -join "`n") }
+  } else {
+    Write-Error ('Last30 header changed; aborting. Expected: ' + $lastHeader + ' Got: ' + $newLastHeader); exit 2
+  }
+}
+
+$newNextHeader = Get-Header $newNext
+if ($newNextHeader -ne $nextHeader) {
+  if (Headers-Equivalent $nextHeader $newNextHeader) {
+    Write-DebugInfo 'Next30 header differs only by formatting; normalizing to original.'
+    $lines2 = $newNext -split "`n"; if ($lines2.Length -gt 0) { $lines2[0] = $nextHeader; $newNext = ($lines2 -join "`n") }
+  } else {
+    Write-Error ('Next30 header changed; aborting. Expected: ' + $nextHeader + ' Got: ' + $newNextHeader); exit 2
+  }
+}
 
 if ($newLast -eq $lastTable -and $newNext -eq $nextTable) {
   Write-Host 'No changes suggested.'; exit 0
