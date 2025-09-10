@@ -47,7 +47,7 @@ Focused digest of Copilot Studio updates, promotions, and new previews in the mo
 - [ ] Tag all MCP-added tools with owner + data sensitivity metadata.
 - [ ] Run localization QA on WhatsApp message variants (fallback & error prompts). 
 
-## Next 30 Days Planned Changes (2025-09-10 to 2025-10-10)
+## Next 30 Days Planned Changes (2025-09-10 to 2025-10-08)
 Publicly disclosed planned GA / preview milestones expected within the next 30 days. All dates are tentative; verify against the live release plan before production gating.
 
 <!-- BEGIN:NEXT30_TABLE -->
