@@ -21,9 +21,16 @@ param(
   [switch]$DryRun,
   [switch]$Offline,
   [switch]$DebugMode,
+  # Provide a raw model output string (e.g., captured from a prior run) to test parsing/repair logic.
+  # When set, the script skips the live Azure OpenAI call and proceeds directly to JSON extraction.
+  [string]$RawModelOutput,
+  # Path to a file containing raw model output (alternative to -RawModelOutput string).
+  [string]$RawModelOutputFile,
   # Retained for backward compatibility but ignored; version fallback disabled by directive.
   [switch]$DisableVersionFallback
 )
+
+Write-Host '[ai-refresh] Script start'
 
 $ErrorActionPreference = 'Stop'
 
@@ -57,16 +64,27 @@ function Get-Header($table) {
 $lastHeader = Get-Header $lastTable
 $nextHeader = Get-Header $nextTable
 
-if ($Offline) {
+if ($RawModelOutputFile -and -not (Test-Path $RawModelOutputFile)) { throw "RawModelOutputFile path not found: $RawModelOutputFile" }
+if (-not $RawModelOutput -and $RawModelOutputFile) { $RawModelOutput = Get-Content -Path $RawModelOutputFile -Raw }
+
+if ($Offline -and -not $RawModelOutput) {
   Write-Host '[offline] Skipping AI call; tables unchanged.'
   exit 0
 }
 
-$endpoint   = Get-RequiredEnv 'AZURE_OPENAI_ENDPOINT'
-$apiKey     = Get-RequiredEnv 'AZURE_OPENAI_KEY'
-$deployment = Get-RequiredEnv 'AZURE_OPENAI_DEPLOYMENT'
-# Optional distinct model name for unified Responses API (some tenants use model IDs instead of deployment alias here)
-$explicitModel = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_MODEL')
+if (-not $RawModelOutput) {
+  $endpoint   = Get-RequiredEnv 'AZURE_OPENAI_ENDPOINT'
+  $apiKey     = Get-RequiredEnv 'AZURE_OPENAI_KEY'
+  $deployment = Get-RequiredEnv 'AZURE_OPENAI_DEPLOYMENT'
+  # Optional distinct model name for unified Responses API (some tenants use model IDs instead of deployment alias here)
+  $explicitModel = [Environment]::GetEnvironmentVariable('AZURE_OPENAI_MODEL')
+} else {
+  # Provide safe placeholders to satisfy later references; logic paths gated on $RawModelOutput.
+  $endpoint = ''
+  $apiKey = ''
+  $deployment = 'raw-test'
+  $explicitModel = $null
+}
 
 # Basic sanity validation on deployment name to catch accidental inclusion of query parameters.
 if ($deployment -match '[\?=&\s]') {
@@ -77,7 +95,7 @@ Next Generation v1 API (versionless)
 Using Azure OpenAI next-gen "v1" endpoints which do not require api-version.
 All prior api-version logic removed.
 #>
-Write-DebugInfo 'Using next-gen v1 API (no api-version parameter).'
+Write-DebugInfo 'Using next-gen v1 API (no api-version parameter).'  
 
 Write-DebugInfo "Env present: ENDPOINT=$([string]::IsNullOrWhiteSpace($endpoint) -eq $false); KEY=$([string]::IsNullOrWhiteSpace($apiKey) -eq $false); DEPLOYMENT=$deployment"
 
@@ -262,59 +280,42 @@ if ($preferResponsesFirst) {
   }
 }
 
-if (-not $finalResponse) {
-  Write-Error 'All attempts failed (v1 versionless).'
-  foreach ($a in $attempts) { if (-not $a.success) { Write-Host "FAILED uri=$($a.uri) status=$($a.status) code=$($a.code)" } }
-  exit 1
+if (-not $RawModelOutput) {
+  if (-not $finalResponse) {
+    Write-Error 'All attempts failed (v1 versionless).'
+    foreach ($a in $attempts) { if (-not $a.success) { Write-Host "FAILED uri=$($a.uri) status=$($a.status) code=$($a.code)" } }
+    exit 1
+  }
+  $resp = $finalResponse.data
+  Write-DebugInfo ("Selected version=$($finalResponse.version) endpoint=$([bool]$finalResponse.responses ? 'responses' : 'chat')")
 }
 
-$resp = $finalResponse.data
-Write-DebugInfo ("Selected version=$($finalResponse.version) endpoint=$([bool]$finalResponse.responses ? 'responses' : 'chat')")
-
 $raw = $null
-if (-not $finalResponse.responses) {
+if ($RawModelOutput) {
+  Write-DebugInfo 'Using provided -RawModelOutput instead of live model response.'
+  $raw = $RawModelOutput
+  Write-DebugInfo ("Raw model output length=" + ($raw.Length))
+} elseif ($finalResponse -and -not $finalResponse.responses) {
   try { $raw = $resp.choices[0].message.content } catch {}
-} else {
-  # Responses API: may return early with status in_progress/queued; poll until completed or timeout.
+} elseif ($finalResponse) {
   function Get-ResponsesText($rObj) {
     if (-not $rObj) { return $null }
     if ($rObj.output_text) { return $rObj.output_text }
     if ($rObj.output -and $rObj.output.Count -gt 0) {
-      $texts = @()
-      foreach ($block in $rObj.output) {
-        if ($block.content) {
-          foreach ($c in $block.content) {
-            if ($c.type -eq 'output_text' -and $c.text) { $texts += $c.text }
-            elseif ($c.type -eq 'text' -and $c.text) { $texts += $c.text }
-          }
-        }
-      }
-      if ($texts.Count -gt 0) { return ([string]::Join("`n", $texts)) }
+      $texts = @(); foreach ($block in $rObj.output) { if ($block.content) { foreach ($c in $block.content) { if ($c.type -eq 'output_text' -and $c.text) { $texts += $c.text } elseif ($c.type -eq 'text' -and $c.text) { $texts += $c.text } } } }; if ($texts.Count -gt 0) { return ([string]::Join("`n", $texts)) }
     }
     return $null
   }
   $raw = Get-ResponsesText $resp
   $status = $resp.status
   if (-not $raw -and $status -and ($status -match '^(in_progress|queued)$')) {
-    $pollSeconds = [int]([Environment]::GetEnvironmentVariable('AZURE_OPENAI_POLL_MAX_SECONDS'))
-    if ($pollSeconds -le 0) { $pollSeconds = 60 }
-    $interval = [int]([Environment]::GetEnvironmentVariable('AZURE_OPENAI_POLL_INTERVAL_SECONDS'))
-    if ($interval -le 0) { $interval = 2 }
+    $pollSeconds = [int]([Environment]::GetEnvironmentVariable('AZURE_OPENAI_POLL_MAX_SECONDS')); if ($pollSeconds -le 0) { $pollSeconds = 60 }
+    $interval = [int]([Environment]::GetEnvironmentVariable('AZURE_OPENAI_POLL_INTERVAL_SECONDS')); if ($interval -le 0) { $interval = 2 }
     Write-DebugInfo "Polling responses status (id=$($resp.id)) up to $pollSeconds s interval=$interval s (initial status=$status)."
-    $deadline = (Get-Date).AddSeconds($pollSeconds)
-    $normalizedEndpoint = $endpoint.TrimEnd('/')
+    $deadline = (Get-Date).AddSeconds($pollSeconds); $normalizedEndpoint = $endpoint.TrimEnd('/')
     while ((Get-Date) -lt $deadline) {
       Start-Sleep -Seconds $interval
-      try {
-  $pollUri = "$normalizedEndpoint/openai/v1/responses/$($resp.id)"
-        $polled = Invoke-RestMethod -Method Get -Uri $pollUri -Headers @{ 'api-key'=$apiKey }
-        $status = $polled.status
-        Write-DebugInfo "Poll status=$status"
-        $raw = Get-ResponsesText $polled
-        if ($raw -or ($status -notmatch '^(in_progress|queued)$')) { $resp = $polled; break }
-      } catch {
-        Write-DebugInfo "Polling error: $($_.Exception.Message)"; break
-      }
+      try { $pollUri = "$normalizedEndpoint/openai/v1/responses/$($resp.id)"; $polled = Invoke-RestMethod -Method Get -Uri $pollUri -Headers @{ 'api-key'=$apiKey }; $status = $polled.status; Write-DebugInfo "Poll status=$status"; $raw = Get-ResponsesText $polled; if ($raw -or ($status -notmatch '^(in_progress|queued)$')) { $resp = $polled; break } } catch { Write-DebugInfo "Polling error: $($_.Exception.Message)"; break }
     }
   }
 }
@@ -350,9 +351,39 @@ function Repair-ModelJson([string]$text) {
   return $null
 }
 
+# Escapes literal (unescaped) newline and carriage return characters that appear inside JSON string literals.
+# Some model outputs incorrectly place raw line breaks inside string values (invalid JSON). This state-machine
+# transformation preserves existing escape sequences while converting only literal line breaks inside strings
+# to their escaped forms so ConvertFrom-Json can succeed.
+function Convert-LiteralNewlinesInJsonStrings([string]$text) {
+  if (-not $text) { return $text }
+  $sb = New-Object System.Text.StringBuilder
+  $inString = $false
+  $escapeNext = $false
+  foreach ($ch in $text.ToCharArray()) {
+    if ($escapeNext) { [void]$sb.Append($ch); $escapeNext = $false; continue }
+    if ($ch -eq '\\') { $escapeNext = $true; [void]$sb.Append($ch); continue }
+    if ($ch -eq '"') { $inString = -not $inString; [void]$sb.Append($ch); continue }
+    if ($inString -and $ch -eq "`n") { [void]$sb.Append('\\n'); continue }
+    if ($inString -and $ch -eq "`r") { [void]$sb.Append('\\r'); continue }
+    # Outside strings we simply drop standalone CR characters (common in Windows line endings) and keep newlines.
+    if (-not $inString -and $ch -eq "`r") { continue }
+    [void]$sb.Append($ch)
+  }
+  return $sb.ToString()
+}
+
 $json = Convert-ModelJsonStrict $raw
 if (-not $json) {
-  Write-DebugInfo 'Strict parse failed; attempting heuristic repair.'
+  Write-DebugInfo 'Strict parse failed; attempting newline escape repair.'
+  $escapedNewlines = Convert-LiteralNewlinesInJsonStrings $raw
+  if ($escapedNewlines -ne $raw) {
+    $json = Convert-ModelJsonStrict $escapedNewlines
+    if ($json) { Write-DebugInfo 'Parse succeeded after escaping literal newlines inside strings.' }
+  }
+}
+if (-not $json) {
+  Write-DebugInfo 'Attempting heuristic structural repair.'
   $json = Repair-ModelJson $raw
 }
 if (-not $json) {
@@ -369,7 +400,7 @@ function Get-HeaderColumns([string]$h) {
   if (-not $h) { return @() }
   return ($h -split '\|') | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
 }
-function Headers-Equivalent($expected, $candidate) {
+function Test-HeadersEquivalent($expected, $candidate) {
   $c1 = Get-HeaderColumns $expected
   $c2 = Get-HeaderColumns $candidate
   if ($c1.Count -ne $c2.Count) { return $false }
@@ -379,7 +410,7 @@ function Headers-Equivalent($expected, $candidate) {
 
 $newLastHeader = Get-Header $newLast
 if ($newLastHeader -ne $lastHeader) {
-  if (Headers-Equivalent $lastHeader $newLastHeader) {
+  if (Test-HeadersEquivalent $lastHeader $newLastHeader) {
     Write-DebugInfo 'Last30 header differs only by formatting; normalizing to original.'
     $lines = $newLast -split "`n"; if ($lines.Length -gt 0) { $lines[0] = $lastHeader; $newLast = ($lines -join "`n") }
   } else {
@@ -389,7 +420,7 @@ if ($newLastHeader -ne $lastHeader) {
 
 $newNextHeader = Get-Header $newNext
 if ($newNextHeader -ne $nextHeader) {
-  if (Headers-Equivalent $nextHeader $newNextHeader) {
+  if (Test-HeadersEquivalent $nextHeader $newNextHeader) {
     Write-DebugInfo 'Next30 header differs only by formatting; normalizing to original.'
     $lines2 = $newNext -split "`n"; if ($lines2.Length -gt 0) { $lines2[0] = $nextHeader; $newNext = ($lines2 -join "`n") }
   } else {
