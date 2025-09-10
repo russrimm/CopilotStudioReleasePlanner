@@ -15,30 +15,47 @@ Param(
   [string[]]$TargetFiles = @('README.md')
 )
 
-$today = Get-Date -Format 'yyyy-MM-dd'
-$start = (Get-Date).AddDays(-30).AddDays(1) # inclusive span of 30 days ending today
-$startStr = $start.ToString('yyyy-MM-dd')
-$endStr = (Get-Date).ToString('yyyy-MM-dd')
+$todayObj = Get-Date
+$today = $todayObj.ToString('yyyy-MM-dd')
 
-$pattern = '^## Last 30 Days Feature Changes \([^)]*\)'
-$replacement = "## Last 30 Days Feature Changes ($startStr to $endStr)"
+# Last 30 days: inclusive span ending today with 30 calendar days total => start = today - 29 days
+$lastStart = $todayObj.AddDays(-29)
+$lastStartStr = $lastStart.ToString('yyyy-MM-dd')
+$lastEndStr = $today
+
+# Next 30 days forward window: start today (forward look includes today) end = today + 30 days
+$nextStart = $todayObj
+$nextEnd = $todayObj.AddDays(30)
+$nextStartStr = $nextStart.ToString('yyyy-MM-dd')
+$nextEndStr = $nextEnd.ToString('yyyy-MM-dd')
+
+$patternLast = '^## Last 30 Days Feature Changes \([^)]*\)'
+$replacementLast = "## Last 30 Days Feature Changes ($lastStartStr to $lastEndStr)"
+
+$patternNext = '^## Next 30 Days Planned Changes \([^)]*\)'
+$replacementNext = "## Next 30 Days Planned Changes ($nextStartStr to $nextEndStr)"
 
 $filesUpdated = 0
 foreach ($file in $TargetFiles) {
   $full = Join-Path $RepoRoot $file
   if (-not (Test-Path $full)) { Write-Host "[skip] $full not found"; continue }
   $content = Get-Content $full -Raw
-  if ($content -match $pattern) {
-    $newContent = [System.Text.RegularExpressions.Regex]::Replace($content, $pattern, $replacement, 'IgnoreCase, Multiline')
-    if ($newContent -ne $content) {
-      Set-Content -Path $full -Value $newContent -NoNewline
-      Write-Host "[updated] $file -> $startStr to $endStr"
-      $filesUpdated++
-    } else {
-      Write-Host "[no change] Pattern matched but dates already current in $file"
-    }
-  } else {
-    Write-Warning "Section heading not found in $file"
+  $newContent = $content
+  $changed = $false
+
+  if ($newContent -match $patternLast) {
+    $updatedLocal = [System.Text.RegularExpressions.Regex]::Replace($newContent, $patternLast, $replacementLast, 'IgnoreCase, Multiline')
+    if ($updatedLocal -ne $newContent) { $newContent = $updatedLocal; $changed = $true; Write-Host "[updated:last] $file -> $lastStartStr to $lastEndStr" } else { Write-Host "[no change:last] $file already current" }
+  } else { Write-Warning "Last 30 Days heading not found in $file" }
+
+  if ($newContent -match $patternNext) {
+    $updatedLocal2 = [System.Text.RegularExpressions.Regex]::Replace($newContent, $patternNext, $replacementNext, 'IgnoreCase, Multiline')
+    if ($updatedLocal2 -ne $newContent) { $newContent = $updatedLocal2; $changed = $true; Write-Host "[updated:next] $file -> $nextStartStr to $nextEndStr" } else { Write-Host "[no change:next] $file already current" }
+  } else { Write-Warning "Next 30 Days heading not found in $file" }
+
+  if ($changed) {
+    Set-Content -Path $full -Value $newContent -NoNewline
+    $filesUpdated++
   }
 }
 

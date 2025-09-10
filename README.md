@@ -12,7 +12,7 @@ Source basis: Official Microsoft Learn "What's new in Copilot Studio" + Power Pl
 
 ---
 
-## Last 30 Days Feature Changes (2025-08-10 to 2025-09-09)
+## Last 30 Days Feature Changes (2025-08-12 to 2025-09-10)
 Focused digest of Copilot Studio updates, promotions, and new previews in the most recent 30‑day window. (Date range auto-updated daily by workflow.)
 
 <!-- BEGIN:LAST30_TABLE -->
@@ -47,7 +47,7 @@ Focused digest of Copilot Studio updates, promotions, and new previews in the mo
 - [ ] Tag all MCP-added tools with owner + data sensitivity metadata.
 - [ ] Run localization QA on WhatsApp message variants (fallback & error prompts). 
 
-## Next 30 Days Planned Changes (2025-09-09 to 2025-10-09)
+## Next 30 Days Planned Changes (2025-09-10 to 2025-10-10)
 Publicly disclosed planned GA / preview milestones expected within the next 30 days. All dates are tentative; verify against the live release plan before production gating.
 
 <!-- BEGIN:NEXT30_TABLE -->
