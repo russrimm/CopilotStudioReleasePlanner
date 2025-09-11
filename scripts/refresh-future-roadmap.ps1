@@ -26,8 +26,16 @@ $now = Get-Date
 function Parse-Date($val){
   if(-not $val){ return $null }
   $formats = 'yyyy-MM-dd','yyyy-MM','yyyy-MM-ddTHH:mm:ss'
-  foreach($f in $formats){ if([DateTime]::TryParseExact($val,$f,$null,[System.Globalization.DateTimeStyles]::None,[ref]$out)){ return $out } }
-  if([DateTime]::TryParse($val,[ref]$generic)){ return $generic }
+  foreach($f in $formats){
+    [DateTime]$parsed = [DateTime]::MinValue
+    if([DateTime]::TryParseExact($val,$f,$null,[System.Globalization.DateTimeStyles]::None,[ref]$parsed)){
+      return $parsed
+    }
+  }
+  [DateTime]$generic = [DateTime]::MinValue
+  if([DateTime]::TryParse($val,[ref]$generic)){
+    return $generic
+  }
   return $null
 }
 
