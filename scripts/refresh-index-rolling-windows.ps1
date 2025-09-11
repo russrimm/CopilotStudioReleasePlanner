@@ -83,7 +83,7 @@ foreach ($f in $raw) {
       What    = $what
       Why     = $why
       Action  = $action
-      Doc     = $f.docUrl
+      Doc     = if ($names -contains 'docUrl') { $f.docUrl } else { $null }
     }
   }
 
@@ -102,7 +102,7 @@ foreach ($f in $raw) {
       Why     = $f.purpose
       Prep    = if ($forwardType -eq 'Decision Due') { 'Prepare decision inputs' } else { 'Finalize adoption readiness' }
       Confidence = $conf
-      Doc     = $f.docUrl
+      Doc     = if ($names -contains 'docUrl') { $f.docUrl } else { $null }
     }
   }
 }
