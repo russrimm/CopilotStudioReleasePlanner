@@ -70,14 +70,6 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 
 ---
 
-<!-- At a Glance section removed (deprecated). -->
-
----
-
-<!-- Rolling Timeline Strip removed (deprecated section). -->
-
----
-
 ### Key Adoption Themes (30 Days)
 <details open>
 <summary>Expand / collapse themes</summary>
