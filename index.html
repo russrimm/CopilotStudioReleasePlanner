@@ -1,0 +1,300 @@
+---
+layout: none
+title: Copilot Studio – Rolling Updates Hub
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Copilot Studio – Rolling Updates Hub</title>
+  <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="dark">
+  <header class="site-header">
+    <h1>Copilot Studio <span class="accent">Rolling Updates Hub</span></h1>
+    <p class="tagline">Ultra‑condensed view of what just changed and what is coming next. Deeper analytics below.</p>
+    <nav class="quick-nav">
+      <a href="#at-a-glance">At a Glance</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#near-term">Near</a>
+      <a href="#horizon">Horizon</a>
+      <a href="#governance">Governance</a>
+      <a href="#risk">Risk</a>
+      <a href="#last30">Last 30 Days</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="reference-links" class="panel">
+      <h2>Reference Links</h2>
+      <div class="link-groups">
+        <div>
+          <h3>Historical Updates</h3>
+          <ul>
+            <li><a href="./archive/Last_12_Months_Features.md">Last 12 Months</a></li>
+            <li><a href="./archive/Last_6_Months_Features.md">Last 6 Months</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Forward Roadmap</h3>
+          <ul>
+            <li><a href="./Future_Planned_Features.md">All Future Planned Features</a></li>
+            <li><a href="#near-term">Future (Near ≤60d)</a></li>
+            <li><a href="#horizon">Future (Horizon)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Governance & Risk</h3>
+          <ul>
+            <li><a href="#security">Security & Compliance</a></li>
+            <li><a href="#policy-matrix">Policy Matrix</a></li>
+            <li><a href="#risk">Risk Heatmap</a></li>
+            <li><a href="#churn">Recent Transitions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Operational Aids</h3>
+          <ul>
+            <li><a href="#prep">Preparation Priorities</a></li>
+            <li><a href="#lifecycle">Lifecycle Funnel</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="at-a-glance" class="panel">
+      <h2>At a Glance</h2>
+      <div class="badge-strip">
+        <span class="pill ga">GA: 4</span>
+        <span class="pill preview">Preview: 11</span>
+        <span class="pill planned">Planned GA: 5</span>
+        <span class="pill tbd">TBD: 6</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Metric</th><th>Count</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>GA features (last 30d window)</td><td>5</td><td>Newly GA or confirmations</td></tr>
+            <tr><td>Preview items (last 30d window)</td><td>6</td><td>Active evaluation required</td></tr>
+            <tr><td>Preview → GA transitions</td><td>2</td><td>Status promotions</td></tr>
+            <tr><td>Security / Governance related updates</td><td>5</td><td>Keyword heuristic</td></tr>
+            <tr><td>Multimodal / Execution updates</td><td>2</td><td>Interpreter & file/image pipeline</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Counts auto-maintained in source repository.</p>
+    </section>
+
+    <section id="timeline" class="panel">
+      <h2>Rolling Timeline Strip</h2>
+      <p class="sub">Last 4 months + current + next 2 (forecast).</p>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Month</th><th>Key Moves</th></tr></thead>
+          <tbody>
+            <tr><td>2025-06</td><td>🧪 File groups preview</td></tr>
+            <tr><td>2025-07</td><td>(quiet)</td></tr>
+            <tr><td>2025-08</td><td>✅ File groups GA; 🧪 1000 files; ✅ Code interpreter; 🧪 MIP labels</td></tr>
+            <tr><td>2025-09</td><td>🧪 Credential blocking; 🧪 WhatsApp (GA prep)</td></tr>
+            <tr><td>2025-10</td><td>(forecast) 📅 Governance tagging GA</td></tr>
+            <tr><td>2025-11</td><td>(forecast) 🔍 MCP UX enhancements</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="themes" class="panel">
+      <h2>Key Adoption Themes (30 Days)</h2>
+      <ol class="themes">
+        <li><strong>Multimodal & Execution</strong> – Code interpreter + image/file pipeline enable compound transformations (govern cost & data scope).</li>
+        <li><strong>Knowledge Scale & Structure</strong> – File groups + high file count preview require taxonomy & pruning discipline.</li>
+        <li><strong>Quality Feedback Loop</strong> – New answer quality analytics institutionalize weekly remediation cycles.</li>
+        <li><strong>Secure Extensibility</strong> – Guided MCP connection + credential blocking preview harden integration posture.</li>
+        <li><strong>Channel Expansion</strong> – WhatsApp preview drives concise, locale-aware conversational design patterns.</li>
+      </ol>
+    </section>
+
+    <section id="actions" class="panel">
+      <h2>Immediate Actions Checklist</h2>
+      <ul class="checklist">
+        <li>Stand up weekly "Answer Quality" review.</li>
+        <li>Finalize file grouping & naming convention.</li>
+        <li>Audit maker-owned credentials & draft migration runbook.</li>
+        <li>Pilot code interpreter; capture execution metrics.</li>
+        <li>Tag MCP-added tools with owner + sensitivity metadata.</li>
+        <li>Localization QA on WhatsApp variants.</li>
+        <li>Sensitivity label mapping validation workflow.</li>
+      </ul>
+    </section>
+
+    <section id="fast-wins" class="panel">
+      <h2>Fast Win Candidates</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Feature</th><th>Why Quick Win</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>File groups GA</td><td>Immediate organization & grounding precision</td><td>Refactor scattered single files</td></tr>
+            <tr><td>Answer quality analytics</td><td>Visibility to improvement backlog</td><td>Weekly triage flow</td></tr>
+            <tr><td>MCP guided connection</td><td>Reduces extensibility friction</td><td>Standardize tool naming</td></tr>
+            <tr><td>Code interpreter</td><td>Rapid prototype value</td><td>Sandbox pilot + limits</td></tr>
+            <tr><td>Catalog governance tagging</td><td>Prevents future sprawl</td><td>Enforce metadata schema</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="security" class="panel">
+      <h2>Security & Compliance Focus</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Area</th><th>Change</th><th>Risk Mitigated</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Credentials</td><td>Maker-provided credential blocking (Preview)</td><td>Secret sprawl / unmanaged auth</td><td>Inventory & migrate</td></tr>
+            <tr><td>Data Classification</td><td>MIP label surfacing (Preview)</td><td>Oversharing sensitive content</td><td>Map labels & gate</td></tr>
+            <tr><td>Catalog Governance</td><td>Metadata enrichment (Preview→GA)</td><td>Orphaned / non-compliant agents</td><td>Enforce required metadata</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="churn" class="panel">
+      <h2>Churn Spotlight</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Feature</th><th>From → To</th><th>Month</th><th>Adoption Note</th></tr></thead>
+          <tbody>
+            <tr><td>File groups</td><td>Preview → GA</td><td>Aug 2025</td><td>Refactor ad hoc file sets</td></tr>
+            <tr><td>(Watching) WhatsApp channel publishing</td><td>Preview → Planned GA</td><td>Sep 2025</td><td>Localization & compliance prep</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="prep" class="panel">
+      <h2>Prep Priority Matrix</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Priority</th><th>Driver</th><th>Why</th><th>Next Step</th></tr></thead>
+          <tbody>
+            <tr><td>P1</td><td>Credential governance</td><td>Blocks secure scale</td><td>Migration runbook</td></tr>
+            <tr><td>P1</td><td>Quality analytics loop</td><td>Accelerates improvement</td><td>Weekly triage</td></tr>
+            <tr><td>P2</td><td>File taxonomy & grouping</td><td>Prevents dilution</td><td>Naming & archival policy</td></tr>
+            <tr><td>P2</td><td>Multimodal governance</td><td>Control cost & scope</td><td>Execution guardrails</td></tr>
+            <tr><td>P3</td><td>Deep reasoning model prep</td><td>Future complexity gains</td><td>Workflow + eval rubric</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="near-term" class="panel">
+      <h2>Future Planned Changes (Near Term ≤60d)</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Item</th><th>Target</th><th>Status</th><th>Why It Matters</th><th>Immediate Prep</th><th>Decision Needed By</th></tr></thead>
+          <tbody>
+            <tr><td>WhatsApp channel publishing</td><td>Sep 2025 (Planned GA)</td><td>🧪 Preview</td><td>Expand mobile/global reach</td><td>Finalize localization & limits</td><td>2025-09-20</td></tr>
+            <tr><td>Block maker-provided credentials control</td><td>Sep 2025 rollout</td><td>🧪 Preview</td><td>Reduce credential sprawl</td><td>Inventory & migration plan</td><td>2025-09-25</td></tr>
+            <tr><td>Catalog governance tagging enrichment</td><td>Sep 2025</td><td>🧪→✅ Transition</td><td>Improve compliant discovery</td><td>Define metadata schema</td><td>2025-09-30</td></tr>
+            <tr><td>Answer quality analytics enhancements</td><td>Sep 2025 (iterative)</td><td>🔍 Enhancing</td><td>Sharper attribution</td><td>Align triage cadence</td><td>2025-09-18</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="horizon" class="panel">
+      <h2>Future Planned Changes (Horizon)</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Item</th><th>Target</th><th>Status</th><th>Why It Matters</th><th>Immediate Prep</th><th>Stale?</th></tr></thead>
+          <tbody>
+            <tr><td>MCP server UX refinements</td><td>Late 2025 (ongoing)</td><td>🔍 Enhancing</td><td>Lower friction external tools</td><td>Refresh integration checklist</td><td>–</td></tr>
+            <tr><td>Deep reasoning models</td><td>TBD GA</td><td>🧪 Preview</td><td>Multi‑step reasoning</td><td>Identify complex workflows</td><td>–</td></tr>
+            <tr><td>Microsoft 365 Copilot Tuning</td><td>TBD GA</td><td>🧪 Preview</td><td>Enterprise adaptation</td><td>Curate labeled datasets</td><td>–</td></tr>
+            <tr><td>Bring Your Own Models</td><td>TBD GA</td><td>🧪 Preview</td><td>Custom extensibility</td><td>Governance & cost controls</td><td>–</td></tr>
+            <tr><td>Multilingual orchestration expansion</td><td>TBD</td><td>🧪 Preview</td><td>Broader coverage</td><td>Prioritize locales</td><td>–</td></tr>
+            <tr><td>GPT‑4.1 mini experimental model</td><td>TBD</td><td>🧪 Preview</td><td>Lower latency experimentation</td><td>Benchmark metrics</td><td>–</td></tr>
+            <tr><td>Reusable component collections</td><td>TBD</td><td>🧪 Preview</td><td>Accelerate reuse</td><td>Identify patterns</td><td>–</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="lifecycle" class="panel">
+      <h2>Lifecycle Funnel</h2>
+      <div class="table-stats">
+        <div class="stat"><span class="label">Preview</span><span class="value">11</span></div>
+        <div class="stat"><span class="label">Planned</span><span class="value">0</span></div>
+        <div class="stat"><span class="label">Enhancing</span><span class="value">2</span></div>
+        <div class="stat"><span class="label">GA</span><span class="value">2</span></div>
+        <div class="stat"><span class="label">Dormant</span><span class="value">0</span></div>
+        <div class="stat"><span class="label">Stale Preview</span><span class="value">0</span></div>
+      </div>
+    </section>
+
+    <section id="policy-matrix" class="panel">
+      <h2>Policy Coverage Matrix</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Feature</th><th>DLP</th><th>CMK</th><th>Logging</th><th>Labels</th><th>Auth Governance</th></tr></thead>
+          <tbody>
+            <tr><td>File groups</td><td>✓</td><td>–</td><td>✓</td><td>–</td><td>–</td></tr>
+            <tr><td>Credential blocking</td><td>✓</td><td>–</td><td>✓</td><td>–</td><td>✓</td></tr>
+            <tr><td>MIP label surfacing</td><td>✓</td><td>–</td><td>✓</td><td>✓</td><td>–</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="risk" class="panel">
+      <h2>Risk Heatmap</h2>
+      <div class="table-responsive">
+        <table>
+          <thead><tr><th>Impact \ Likelihood</th><th>Low</th><th>Medium</th><th>High</th></tr></thead>
+          <tbody>
+            <tr><td>High</td><td></td><td>1000-file scale</td><td>Deep reasoning models</td></tr>
+            <tr><td>Medium</td><td></td><td>Credential blocking delay</td><td>BYO Models cost drift</td></tr>
+            <tr><td>Low</td><td></td><td>Localization variance</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="last30" class="panel">
+      <h2>Last 30 Days Feature Changes</h2>
+      <p class="sub">Window: 2025-08-12 → 2025-09-10</p>
+      <div class="table-responsive dense">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Status (Now)</th><th>Change Date</th><th>What Changed</th><th>Why It Matters</th><th>Recommended Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts">Code interpreter</a></td><td>GA</td><td>2025-08</td><td>GA release</td><td>Natural language → Python execution</td><td>Pilot; define governance limits</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups">File groups</a></td><td>GA</td><td>2025-08</td><td>Reached GA</td><td>Scoped grouped files</td><td>Refactor file sources</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality">Generated answer rate & quality analytics</a></td><td>GA</td><td>2025-08</td><td>New GA analytics</td><td>Surface unanswered clusters</td><td>Weekly remediation flow</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/image-input-analysis">Expanded file & image upload pipeline</a></td><td>GA</td><td>2025-08</td><td>Broader multimodal support</td><td>Richer workflows</td><td>Compliance validation step</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#add-the-mcp-server-in-copilot-studio-recommended">MCP server guided connection</a></td><td>GA</td><td>2025-08</td><td>Guided add & registration</td><td>Lower integration friction</td><td>Naming & tagging standards</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent">Discover & install Microsoft-built agents</a></td><td>Phased GA</td><td>2025-08</td><td>Catalog maturing</td><td>Reuse reduces duplicate build</td><td>Adoption review checklist</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration">Use up to 1000 files per agent</a></td><td>Preview</td><td>2025-08-18</td><td>Preview availability</td><td>Scale ingestion</td><td>Plan taxonomy & retention</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration">Block maker-provided credentials</a></td><td>Preview</td><td>2025-09</td><td>New preview control</td><td>Reduce auth risk</td><td>Inventory & migrate</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp">WhatsApp channel publishing</a></td><td>Preview</td><td>Aug–Sep 2025</td><td>Stabilizing ahead of GA</td><td>Mobile-first reach</td><td>Localization & rate limits</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio">MIP sensitivity label surfacing</a></td><td>Preview</td><td>2025-08</td><td>Incremental refinements</td><td>Data classification enforcement</td><td>Map taxonomy</td></tr>
+            <tr><td>SSO Consent Card (inline consent)</td><td>Preview</td><td>2025-08</td><td>Wider tenant rollout</td><td>Reduces OAuth friction</td><td>Update onboarding docs</td></tr>
+            <tr><td>Agent catalog + governance tagging</td><td>Preview → GA</td><td>2025-08</td><td>Metadata enrichment</td><td>Speeds discovery</td><td>Enforce metadata</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="legend-note">Legend: GA = Generally Available • Preview = Early access • Planned GA = Published target.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Last updated: 2025-09-10</span>
+    <span>Theme: Modernist (custom dark override)</span>
+    <span><a href="https://github.com/russrimm/CopilotStudioReleasePlanner">Repo</a></span>
+  </footer>
+</body>
+</html>
