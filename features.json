@@ -54,6 +54,7 @@
     "category": "Governance",
     "purpose": "Eliminate unmanaged credentials",
     "lifecycleStage": "Preview",
+  "docUrl": "https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration",
     "decisionNeededBy": "2025-09-25",
     "policies": {"DLP": true, "Logging": true, "AuthGovernance": true},
     "riskImpact": "Medium",
@@ -69,6 +70,7 @@
     "category": "Channels",
     "purpose": "Mobile reach channel",
     "lifecycleStage": "Preview",
+  "docUrl": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp",
     "decisionNeededBy": "2025-09-20",
     "riskImpact": "Medium",
     "riskLikelihood": "Low"
@@ -112,6 +114,7 @@
     "category": "Analytics",
     "purpose": "Identify low quality answer clusters",
     "lifecycleStage": "Enhancing",
+  "docUrl": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality",
     "decisionNeededBy": "2025-09-18",
     "riskImpact": "Low",
     "riskLikelihood": "Low"

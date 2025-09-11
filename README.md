@@ -30,10 +30,10 @@ Expected public / disclosed changes inside the upcoming 30‑day window (auto‑
 <!-- BEGIN:NEXT30_TABLE -->
 | Feature | Expected Change (Next 30d) | Planned Date (Approx) | Nature of Change | Why It Matters | Prep / Action |
 |---------|---------------------------|-----------------------|------------------|----------------|---------------|
-| Block maker-provided credentials | GA target | 2025-09 | GA target | Eliminate unmanaged credentials | Assess readiness |
-| WhatsApp channel publishing | GA target | 2025-09 | GA target | Mobile reach channel | Assess readiness |
+| [Block maker-provided credentials](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | GA target | 2025-09 | GA target | Eliminate unmanaged credentials | Assess readiness |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | GA target | 2025-09 | GA target | Mobile reach channel | Assess readiness |
 | Catalog governance tagging enrichment | GA target | 2025-09 | GA target | Metadata for discovery & compliance | Assess readiness |
-| Generated answer quality analytics | GA enhancement | 2025-09-18 | GA enhancement | Identify low quality answer clusters | Adopt incrementally |
+| [Generated answer quality analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) | GA enhancement | 2025-09-18 | GA enhancement | Identify low quality answer clusters | Adopt incrementally |
 <!-- END:NEXT30_TABLE -->
 
 _Quick Legend:_ **GA** Generally Available • **Preview** Early access • **Planned GA** Published target month/date • **TBD** Not yet published.

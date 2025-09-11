@@ -627,6 +627,39 @@ if ($newLast -eq $lastTable -and $newNext -eq $nextTable) {
   }
 }
 
+<#
+ Post-process NEXT30 table to ensure feature names are hyperlinked when a docUrl
+ exists in features.json. This guards against model outputs omitting links.
+#>
+try {
+  $repoRoot = Split-Path $ReadmePath -Parent
+  $manifestPath = Join-Path $repoRoot 'features.json'
+  if (Test-Path $manifestPath) {
+    $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+    $nameToUrl = @{}
+    foreach ($f in $manifest) { if ($f.name -and $f.docUrl) { $nameToUrl[$f.name] = $f.docUrl } }
+    function Convert-Next30Links([string]$table,[hashtable]$map){
+      if (-not $table) { return $table }
+      $lines = $table -split "`n"
+      if ($lines.Length -lt 3) { return $table }
+      for ($i=2; $i -lt $lines.Length; $i++) {
+        $line = $lines[$i]
+        if ($line -match '^\|\s*([^|]+?)\s*\|') {
+          $feat = $matches[1].Trim()
+          if ($feat -and ($feat -notmatch '^\[') -and $map.ContainsKey($feat)) {
+            $url = $map[$feat]
+            # Replace only the first cell content
+            $escaped = [regex]::Escape($feat)
+            $lines[$i] = $line -replace "^\|\s*$escaped\s*\|", "| [$feat]($url) |"
+          }
+        }
+      }
+      return ($lines -join "`n")
+    }
+    $newNext = Convert-Next30Links -table $newNext -map $nameToUrl
+  }
+} catch { Write-Host "[warn] NEXT30 link enrichment failed: $($_.Exception.Message)" }
+
 Write-Host 'Applying updates.'
 $updated = [Regex]::Replace($readme, $patLast, "<!-- BEGIN:LAST30_TABLE -->`n$newLast`n<!-- END:LAST30_TABLE -->")
 $updated = [Regex]::Replace($updated, $patNext, "<!-- BEGIN:NEXT30_TABLE -->`n$newNext`n<!-- END:NEXT30_TABLE -->")
