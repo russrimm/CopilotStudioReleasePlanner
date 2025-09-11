@@ -415,7 +415,40 @@ if (-not $json) {
   $json = Repair-ModelJson $raw
 }
 if (-not $json) {
-  Write-Error 'Model output not valid JSON (after repair attempts).'
+  Write-DebugInfo 'Heuristic repair failed; attempting table-string reconstruction fallback.'
+  function Try-ConstructFromRawTables([string]$text){
+    if(-not $text){ return $null }
+    # Strip any leading noise before first '{' and trailing after last '}'
+    $start = $text.IndexOf('{'); $end = $text.LastIndexOf('}')
+    if($start -ge 0 -and $end -gt $start){ $text = $text.Substring($start,$end-$start+1) }
+    # If it already deserializes, return
+    try { $tmp = $text | ConvertFrom-Json -ErrorAction Stop; return $tmp } catch {}
+    # Regex spanning newlines for table sections (assumes no embedded quotes inside table cells)
+    $regex = [regex]'"last30_table"\s*:\s*"(?<last>.*?)"\s*,\s*"next30_table"\s*:\s*"(?<next>.*?)"\s*}'
+    $m = $regex.Match($text.Replace("\r",""))
+    if(-not $m.Success){ return $null }
+    $lastRaw = $m.Groups['last'].Value
+    $nextRaw = $m.Groups['next'].Value
+    # Reconstruct by capturing lines starting with pipe until boundary if regex failed to capture fully
+    if(-not $lastRaw -or -not $lastRaw.StartsWith('|')){
+      # fallback: search manually
+      $lines = $text -split "`n"
+      $collecting=$false; $bufLast = New-Object System.Text.StringBuilder
+      foreach($ln in $lines){ if($ln -match '^"?last30_table'){ $collecting=$true; continue }
+        if($collecting){ if($ln -match '^\s*"next30_table"'){ break } if($ln.Trim().Length -gt 0){ [void]$bufLast.AppendLine($ln.Trim()) } }
+      }
+      if($bufLast.Length -gt 0){ $lastRaw = ($bufLast.ToString()).Trim() }
+    }
+    $escape = { param($s) ($s -replace '"','\"' -replace "`r","" -replace "`n","\\n") }
+    $lastEsc = & $escape $lastRaw
+    $nextEsc = & $escape $nextRaw
+    $jsonStr = '{"last30_table":"'+$lastEsc+'","next30_table":"'+$nextEsc+'"}'
+    try { return ($jsonStr | ConvertFrom-Json -ErrorAction Stop) } catch { return $null }
+  }
+  $json = Try-ConstructFromRawTables $raw
+}
+if (-not $json) {
+  Write-Error 'Model output not valid JSON (after all repair fallbacks).'
   if ($raw.Length -lt 2000) { Write-Host $raw } else { Write-Host ($raw.Substring(0,2000) + '...') }
   exit 1
 }
