@@ -22,7 +22,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Parse-Date([string]$s) {
+Write-Host "[rolling] Script start"
+
+function ParseDate([string]$s) {
   if ([string]::IsNullOrWhiteSpace($s)) { return $null }
   $formats = 'yyyy-MM-dd','yyyy-MM','yyyy/MM/dd','yyyy/MM'
   foreach ($f in $formats) {
@@ -44,26 +46,28 @@ $lastEnd   = $today
 $nextStart = $today
 $nextEnd   = $today.AddDays(29)
 
-function In-Window($dt,$start,$end) { if (-not $dt) { return $false }; $d=$dt.Date; return ($d -ge $start -and $d -le $end) }
+function InWindow($dt,$start,$end) { if (-not $dt) { return $false }; $d=$dt.Date; return ($d -ge $start -and $d -le $end) }
 
 $lastRows = @()
 Write-Host "[rolling] Loaded $($raw.Count) features"  # early debug
 $nextRows = @()
 
 foreach ($f in $raw) {
-  $previewStart = Parse-Date $f.previewStart
-  $gaDate       = Parse-Date ($f.gaDate ?? $f.initialRelease)
-  $lastUpdate   = Parse-Date $f.lastUpdate
-  $decisionBy   = Parse-Date $f.decisionNeededBy
-  $plannedGA    = Parse-Date $f.plannedGA
+  $names = $f.PSObject.Properties.Name
+  $previewStart = if ($names -contains 'previewStart') { ParseDate $f.previewStart } else { $null }
+  $gaRaw = if ($names -contains 'gaDate') { $f.gaDate } elseif ($names -contains 'initialRelease') { $f.initialRelease } else { $null }
+  $gaDate = ParseDate $gaRaw
+  $lastUpdate = if ($names -contains 'lastUpdate') { ParseDate $f.lastUpdate } else { $null }
+  $decisionBy = if ($names -contains 'decisionNeededBy') { ParseDate $f.decisionNeededBy } else { $null }
+  $plannedGA  = if ($names -contains 'plannedGA') { ParseDate $f.plannedGA } else { $null }
 
   # LAST 30: capture if any relevant activity date in window
   $activityDate = $lastUpdate
   $changeLabel = $null
-  if (In-Window $gaDate $lastStart $lastEnd) { $activityDate = $gaDate; $changeLabel = 'GA release' }
-  elseif (In-Window $previewStart $lastStart $lastEnd) { $activityDate = $previewStart; $changeLabel = 'Preview start' }
-  elseif (In-Window $lastUpdate $lastStart $lastEnd) { $changeLabel = 'Update' }
-  if ($activityDate -and (In-Window $activityDate $lastStart $lastEnd)) {
+  if (InWindow $gaDate $lastStart $lastEnd) { $activityDate = $gaDate; $changeLabel = 'GA release' }
+  elseif (InWindow $previewStart $lastStart $lastEnd) { $activityDate = $previewStart; $changeLabel = 'Preview start' }
+  elseif (InWindow $lastUpdate $lastStart $lastEnd) { $changeLabel = 'Update' }
+  if ($activityDate -and (InWindow $activityDate $lastStart $lastEnd)) {
     $statusNow = $f.currentStatus
     $what = if ($changeLabel) { $changeLabel } else { 'Activity' }
     $why  = $f.purpose
@@ -86,9 +90,9 @@ foreach ($f in $raw) {
   # NEXT 30: look at planned GA or decisionNeededBy in forward window
   $forwardDate = $decisionBy
   $forwardType = 'Decision'
-  if ($plannedGA -and (In-Window $plannedGA $nextStart $nextEnd)) { $forwardDate = $plannedGA; $forwardType = 'Planned GA' }
-  elseif ($decisionBy -and (In-Window $decisionBy $nextStart $nextEnd)) { $forwardType = 'Decision Due' }
-  if ($forwardDate -and (In-Window $forwardDate $nextStart $nextEnd)) {
+  if ($plannedGA -and (InWindow $plannedGA $nextStart $nextEnd)) { $forwardDate = $plannedGA; $forwardType = 'Planned GA' }
+  elseif ($decisionBy -and (InWindow $decisionBy $nextStart $nextEnd)) { $forwardType = 'Decision Due' }
+  if ($forwardDate -and (InWindow $forwardDate $nextStart $nextEnd)) {
     $conf = if ($plannedGA) { 'Medium' } else { 'Medium' }
     if ($f.currentStatus -match 'GA') { $conf = 'High' }
     $nextRows += [PSCustomObject]@{
@@ -107,62 +111,62 @@ foreach ($f in $raw) {
 $lastRows = $lastRows | Sort-Object Date, Feature
 $nextRows = $nextRows | Sort-Object Target, Feature
 
-function Html-Escape($s){ return ($s -replace '&','&amp;' -replace '<','&lt;' -replace '>' ,'&gt;') }
+function HtmlEscape($s){ if ($null -eq $s) { return '' }; return ($s -replace '&','&amp;' -replace '<','&lt;' -replace '>','&gt;') }
 
-function Build-LastTable($rows){
+function BuildLastHtml($rows){
   if (-not $rows -or $rows.Count -eq 0) { return '<div class="table-responsive dense"><em>No feature changes in window.</em></div>' }
   $sb = New-Object System.Text.StringBuilder
-  [void]$sb.Append('<div class="table-responsive dense"><table><thead><tr><th>Feature</th><th>Status (Now)</th><th>Change Date</th><th>What Changed</th><th>Why It Matters</th><th>Recommended Action</th></tr></thead><tbody>')
+  $sb.Append('<div class="table-responsive dense"><table><thead><tr><th>Feature</th><th>Status</th><th>Date</th><th>What Changed</th><th>Why It Matters</th><th>Action</th></tr></thead><tbody>') | Out-Null
   foreach ($r in $rows) {
-    $name = if ($r.Doc) { "<a href=\"$($r.Doc)\">$(Html-Escape $r.Feature)</a>" } else { Html-Escape $r.Feature }
-    [void]$sb.Append("<tr><td>$name</td><td>$(Html-Escape $r.Status)</td><td>$($r.Date)</td><td>$(Html-Escape $r.What)</td><td>$(Html-Escape $r.Why)</td><td>$(Html-Escape $r.Action)</td></tr>")
+    $nameCell = if ($r.Doc) { '<a href="'+(HtmlEscape $r.Doc)+'">'+(HtmlEscape $r.Feature)+'</a>' } else { HtmlEscape $r.Feature }
+    $sb.Append('<tr><td>'+ $nameCell + '</td><td>' + (HtmlEscape $r.Status) + '</td><td>' + (HtmlEscape $r.Date) + '</td><td>' + (HtmlEscape $r.What) + '</td><td>' + (HtmlEscape $r.Why) + '</td><td>' + (HtmlEscape $r.Action) + '</td></tr>') | Out-Null
   }
-  [void]$sb.Append('</tbody></table></div>')
+  $sb.Append('</tbody></table></div>') | Out-Null
   return $sb.ToString()
 }
 
-function Build-NextTable($rows){
+function BuildNextHtml($rows){
   if (-not $rows -or $rows.Count -eq 0) { return '<div class="table-responsive dense"><em>No planned or decision items in window.</em></div>' }
   $sb = New-Object System.Text.StringBuilder
-  [void]$sb.Append('<div class="table-responsive dense"><table><thead><tr><th>Feature</th><th>Target</th><th>Status</th><th>Why It Matters</th><th>Immediate Prep</th><th>Confidence</th></tr></thead><tbody>')
+  $sb.Append('<div class="table-responsive dense"><table><thead><tr><th>Feature</th><th>Target</th><th>Status</th><th>Why It Matters</th><th>Immediate Prep</th><th>Confidence</th></tr></thead><tbody>') | Out-Null
   foreach ($r in $rows) {
-    $name = if ($r.Doc) { "<a href=\"$($r.Doc)\">$(Html-Escape $r.Feature)</a>" } else { Html-Escape $r.Feature }
-    [void]$sb.Append("<tr><td>$name</td><td>$($r.Target)</td><td>$(Html-Escape $r.Status)</td><td>$(Html-Escape $r.Why)</td><td>$(Html-Escape $r.Prep)</td><td>$(Html-Escape $r.Confidence)</td></tr>")
+    $nameCell = if ($r.Doc) { '<a href="'+(HtmlEscape $r.Doc)+'">'+(HtmlEscape $r.Feature)+'</a>' } else { HtmlEscape $r.Feature }
+    $sb.Append('<tr><td>'+ $nameCell + '</td><td>' + (HtmlEscape $r.Target) + '</td><td>' + (HtmlEscape $r.Status) + '</td><td>' + (HtmlEscape $r.Why) + '</td><td>' + (HtmlEscape $r.Prep) + '</td><td>' + (HtmlEscape $r.Confidence) + '</td></tr>') | Out-Null
   }
-  [void]$sb.Append('</tbody></table></div>')
+  $sb.Append('</tbody></table></div>') | Out-Null
   return $sb.ToString()
 }
 
-$lastHtml = Build-LastTable $lastRows
-$nextHtml = Build-NextTable $nextRows
+$lastHtml = BuildLastHtml $lastRows
+$nextHtml = BuildNextHtml $nextRows
 
 $indexContent = Get-Content $indexPath -Raw
 
-function Replace-Block([string]$content,[string]$begin,[string]$end,[string]$replacement){
-  $pattern = "(?s)<!-- $begin -->(.*?)<!-- $end -->"
+function ReplaceBlock([string]$content,[string]$beginMarker,[string]$endMarker,[string]$replacement){
   $beginToken = "<!-- $beginMarker -->"
-  $endToken   = "<!-- $endMarker -->"
+  $endToken = "<!-- $endMarker -->"
   $beginIndex = $content.IndexOf($beginToken)
   if ($beginIndex -lt 0) { throw "Begin marker $beginMarker not found" }
   $endIndex = $content.IndexOf($endToken,$beginIndex)
   if ($endIndex -lt 0) { throw "End marker $endMarker not found" }
-  $startReplace = $beginIndex + $beginToken.Length
-  $lengthReplace = $endIndex - $startReplace
-  $before = $content.Substring(0,$startReplace)
-  $after  = $content.Substring($endIndex)
-  $new = "$before`n$replacement`n$after"
-  return $new
+  $before = $content.Substring(0, $beginIndex + $beginToken.Length)
+  $after = $content.Substring($endIndex)
+  return "$before`n$replacement`n$after"
 }
 
 Write-Host "[rolling] Computed windows last=$($lastStart.ToShortDateString())..$($lastEnd.ToShortDateString()) next=$($nextStart.ToShortDateString())..$($nextEnd.ToShortDateString())"
 Write-Host "[rolling] Row counts pre-render: last=$($lastRows.Count) next=$($nextRows.Count)"
+Write-Host "[rolling] Sample last html: $lastHtml"
 
-$indexContent = Replace-Block $indexContent 'BEGIN:LAST30_DYNAMIC' 'END:LAST30_DYNAMIC' $lastHtml
-$indexContent = Replace-Block $indexContent 'BEGIN:NEXT30_DYNAMIC' 'END:NEXT30_DYNAMIC' $nextHtml
+$indexContent = ReplaceBlock $indexContent 'BEGIN:LAST30_DYNAMIC' 'END:LAST30_DYNAMIC' $lastHtml
+$indexContent = ReplaceBlock $indexContent 'BEGIN:NEXT30_DYNAMIC' 'END:NEXT30_DYNAMIC' $nextHtml
 
 # Update window text
-$indexContent = $indexContent -replace '<p class="sub" id="last30-window">Window: \(auto\)</p>', "<p class=\"sub\" id=\"last30-window\">Window: $($lastStart.ToString('yyyy-MM-dd')) → $($lastEnd.ToString('yyyy-MM-dd'))</p>"
-$indexContent = $indexContent -replace '<p class="sub" id="next30-window">Window: \(auto\)</p>', "<p class=\"sub\" id=\"next30-window\">Window: $($nextStart.ToString('yyyy-MM-dd')) → $($nextEnd.ToString('yyyy-MM-dd')) (targets & decision points)</p>"
+$arrow = '->'
+$lastWindowText = '<p class="sub" id="last30-window">Window: ' + $lastStart.ToString('yyyy-MM-dd') + ' ' + $arrow + ' ' + $lastEnd.ToString('yyyy-MM-dd') + '</p>'
+$nextWindowText = '<p class="sub" id="next30-window">Window: ' + $nextStart.ToString('yyyy-MM-dd') + ' ' + $arrow + ' ' + $nextEnd.ToString('yyyy-MM-dd') + ' (targets & decision points)</p>'
+$indexContent = $indexContent -replace '<p class="sub" id="last30-window">Window: \(auto\)</p>', $lastWindowText
+$indexContent = $indexContent -replace '<p class="sub" id="next30-window">Window: \(auto\)</p>', $nextWindowText
 
 Set-Content -Path $indexPath -Value $indexContent -NoNewline
 Write-Host "[rolling] Updated index.html rolling windows: last=$($lastStart.ToString('yyyy-MM-dd')) to $($lastEnd.ToString('yyyy-MM-dd')); next=$($nextStart.ToString('yyyy-MM-dd')) to $($nextEnd.ToString('yyyy-MM-dd'))"
