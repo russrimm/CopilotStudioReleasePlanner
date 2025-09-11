@@ -24,6 +24,15 @@ Most recent launches, promotions, and previews (auto‑rolling window).
 | Agent catalog + governance tagging (internal refinement) | Preview → GA | 2025-08 | Metadata enrichment & search improvements | Speeds discovery; reduces duplicate logic | Enforce required metadata (owner, data scope, PII flags). |
 <!-- END:LAST30_TABLE -->
 
+## Next 30 Days Planned Changes (Forward Look)
+Expected public / disclosed changes inside the upcoming 30‑day window (auto‑maintained by AI refresh script).
+
+<!-- BEGIN:NEXT30_TABLE -->
+| Feature | Expected Change (Next 30d) | Planned Date (Approx) | Nature of Change | Why It Matters | Prep / Action |
+|---------|---------------------------|-----------------------|------------------|----------------|---------------|
+| (placeholder – awaiting first AI refresh) |  |  |  |  |  |
+<!-- END:NEXT30_TABLE -->
+
 _Quick Legend:_ **GA** Generally Available • **Preview** Early access • **Planned GA** Published target month/date • **TBD** Not yet published.
 
 ---
