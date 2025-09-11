@@ -54,10 +54,7 @@ $near = $features |
     ($_.plannedDateObj -and $_.plannedDateObj -le $nearCutoff) -or
     ($_.decisionDateObj -and $_.decisionDateObj -le $nearCutoff)
   } |
-  Sort-Object -Property `
-    @{ Expression = { if ($_.plannedDateObj) { 0 } else { 1 } }; Ascending = $true }, `
-    @{ Expression = { $_.plannedDateObj }; Ascending = $true }, `
-    @{ Expression = { $_.decisionDateObj }; Ascending = $true }
+  Sort-Object -Property @{ Expression = { if ($_.plannedDateObj) { 0 } else { 1 } }; Ascending = $true }, @{ Expression = { $_.plannedDateObj }; Ascending = $true }, @{ Expression = { $_.decisionDateObj }; Ascending = $true }
 
 $nearSlugs = $near.slug
 $horizon = $features | Where-Object { $nearSlugs -notcontains $_.slug }
