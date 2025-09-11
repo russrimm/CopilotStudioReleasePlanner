@@ -4,7 +4,7 @@
 .DESCRIPTION
   Uses enhanced manifest (features.json) to:
    - Partition features into Near (plannedGA within 60d OR decisionNeededBy within 60d) and Horizon (others with future activity)
-   - Build FUTURE_NEAR and FUTURE_HORIZON tables
+   - Build FUTURE_HORIZON table (FUTURE_NEAR table generation skipped if markers absent to avoid duplication with NEXT30)
    - Auto-calculate lifecycle funnel counts (Preview, Planned, Enhancing, GA, Dormant, Stale Preview)
    - Generate flattened list & feature IDs blocks
    - Generate policy coverage matrix (union of policy keys across features)
@@ -163,6 +163,7 @@ function Replace-Block($content,$marker,$new){
   return [regex]::Replace($content,$pattern,"<!-- BEGIN:$marker -->`n$new`n<!-- END:$marker -->")
 }
 
+# FUTURE_NEAR table intentionally omitted if markers not present in README (section deprecated)
 $readmeContent = Replace-Block $readmeContent 'FUTURE_NEAR' $nearTable
 $readmeContent = Replace-Block $readmeContent 'FUTURE_HORIZON' $horizonTable
 $readmeContent = Replace-Block $readmeContent 'LIFECYCLE_FUNNEL' $lifecycleTable

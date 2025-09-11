@@ -1,9 +1,10 @@
 <#
 .SYNOPSIS
-  Updates the Delta Since Last Refresh section in README.md with diff of FUTURE_NEAR + FUTURE_HORIZON tables.
+  Updates the Delta Since Last Refresh section in README.md with diff of future roadmap tables.
 .DESCRIPTION
-  Concatenates both future roadmap tables and computes row-level adds/removals/modifications keyed by feature name.
-  Persists hash & snapshot for change detection.
+  Historically diffed FUTURE_NEAR + FUTURE_HORIZON; after removal of the Near Term (≤60d) table it now
+  operates solely on FUTURE_HORIZON when FUTURE_NEAR markers are absent. Computes row-level adds/removals/
+  modifications keyed by feature name and persists hash & snapshot for change detection.
 #>
 $ErrorActionPreference='Stop'
 $root = Resolve-Path (Join-Path $PSScriptRoot '..')
@@ -16,11 +17,14 @@ if(-not (Test-Path $cacheDir)){ New-Item -ItemType Directory -Path $cacheDir | O
 $content = Get-Content $readme -Raw
 $near = [regex]::Match($content,'(?s)<!-- BEGIN:FUTURE_NEAR -->(.*?)<!-- END:FUTURE_NEAR -->')
 $horizon = [regex]::Match($content,'(?s)<!-- BEGIN:FUTURE_HORIZON -->(.*?)<!-- END:FUTURE_HORIZON -->')
-if(-not $near.Success){ throw 'Future near marker not found.' }
-$nearPart = $near.Groups[1].Value.Trim()
+$nearPart = if($near.Success){ $near.Groups[1].Value.Trim() } else { '' }
 $horizonPart = if($horizon.Success){ $horizon.Groups[1].Value.Trim() } else { '' }
-$block = if([string]::IsNullOrWhiteSpace($horizonPart)){ $nearPart } else { ($nearPart+"`n"+$horizonPart).Trim() }
- $horizonNote = if($horizon.Success){ '' } else { ' (horizon section absent in README; treated as empty)' }
+if(-not $near.Success -and -not $horizon.Success){
+  Write-Warning 'No FUTURE_NEAR or FUTURE_HORIZON markers found; delta update skipped.'
+  exit 0
+}
+$block = if([string]::IsNullOrWhiteSpace($nearPart)){ $horizonPart } elseif([string]::IsNullOrWhiteSpace($horizonPart)){ $nearPart } else { ($nearPart+"`n"+$horizonPart).Trim() }
+$horizonNote = if($near.Success){ '' } else { ' (near term section removed; horizon only)' }
 $currentHash = (Get-FileHash -InputStream ([IO.MemoryStream]::new([Text.Encoding]::UTF8.GetBytes($block)))).Hash
 
 $deltaSectionPattern = '(?s)<!-- BEGIN:DELTA -->.*?<!-- END:DELTA -->'

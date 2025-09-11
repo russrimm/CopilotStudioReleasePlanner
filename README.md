@@ -174,18 +174,7 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 ## Future Planned Changes (Concise Summary)
 High‑signal publicly disclosed upcoming items. Full backlog + categorization in [All Future Planned Features](./Future_Planned_Features.md).
 
-## Future Planned Changes (Near Term ≤60d)
-High‑signal publicly disclosed upcoming items expected inside ~60 day horizon.
-
-<!-- BEGIN:FUTURE_NEAR -->
-| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Decision Needed By |
-|----------------|--------|--------|----------------|----------------|--------------------|
-| WhatsApp channel publishing | 2025-09 | 🧪 Preview | Mobile reach channel | (auto) | 2025-09-20 |
-| Block maker-provided credentials | 2025-09 | 🧪 Preview | Eliminate unmanaged credentials | (auto) | 2025-09-25 |
-| Catalog governance tagging enrichment | 2025-09 | 🧪 Preview | Metadata for discovery & compliance | (auto) | 2025-09-30 |
-| 1000 files per agent | 2025-11 | 🧪 Preview | Higher knowledge object limits | (auto) |  |
-| Generated answer quality analytics |  | ✅ GA (enhancing) | Identify low quality answer clusters | (auto) | 2025-09-18 |
-<!-- END:FUTURE_NEAR -->
+<!-- NOTE: Former Near Term (≤60d) table removed to avoid duplication with "Next 30 Days Planned Changes" section. -->
 
 ## Future Planned Changes (Horizon)
 Moved to dedicated page for clarity and easier long-horizon curation: see [Future Horizon Features](./Future_Horizon_Features.md).
