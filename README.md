@@ -165,18 +165,7 @@ Moved to dedicated page for clarity and easier long-horizon curation: see [Futur
 
 <!-- NOTE: The following FUTURE_HORIZON block is intentionally retained (even though detailed horizon items live in a separate file) so automation and delta tracking scripts have both markers available. It may contain a condensed snapshot or be left minimal. -->
 <!-- BEGIN:FUTURE_HORIZON -->
-| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
-|----------------|--------|--------|----------------|----------------|--------|
-| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | TBD | ✅ GA | Group related files & scope instructions | (auto) | – |
-| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | TBD | ✅ GA | NL to Python execution | (auto) | – |
-| MIP sensitivity labels | 2025-12 | 🧪 Preview | Surface sensitivity labels in content | (auto) | – |
-| MCP server UX refinements | TBD | ✅ GA (enhancements) | Improve external tool onboarding | (auto) | – |
-| Deep reasoning models | TBD | 🧪 Preview | Advanced multi-step reasoning | (auto) | – |
-| Bring Your Own Models | TBD | 🧪 Preview | Custom model extensibility | (auto) | – |
-| Multilingual orchestration | TBD | 🧪 Preview | Broader language coverage | (auto) | – |
-| GPT-4.1 mini experimental model | TBD | 🧪 Preview | Lower latency experimentation | (auto) | – |
-| Reusable component collections | TBD | 🧪 Preview | Accelerate modular reuse | (auto) | – |
-| Microsoft 365 Copilot Tuning | TBD | 🧪 Preview | Enterprise domain adaptation | (auto) | – |
+_(Condensed – see dedicated horizon page for full details)_
 <!-- END:FUTURE_HORIZON -->
 
 <details open>
