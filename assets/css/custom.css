@@ -1,0 +1,53 @@
+/* Custom overrides for Modernist theme */
+body {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+h1, h2, h3, h4 {
+  scroll-margin-top: 80px;
+}
+
+/* Table styling */
+.markdown-body table {
+  font-size: 14px;
+}
+.markdown-body table th, .markdown-body table td {
+  padding: 4px 8px;
+}
+
+/* At a Glance badges wrapper */
+.badge-strip img {
+  margin-right: 4px;
+}
+
+/* Collapsible details spacing */
+details summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Pill labels */
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #eee;
+  font-size: 12px;
+  margin-right: 4px;
+}
+.pill.preview { background:#ffdfa3; }
+.pill.ga { background:#b4f2b0; }
+.pill.enhancing { background:#c5e1ff; }
+
+/* Horizontal rule tightening */
+hr { margin: 28px 0; }
+
+/* Improve code font sizing */
+code { font-size: 90%; }
+
+/* Legend styling */
+.legend-note { font-size: 12px; color: #555; }
+
+/* Last updated footer */
+.footer-updated { font-size: 12px; margin-top: 40px; color:#666; }

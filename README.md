@@ -302,6 +302,8 @@ _Quick Legend:_ **GA** Generally Available • **Preview** Early access • **Pl
 
 _Last updated: 2025-09-10 (automation: scheduled refresh, metrics & diff v1.2)_
 
+Site theme: Modernist (GitHub Pages)
+
 
 
 

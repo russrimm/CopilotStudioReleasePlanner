@@ -1,0 +1,24 @@
+title: Copilot Studio Rolling Updates Hub
+description: Rolling 30‑day changes plus concise future roadmap summary.
+theme: jekyll-theme-modernist
+# Exclude build/development artifacts
+exclude:
+  - scripts/
+  - temp-raw.txt
+  - README.md~
+  - Gemfile
+  - Gemfile.lock
+# Markdown & kramdown tweaks
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+# Permalinks (default simple)
+permalink: pretty
+
+# Custom collections (future extensibility)
+collections:
+  features:
+    output: false
