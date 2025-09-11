@@ -203,6 +203,13 @@ High‑signal publicly disclosed upcoming items expected inside ~60 day horizon.
 ## Future Planned Changes (Horizon)
 Moved to dedicated page for clarity and easier long-horizon curation: see [Future Horizon Features](./Future_Horizon_Features.md).
 
+<!-- NOTE: The following FUTURE_HORIZON block is intentionally retained (even though detailed horizon items live in a separate file) so automation and delta tracking scripts have both markers available. It may contain a condensed snapshot or be left minimal. -->
+<!-- BEGIN:FUTURE_HORIZON -->
+| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
+|----------------|--------|--------|----------------|----------------|--------|
+| (horizon snapshot delegated to separate file) |  |  |  |  |  |
+<!-- END:FUTURE_HORIZON -->
+
 <details open>
 <summary>Key Guidance</summary>
 
@@ -213,6 +220,13 @@ Moved to dedicated page for clarity and easier long-horizon curation: see [Futur
 5. Avoid knowledge bloat—prune low-signal files before exploiting 1000-file scale.  
 
 </details>
+
+## Delta Since Last Refresh
+Automated summary of changes detected between Near / Horizon future roadmap tables.
+
+<!-- BEGIN:DELTA -->
+Initializing delta tracking baseline...
+<!-- END:DELTA -->
 
 ## Lifecycle Funnel
 Summary of feature counts by lifecycle stage.
