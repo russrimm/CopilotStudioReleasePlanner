@@ -21,18 +21,45 @@ title: Copilot Studio – Rolling Updates Hub
         <p class="tagline">Ultra‑condensed view of recent changes and near‑term roadmap. Scroll for deeper analytics, governance & risk.</p>
       </div>
       <nav class="quick-nav" aria-label="Section navigation">
+        <a href="#last30">Last 30d</a>
         <a href="#at-a-glance">At a Glance</a>
         <a href="#timeline">Timeline</a>
         <a href="#near-term">Near</a>
         <a href="#horizon">Horizon</a>
         <a href="#policy-matrix">Policies</a>
         <a href="#risk">Risk</a>
-        <a href="#last30">Last 30d</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
+    <!-- Last 30 Days moved to top -->
+    <section id="last30" class="panel">
+      <h2>Last 30 Days Feature Changes</h2>
+      <p class="sub">Window: 2025-08-12 → 2025-09-10</p>
+      <div class="table-responsive dense">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Status (Now)</th><th>Change Date</th><th>What Changed</th><th>Why It Matters</th><th>Recommended Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts">Code interpreter</a></td><td>GA</td><td>2025-08</td><td>GA release</td><td>Natural language → Python execution</td><td>Pilot; define governance limits</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups">File groups</a></td><td>GA</td><td>2025-08</td><td>Reached GA</td><td>Scoped grouped files</td><td>Refactor file sources</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality">Generated answer rate & quality analytics</a></td><td>GA</td><td>2025-08</td><td>New GA analytics</td><td>Surface unanswered clusters</td><td>Weekly remediation flow</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/image-input-analysis">Expanded file & image upload pipeline</a></td><td>GA</td><td>2025-08</td><td>Broader multimodal support</td><td>Richer workflows</td><td>Compliance validation step</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#add-the-mcp-server-in-copilot-studio-recommended">MCP server guided connection</a></td><td>GA</td><td>2025-08</td><td>Guided add & registration</td><td>Lower integration friction</td><td>Naming & tagging standards</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent">Discover & install Microsoft-built agents</a></td><td>Phased GA</td><td>2025-08</td><td>Catalog maturing</td><td>Reuse reduces duplicate build</td><td>Adoption review checklist</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration">Use up to 1000 files per agent</a></td><td>Preview</td><td>2025-08-18</td><td>Preview availability</td><td>Scale ingestion</td><td>Plan taxonomy & retention</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration">Block maker-provided credentials</a></td><td>Preview</td><td>2025-09</td><td>New preview control</td><td>Reduce auth risk</td><td>Inventory & migrate</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp">WhatsApp channel publishing</a></td><td>Preview</td><td>Aug–Sep 2025</td><td>Stabilizing ahead of GA</td><td>Mobile-first reach</td><td>Localization & rate limits</td></tr>
+            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio">MIP sensitivity label surfacing</a></td><td>Preview</td><td>2025-08</td><td>Incremental refinements</td><td>Data classification enforcement</td><td>Map taxonomy</td></tr>
+            <tr><td>SSO Consent Card (inline consent)</td><td>Preview</td><td>2025-08</td><td>Wider tenant rollout</td><td>Reduces OAuth friction</td><td>Update onboarding docs</td></tr>
+            <tr><td>Agent catalog + governance tagging</td><td>Preview → GA</td><td>2025-08</td><td>Metadata enrichment</td><td>Speeds discovery</td><td>Enforce metadata</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="legend-note">Legend: GA = Generally Available • Preview = Early access • Planned GA = Published target.</p>
+    </section>
   <section id="reference-links" class="panel">
       <h2>Reference Links</h2>
       <div class="link-groups">
@@ -267,32 +294,6 @@ title: Copilot Studio – Rolling Updates Hub
       </div>
     </section>
 
-    <section id="last30" class="panel">
-      <h2>Last 30 Days Feature Changes</h2>
-      <p class="sub">Window: 2025-08-12 → 2025-09-10</p>
-      <div class="table-responsive dense">
-        <table>
-          <thead>
-            <tr><th>Feature</th><th>Status (Now)</th><th>Change Date</th><th>What Changed</th><th>Why It Matters</th><th>Recommended Action</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts">Code interpreter</a></td><td>GA</td><td>2025-08</td><td>GA release</td><td>Natural language → Python execution</td><td>Pilot; define governance limits</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups">File groups</a></td><td>GA</td><td>2025-08</td><td>Reached GA</td><td>Scoped grouped files</td><td>Refactor file sources</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality">Generated answer rate & quality analytics</a></td><td>GA</td><td>2025-08</td><td>New GA analytics</td><td>Surface unanswered clusters</td><td>Weekly remediation flow</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/image-input-analysis">Expanded file & image upload pipeline</a></td><td>GA</td><td>2025-08</td><td>Broader multimodal support</td><td>Richer workflows</td><td>Compliance validation step</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#add-the-mcp-server-in-copilot-studio-recommended">MCP server guided connection</a></td><td>GA</td><td>2025-08</td><td>Guided add & registration</td><td>Lower integration friction</td><td>Naming & tagging standards</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent">Discover & install Microsoft-built agents</a></td><td>Phased GA</td><td>2025-08</td><td>Catalog maturing</td><td>Reuse reduces duplicate build</td><td>Adoption review checklist</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration">Use up to 1000 files per agent</a></td><td>Preview</td><td>2025-08-18</td><td>Preview availability</td><td>Scale ingestion</td><td>Plan taxonomy & retention</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration">Block maker-provided credentials</a></td><td>Preview</td><td>2025-09</td><td>New preview control</td><td>Reduce auth risk</td><td>Inventory & migrate</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp">WhatsApp channel publishing</a></td><td>Preview</td><td>Aug–Sep 2025</td><td>Stabilizing ahead of GA</td><td>Mobile-first reach</td><td>Localization & rate limits</td></tr>
-            <tr><td><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio">MIP sensitivity label surfacing</a></td><td>Preview</td><td>2025-08</td><td>Incremental refinements</td><td>Data classification enforcement</td><td>Map taxonomy</td></tr>
-            <tr><td>SSO Consent Card (inline consent)</td><td>Preview</td><td>2025-08</td><td>Wider tenant rollout</td><td>Reduces OAuth friction</td><td>Update onboarding docs</td></tr>
-            <tr><td>Agent catalog + governance tagging</td><td>Preview → GA</td><td>2025-08</td><td>Metadata enrichment</td><td>Speeds discovery</td><td>Enforce metadata</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="legend-note">Legend: GA = Generally Available • Preview = Early access • Planned GA = Published target.</p>
-    </section>
   </main>
 
   <footer class="site-footer">
