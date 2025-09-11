@@ -1,14 +1,14 @@
 <#
 .SYNOPSIS
-  Regenerates future roadmap sections (Near ≤60d, Horizon) plus derived blocks from features.json.
+  Regenerates remaining future roadmap derived blocks (flattened list & policy matrix) from features.json.
 .DESCRIPTION
-  Uses enhanced manifest (features.json) to:
-   - Partition features into Near (plannedGA within 60d OR decisionNeededBy within 60d) and Horizon (others with future activity)
-   - Build FUTURE_HORIZON table (FUTURE_NEAR table generation skipped if markers absent to avoid duplication with NEXT30)
-   - Generate flattened list & feature IDs blocks
+  Simplified after Horizon section removal.
+  Uses manifest to:
+   - Partition features (retained internally; Near table suppressed by design)
+   - Generate flattened list of features
    - Generate policy coverage matrix (union of policy keys across features)
   Writes into README.md markers:
-    FUTURE_NEAR, FUTURE_HORIZON, FLATTENED_FEATURES, POLICY_MATRIX
+    FUTURE_NEAR (if present), FLATTENED_FEATURES, POLICY_MATRIX
 #>
 param(
   [int]$NearWindowDays = 60
@@ -77,24 +77,7 @@ function Build-NearTable($items){
   return ($header,$sep)+$rows -join "`n"
 }
 
-function Build-HorizonTable($items){
-  $header = '| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |'
-  $sep =    '|----------------|--------|--------|----------------|----------------|--------|'
-  $rows = foreach($f in $items){
-    $target = if($f.plannedGA){ $f.plannedGA } else { 'TBD' }
-    $status = Format-StatusGlyph $f.currentStatus
-    $stale = ''
-    if($f.currentStatus -match 'Preview' -and $f.previewStartObj){
-      if(($now - $f.previewStartObj).TotalDays -gt 180){ $stale = '⚠' } else { $stale = '–' }
-    } else { $stale = '–' }
-  $disp = if($f.docUrl){ "[$($f.name)]($($f.docUrl))" } else { $f.name }
-  "| $disp | $target | $status | $($f.purpose) | (auto) | $stale |"
-  }
-  return ($header,$sep)+$rows -join "`n"
-}
-
-$nearTable = Build-NearTable $near
-$horizonTable = Build-HorizonTable $horizon
+ $nearTable = Build-NearTable $near
 
 
 # Flattened list
@@ -125,9 +108,8 @@ function Replace-Block($content,$marker,$new){
   return [regex]::Replace($content,$pattern,"<!-- BEGIN:$marker -->`n$new`n<!-- END:$marker -->")
 }
 
-# FUTURE_NEAR table intentionally omitted if markers not present in README (section deprecated)
+# FUTURE_NEAR table intentionally omitted if markers not present in README (section deprecated); horizon section removed
 $readmeContent = Replace-Block $readmeContent 'FUTURE_NEAR' $nearTable
-$readmeContent = Replace-Block $readmeContent 'FUTURE_HORIZON' $horizonTable
 $readmeContent = Replace-Block $readmeContent 'FLATTENED_FEATURES' ($flatList.TrimEnd())
 
 $readmeContent = Replace-Block $readmeContent 'POLICY_MATRIX' $policyTable

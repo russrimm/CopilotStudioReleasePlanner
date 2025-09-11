@@ -49,7 +49,6 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 
 **Forward Roadmap**
 - Full Future Detail: [All Future Planned Features](./Future_Planned_Features.md)
-- Longer Horizon: [Future (Horizon)](./Future_Horizon_Features.md)
 
 **Governance & Risk**
 - Security Focus: [Security & Compliance](#security--compliance-focus)
@@ -153,13 +152,7 @@ High‑signal publicly disclosed upcoming items. Full backlog + categorization i
 
 <!-- NOTE: Former Near Term (≤60d) table removed to avoid duplication with "Next 30 Days Planned Changes" section. -->
 
-## Future Planned Changes (Horizon)
-Moved to dedicated page for clarity and easier long-horizon curation: see [Future Horizon Features](./Future_Horizon_Features.md).
-
-<!-- NOTE: The following FUTURE_HORIZON block is intentionally retained (even though detailed horizon items live in a separate file) so automation and delta tracking scripts have both markers available. It may contain a condensed snapshot or be left minimal. -->
-<!-- BEGIN:FUTURE_HORIZON -->
-_(Condensed – see dedicated horizon page for full details)_
-<!-- END:FUTURE_HORIZON -->
+<!-- NOTE: FUTURE_HORIZON section removed (Horizon content consolidated into concise summary + dedicated planned features page). -->
 
 <details open>
 <summary>Key Guidance</summary>
