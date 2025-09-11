@@ -64,11 +64,66 @@ function Get-Header($table) {
 $lastHeader = Get-Header $lastTable
 $nextHeader = Get-Header $nextTable
 
+# Lightweight date parsing helper (supports yyyy-MM-dd and yyyy-MM producing first-of-month).
+function Parse-Date([string]$val){
+  if([string]::IsNullOrWhiteSpace($val)){ return $null }
+  $out = [DateTime]::MinValue
+  $formats = 'yyyy-MM-dd','yyyy-MM'
+  foreach($f in $formats){
+    if([DateTime]::TryParseExact($val,$f,$null,[System.Globalization.DateTimeStyles]::None,[ref]$out)){
+      if($f -eq 'yyyy-MM'){ return (Get-Date -Year $out.Year -Month $out.Month -Day 1) } else { return $out }
+    }
+  }
+  try { return [DateTime]::Parse($val) } catch { return $null }
+}
+
 if ($RawModelOutputFile -and -not (Test-Path $RawModelOutputFile)) { throw "RawModelOutputFile path not found: $RawModelOutputFile" }
 if (-not $RawModelOutput -and $RawModelOutputFile) { $RawModelOutput = Get-Content -Path $RawModelOutputFile -Raw }
 
 if ($Offline -and -not $RawModelOutput) {
-  Write-Host '[offline] Skipping AI call; tables unchanged.'
+  Write-Host '[offline] Offline mode enabled (no RawModelOutput supplied).'
+  # Even in offline mode, attempt placeholder synthesis so local dev can populate NEXT30 without a live model.
+  $placeholderPattern = '\(placeholder – awaiting first AI refresh\)'
+  if ($nextTable -match $placeholderPattern) {
+    Write-Host '[offline] Detected placeholder NEXT30 table; generating synthetic forward table from features.json.'
+    try {
+      $manifestPath = Join-Path (Split-Path $ReadmePath -Parent) 'features.json'
+      if (Test-Path $manifestPath) {
+        $featuresData = Get-Content $manifestPath -Raw | ConvertFrom-Json
+        $nowDate = Get-Date
+        $forwardEnd = $nowDate.AddDays(29)
+        $candidate = $featuresData | Where-Object { $_.plannedGA -or $_.decisionNeededBy }
+        foreach($c in $candidate){
+          $planDate = Parse-Date $c.plannedGA
+          $decisionDate = Parse-Date $c.decisionNeededBy
+          $c | Add-Member -NotePropertyName _planDate -NotePropertyValue $planDate -Force
+          $c | Add-Member -NotePropertyName _decisionDate -NotePropertyValue $decisionDate -Force
+        }
+        $forwardItems = $candidate | Where-Object { ( $_._planDate -and $_._planDate -ge $nowDate -and $_._planDate -le $forwardEnd ) -or ( $_._decisionDate -and $_._decisionDate -ge $nowDate -and $_._decisionDate -le $forwardEnd ) }
+        $forwardItems = $forwardItems | Sort-Object -Property @{Expression = { if($_._planDate){0}else{1}}; Ascending=$true}, @{Expression={ $_._planDate }}, @{Expression={ $_._decisionDate }}
+        if ($forwardItems.Count -gt 0) {
+          $header = '| Feature | Expected Change (Next 30d) | Planned Date (Approx) | Nature of Change | Why It Matters | Prep / Action |'
+          $sep = '|---------|---------------------------|-----------------------|------------------|----------------|---------------|'
+          $rows = foreach($f in $forwardItems){
+            $plan = if($f.plannedGA){ $f.plannedGA } elseif($f._decisionDate){ $f._decisionDate.ToString('yyyy-MM-dd') } else { '' }
+            $nature = if($f.currentStatus -match 'Preview' -and ($f.plannedGA -and $f.plannedGA -ne 'TBD')){ 'GA target' } elseif($f.currentStatus -match 'Preview'){ 'Preview in-flight' } elseif($f.currentStatus -match 'GA'){ 'GA enhancement' } else { 'Update' }
+            $disp = if($f.docUrl){ "[$($f.name)]($($f.docUrl))" } else { $f.name }
+            $why = $f.purpose
+            $action = if($f.currentStatus -match 'Preview'){ 'Assess readiness' } elseif($f.currentStatus -match 'GA'){ 'Adopt incrementally' } else { 'Review' }
+            "| $disp | $nature | $plan | $nature | $why | $action |"
+          }
+          $synthTable = ($header,$sep)+$rows -join "`n"
+          $updated = [Regex]::Replace($readme, $patNext, "<!-- BEGIN:NEXT30_TABLE -->`n$synthTable`n<!-- END:NEXT30_TABLE -->")
+          Set-Content -Path $ReadmePath -Value $updated -NoNewline
+          Write-Host "[offline] Synthesized NEXT30 with $($forwardItems.Count) item(s); README updated."
+        } else {
+          Write-Host '[offline] No qualifying forward items found; leaving placeholder.'
+        }
+      } else { Write-Host '[offline] features.json not found; cannot synthesize forward table.' }
+    } catch { Write-Warning "[offline] Fallback generation error: $($_.Exception.Message)" }
+  } else {
+    Write-Host '[offline] Placeholder not detected; no changes.'
+  }
   exit 0
 }
 
@@ -521,7 +576,55 @@ if ($newNextHeader -ne $nextHeader) {
 }
 
 if ($newLast -eq $lastTable -and $newNext -eq $nextTable) {
-  Write-Host 'No changes suggested.'; exit 0
+  # Detect placeholder in NEXT30 and synthesize if model produced no update
+  $placeholderPattern = '\(placeholder – awaiting first AI refresh\)'
+  if ($nextTable -match $placeholderPattern) {
+    Write-Host '[fallback] AI produced no update; generating forward table from features.json manifest.'
+    try {
+      $manifestPath = Join-Path (Split-Path $ReadmePath -Parent) 'features.json'
+      if (Test-Path $manifestPath) {
+        $featuresData = Get-Content $manifestPath -Raw | ConvertFrom-Json
+        $nowDate = Get-Date
+        $forwardEnd = $nowDate.AddDays(29)
+        $candidate = $featuresData | Where-Object {
+          ($_.plannedGA -and $_.plannedGA -match '^[0-9]{4}-[0-9]{2}') -or
+          ($_.decisionNeededBy -and $_.decisionNeededBy -match '^[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        }
+        foreach($c in $candidate){
+          $dtPlan = $null
+          if($c.plannedGA){
+            if($c.plannedGA -match '^[0-9]{4}-[0-9]{2}$'){ [void][DateTime]::TryParse(($c.plannedGA + '-01'),[ref]$dtPlan) }
+            elseif($c.plannedGA -match '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'){ [void][DateTime]::TryParse($c.plannedGA,[ref]$dtPlan) }
+          }
+          $c | Add-Member -NotePropertyName _planDate -NotePropertyValue $dtPlan -Force
+          $dNeed = $null; if($c.decisionNeededBy -and $c.decisionNeededBy -match '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'){ [void][DateTime]::TryParse($c.decisionNeededBy,[ref]$dNeed) }
+          $c | Add-Member -NotePropertyName _decisionDate -NotePropertyValue $dNeed -Force
+        }
+        $forwardItems = $candidate | Where-Object { ( $_._planDate -and $_._planDate -ge $nowDate -and $_._planDate -le $forwardEnd ) -or ( $_._decisionDate -and $_._decisionDate -ge $nowDate -and $_._decisionDate -le $forwardEnd ) }
+        $forwardItems = $forwardItems | Sort-Object -Property @{Expression = { if($_._planDate){0}else{1}}; Ascending=$true}, @{Expression={ $_._planDate }}, @{Expression={ $_._decisionDate }}
+        if ($forwardItems.Count -gt 0) {
+          $header = '| Feature | Expected Change (Next 30d) | Planned Date (Approx) | Nature of Change | Why It Matters | Prep / Action |'
+          $sep = '|---------|---------------------------|-----------------------|------------------|----------------|---------------|'
+          $rows = foreach($f in $forwardItems){
+            $plan = if($f.plannedGA){ $f.plannedGA } elseif($f._decisionDate){ $f._decisionDate.ToString('yyyy-MM-dd') } else { '' }
+            $nature = if($f.currentStatus -match 'Preview' -and ($f.plannedGA -and $f.plannedGA -ne 'TBD')){ 'GA target' } elseif($f.currentStatus -match 'Preview'){ 'Preview in-flight' } elseif($f.currentStatus -match 'GA'){ 'GA enhancement' } else { 'Update' }
+            $disp = if($f.docUrl){ "[$($f.name)]($($f.docUrl))" } else { $f.name }
+            $why = $f.purpose
+            $action = if($f.currentStatus -match 'Preview'){ 'Assess readiness' } elseif($f.currentStatus -match 'GA'){ 'Adopt incrementally' } else { 'Review' }
+            "| $disp | $nature | $plan | $nature | $why | $action |"
+          }
+          $synthTable = ($header,$sep)+$rows -join "`n"
+          $newNext = $synthTable
+          Write-Host '[fallback] Synthesized NEXT30 table with ' $forwardItems.Count ' item(s).'
+        } else {
+          Write-Host '[fallback] No qualifying forward items found; leaving placeholder.'
+        }
+      } else { Write-Host '[fallback] features.json not found; cannot synthesize NEXT30.' }
+    } catch { Write-Warning "Fallback forward table generation failed: $($_.Exception.Message)" }
+    if ($newLast -eq $lastTable -and $newNext -eq $nextTable) { Write-Host 'No changes suggested.'; exit 0 }
+  } else {
+    Write-Host 'No changes suggested.'; exit 0
+  }
 }
 
 Write-Host 'Applying updates.'
