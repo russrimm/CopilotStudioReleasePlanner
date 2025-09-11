@@ -54,7 +54,6 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 **Governance & Risk**
 - Security Focus: [Security & Compliance](#security--compliance-focus)
 - Policy Coverage Matrix: [Policies](#policy-coverage-matrix)
-- Risk Heatmap: [Risk](#risk-heatmap)
 - Churn Spotlight: [Recent Transitions](#churn-spotlight-recent-status-transitions)
 
 **Operational Aids**
@@ -199,15 +198,7 @@ Matrix of policy/controls coverage (✓ implemented / – not applicable / ◻ g
 | Microsoft 365 Copilot Tuning | – | – | – | – |
 <!-- END:POLICY_MATRIX -->
 
-## Risk Heatmap
-Impact vs likelihood (qualitative quick scan).
-<!-- BEGIN:RISK_HEATMAP -->
-| Impact \\ Likelihood | Low | Medium | High |
-|---------------------|-----|--------|------|
-| High | m365-copilot-tuning | thousand-files, deep-reasoning-models |   |
-| Medium | file-groups, whatsapp-channel, mcp-server-ux, gpt41-mini-experimental | code-interpreter, credential-blocking, catalog-governance-tagging, byo-models, reusable-component-collections |   |
-| Low | answer-quality-analytics | mip-sensitivity-labels, multilingual-orchestration |   |
-<!-- END:RISK_HEATMAP -->
+
 
 ## All Features (Flattened)
 Single list for accessibility / quick grep.

@@ -7,9 +7,8 @@
    - Build FUTURE_HORIZON table (FUTURE_NEAR table generation skipped if markers absent to avoid duplication with NEXT30)
    - Generate flattened list & feature IDs blocks
    - Generate policy coverage matrix (union of policy keys across features)
-   - Provide risk heatmap placeholder classification by riskImpact + riskLikelihood
   Writes into README.md markers:
-    FUTURE_NEAR, FUTURE_HORIZON, FLATTENED_FEATURES, FEATURE_IDS, POLICY_MATRIX, RISK_HEATMAP
+    FUTURE_NEAR, FUTURE_HORIZON, FLATTENED_FEATURES, FEATURE_IDS, POLICY_MATRIX
 #>
 param(
   [int]$NearWindowDays = 60
@@ -119,23 +118,6 @@ $policyRows = foreach($f in $features){
 }
 $policyTable = ($policyHeader,$policySep)+$policyRows -join "`n"
 
-# Risk heatmap classification
-$impactLevels = 'Low','Medium','High'
-$likelihoodLevels = 'Low','Medium','High'
-$grid = @{}
-foreach($i in $impactLevels){ foreach($l in $likelihoodLevels){ $grid["$i|$l"] = @() } }
-foreach($f in $features){
-  $key = "$($f.riskImpact)|$($f.riskLikelihood)"
-  if($grid.ContainsKey($key)){ $grid[$key] += $f.slug }
-}
-function Cell($impact,$likelihood){ $v = $grid["$impact|$likelihood"]; if($v.Count -gt 0){ ($v -join ', ') } else { ' ' } }
-$riskTable = @(
-  '| Impact \\ Likelihood | Low | Medium | High |',
-  '|---------------------|-----|--------|------|',
-  "| High | $(Cell 'High' 'Low') | $(Cell 'High' 'Medium') | $(Cell 'High' 'High') |",
-  "| Medium | $(Cell 'Medium' 'Low') | $(Cell 'Medium' 'Medium') | $(Cell 'Medium' 'High') |",
-  "| Low | $(Cell 'Low' 'Low') | $(Cell 'Low' 'Medium') | $(Cell 'Low' 'High') |"
-) -join "`n"
 
 $readmeContent = Get-Content $readme -Raw
 function Replace-Block($content,$marker,$new){
@@ -150,7 +132,7 @@ $readmeContent = Replace-Block $readmeContent 'FUTURE_HORIZON' $horizonTable
 $readmeContent = Replace-Block $readmeContent 'FLATTENED_FEATURES' ($flatList.TrimEnd())
 $readmeContent = Replace-Block $readmeContent 'FEATURE_IDS' $ids
 $readmeContent = Replace-Block $readmeContent 'POLICY_MATRIX' $policyTable
-$readmeContent = Replace-Block $readmeContent 'RISK_HEATMAP' $riskTable
+
 
 Set-Content -Path $readme -Value $readmeContent -Encoding UTF8
 Write-Host 'Future roadmap sections refreshed.'
