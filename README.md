@@ -244,8 +244,8 @@ Moved to dedicated page for clarity and easier long-horizon curation: see [Futur
 Automated summary of changes detected between Near / Horizon future roadmap tables.
 
 <!-- BEGIN:DELTA -->
-2025-09-11 15:12 UTC - Future summary updated (hash 955409FB77CC31CF97AE5488E8421FCA64585E8F4CCC79CCB6A343F414E8C85B
- → E4E2B1CC7137842241F3387227939C3B9C780655CFBE6C77811236052464E427). Added: Generated answer quality analytics, Multilingual orchestration, [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups), Block maker-provided credentials, GPT-4.1 mini experimental model, 1000 files per agent, [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts), Bring Your Own Models, MIP sensitivity labels | Removed: Multilingual generative orchestration expansion, Block maker-provided credentials control, Answer quality analytics enhancements, Bring Your Own Models (Azure AI Foundry), GPT‑4.1 mini experimental model | Modified: Reusable component collections, ----------------, Deep reasoning models, Catalog governance tagging enrichment, Item (Summary), WhatsApp channel publishing, MCP server UX refinements, Microsoft 365 Copilot Tuning
+2025-09-11 11:01 UTC - Future summary updated (hash E4E2B1CC7137842241F3387227939C3B9C780655CFBE6C77811236052464E427
+ → E4E2B1CC7137842241F3387227939C3B9C780655CFBE6C77811236052464E427). Modified: GPT-4.1 mini experimental model, MCP server UX refinements, WhatsApp channel publishing, ----------------, Catalog governance tagging enrichment, Generated answer quality analytics, Bring Your Own Models, Item (Summary), 1000 files per agent, Multilingual orchestration, Block maker-provided credentials, [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups), MIP sensitivity labels, Deep reasoning models, Microsoft 365 Copilot Tuning, [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts), Reusable component collections
 <!-- END:DELTA -->
 
 ## Lifecycle Funnel
@@ -337,6 +337,9 @@ file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-cha
 _Last updated: 2025-09-11 (rolling windows)_
 
 Site theme: Modernist (GitHub Pages)
+
+
+
 
 
 
