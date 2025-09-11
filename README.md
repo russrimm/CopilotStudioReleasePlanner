@@ -88,19 +88,7 @@ Lifecycle: ✅ GA • 🧪 Preview • 📅 Planned • 🔍 Enhancing • 💤 
 
 ---
 
-## Rolling Timeline Strip
-<small>Visual month-by-month status glyph view (last 4 months + current + next 2 months).</small>
-<!-- BEGIN:TIMELINE_STRIP -->
-| Month | Key Moves |
-|-------|-----------|
-| 2025-06 | 🧪 File groups preview |
-| 2025-07 | (quiet) |
-| 2025-08 | ✅ File groups GA; 🧪 1000 files; ✅ Code interpreter; 🧪 MIP labels |
-| 2025-09 | 🧪 Credential blocking; 🧪 WhatsApp (GA prep) |
-| 2025-10 | (forecast) 📅 Governance tagging GA |
-| 2025-11 | (forecast) 🔍 MCP UX enhancements |
-<!-- END:TIMELINE_STRIP -->
-_Auto-generated; edit via scripts or manifest._
+<!-- Rolling Timeline Strip removed (deprecated section). -->
 
 ---
 
