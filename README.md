@@ -334,7 +334,7 @@ file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-cha
 
 ---
 
-_Last updated: 2025-09-10 (automation: scheduled refresh, metrics & diff v1.2)_
+_Last updated: 2025-09-11 (rolling windows)_
 
 Site theme: Modernist (GitHub Pages)
 
