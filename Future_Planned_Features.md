@@ -26,10 +26,10 @@ Source Basis: Microsoft Learn "What's new" + Power Platform Release Plans (curre
 <!-- BEGIN:IMMINENT_TABLE -->
 | Feature | Target (Month / Date) | Current Status | Expected Change | Impact | Prep Recommendations |
 |---------|-----------------------|----------------|-----------------|--------|---------------------|
-| WhatsApp channel publishing | Sep 2025 (Planned GA) | Preview | Preview → GA | Expands mobile / international channel reach | Finalize localization & rate limiting; test message templates |
-| Block maker-provided credentials control | Sep 2025 rollout | Preview | Wider tenant availability | Strengthens credential governance & reduces risk | Inventory existing maker creds; plan migration to managed auth |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Sep 2025 (Planned GA) | Preview | Preview → GA | Expands mobile / international channel reach | Finalize localization & rate limiting; test message templates |
+| [Block maker-provided credentials control](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Sep 2025 rollout | Preview | Wider tenant availability | Strengthens credential governance & reduces risk | Inventory existing maker creds; plan migration to managed auth |
 | Catalog governance tagging enrichment | Sep 2025 | Preview | Maturation / enhanced GA metadata | Improves compliant reuse & discovery | Define mandatory metadata schema (owner, PII, risk class) |
-| Generated answer quality analytics enhancements | Sep 2025 (iterative) | GA | Incremental enhancements | Finer attribution of answer gaps | Align dashboard KPIs & triage cadence |
+| [Generated answer quality analytics enhancements](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) | Sep 2025 (iterative) | GA | Incremental enhancements | Finer attribution of answer gaps | Align dashboard KPIs & triage cadence |
 | MCP server UX refinements | Late 2025 (ongoing) | GA | Progressive enhancements | Lowers friction for external capability onboarding | Update internal MCP integration checklist |
 <!-- END:IMMINENT_TABLE -->
 
@@ -54,8 +54,8 @@ Source Basis: Microsoft Learn "What's new" + Power Platform Release Plans (curre
 ## Governance, Security & Compliance
 | Feature | Status | Planned GA | Impact | Prep |
 |---------|--------|-----------|--------|-----|
-| Block maker-provided credentials control | Preview | Sep 2025 rollout | Credential governance & reduction of shadow secrets | Credential inventory & migration runbook |
-| MIP sensitivity label surfacing | Preview | TBD | Data classification in context | Align label taxonomy; pilot with sensitive set |
+| [Block maker-provided credentials control](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | Sep 2025 rollout | Credential governance & reduction of shadow secrets | Credential inventory & migration runbook |
+| [MIP sensitivity label surfacing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio) | Preview | TBD | Data classification in context | Align label taxonomy; pilot with sensitive set |
 | Customer Managed Keys (enhancements) | GA (enhancements) | N/A | Extended encryption control fidelity | Monitor key rotation & audit policies |
 | Audit logs / extended event taxonomy | GA (iterative) | N/A | Deeper operational visibility | Expand log parsing & retention pipelines |
 
@@ -85,7 +85,7 @@ Source Basis: Microsoft Learn "What's new" + Power Platform Release Plans (curre
 ## Channels & Surface Expansion
 | Feature | Status | Planned GA | Value | Prep |
 |---------|--------|-----------|-------|-----|
-| WhatsApp channel publishing | Preview | Sep 2025 (Planned GA) | High‑reach mobile channel | Localization QA; test opt-in flows |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Preview | Sep 2025 (Planned GA) | High‑reach mobile channel | Localization QA; test opt-in flows |
 | SharePoint channel enhancements | GA (enhancing) | N/A | Intranet integration depth | Governance & lifecycle policy |
 | Microsoft 365 Copilot publish refinements | GA (enhancing) | N/A | Seamless productivity surface integration | Align permission & visibility model |
 | Potential future channel pilots (undisclosed) | N/A | N/A | Not publicly documented | Monitor official announcements |
