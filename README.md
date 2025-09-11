@@ -2,6 +2,7 @@
 
 Ultra‑condensed view of what just changed and what is coming next. Scroll only if you need deeper analytics, governance, or risk context.
 
+For a more interactive version of updates across the entire suite of Microsoft products, visit [MS Pulse 360](https://www.mspulse360.app)
 ---
 
 ## Last 30 Days Feature Changes (2025-08-13 to 2025-09-11)
