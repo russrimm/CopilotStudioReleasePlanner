@@ -111,12 +111,7 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 
 </details>
 
-### No Security Posture Change Items (Recent)
-| Feature | Note |
-|---------|------|
-| Code interpreter GA | Operational governance required but no inherent platform security model change |
-| File groups GA | Structural organization feature only |
-| Image/file pipeline GA expansion | Increases surface; posture unchanged (govern via content policies) |
+
 
 ## Churn Spotlight (Recent Status Transitions)
 | Feature | From → To | Month | Adoption Note |
