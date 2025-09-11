@@ -12,7 +12,8 @@
 
 Param(
   [string]$RepoRoot = (Resolve-Path "$PSScriptRoot/.."),
-  [string[]]$TargetFiles = @('README.md')
+  [string[]]$TargetFiles = @('README.md'),
+  [switch]$EnsureNextHeadingRange = $true
 )
 
 $todayObj = Get-Date
@@ -32,8 +33,11 @@ $nextEndStr = $nextEnd.ToString('yyyy-MM-dd')
 $patternLast = '^## Last 30 Days Feature Changes \([^)]*\)'
 $replacementLast = "## Last 30 Days Feature Changes ($lastStartStr to $lastEndStr)"
 
-$patternNext = '^## Next 30 Days Planned Changes \([^)]*\)'
+$patternNextWithRange = '^## Next 30 Days Planned Changes \([^)]*\)'
 $replacementNext = "## Next 30 Days Planned Changes ($nextStartStr to $nextEndStr)"
+
+# Secondary pattern: heading present but missing range (e.g., "## Next 30 Days Planned Changes (Forward Look)")
+$patternNextAny = '^## Next 30 Days Planned Changes.*$'
 
 $filesUpdated = 0
 foreach ($file in $TargetFiles) {
@@ -43,15 +47,30 @@ foreach ($file in $TargetFiles) {
   $newContent = $content
   $changed = $false
 
-  if ($newContent -match $patternLast) {
-    $updatedLocal = [System.Text.RegularExpressions.Regex]::Replace($newContent, $patternLast, $replacementLast, 'IgnoreCase, Multiline')
+  # Debug diagnostics
+  $debugLast = [Regex]::Matches($newContent, $patternLast, 'IgnoreCase, Multiline').Count
+  Write-Host "[debug] Last-pattern matches: $debugLast"
+  $debugNext = [Regex]::Matches($newContent, $patternNextWithRange, 'IgnoreCase, Multiline').Count
+  Write-Host "[debug] Next-pattern (with range) matches: $debugNext"
+  $debugNextAny = [Regex]::Matches($newContent, $patternNextAny, 'IgnoreCase, Multiline').Count
+  Write-Host "[debug] Next-pattern (any) matches: $debugNextAny"
+
+  if ($debugLast -gt 0) {
+    $updatedLocal = [Regex]::Replace($newContent, $patternLast, $replacementLast, 'IgnoreCase, Multiline')
     if ($updatedLocal -ne $newContent) { $newContent = $updatedLocal; $changed = $true; Write-Host "[updated:last] $file -> $lastStartStr to $lastEndStr" } else { Write-Host "[no change:last] $file already current" }
   } else { Write-Warning "Last 30 Days heading not found in $file" }
 
-  if ($newContent -match $patternNext) {
-    $updatedLocal2 = [System.Text.RegularExpressions.Regex]::Replace($newContent, $patternNext, $replacementNext, 'IgnoreCase, Multiline')
-    if ($updatedLocal2 -ne $newContent) { $newContent = $updatedLocal2; $changed = $true; Write-Host "[updated:next] $file -> $nextStartStr to $nextEndStr" } else { Write-Host "[no change:next] $file already current" }
-  } else { Write-Warning "Next 30 Days heading not found in $file" }
+  if ($EnsureNextHeadingRange) {
+    if ($debugNext -gt 0) {
+      $updatedLocal2 = [Regex]::Replace($newContent, $patternNextWithRange, $replacementNext, 'IgnoreCase, Multiline')
+      if ($updatedLocal2 -ne $newContent) { $newContent = $updatedLocal2; $changed = $true; Write-Host "[updated:next] (range refresh) $file -> $nextStartStr to $nextEndStr" } else { Write-Host "[no change:next] $file already current" }
+    } elseif ($debugNextAny -gt 0) {
+      $updatedLocal3 = [Regex]::Replace($newContent, $patternNextAny, $replacementNext, 'IgnoreCase, Multiline')
+      if ($updatedLocal3 -ne $newContent) { $newContent = $updatedLocal3; $changed = $true; Write-Host "[updated:next] (added missing range) $file -> $nextStartStr to $nextEndStr" } else { Write-Host "[no change:next] pattern found but no diff" }
+    } else {
+      Write-Warning "Next 30 Days heading not found in $file"
+    }
+  }
 
   if ($changed) {
     Set-Content -Path $full -Value $newContent -NoNewline
