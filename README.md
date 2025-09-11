@@ -70,21 +70,7 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 
 ---
 
-## At a Glance
-<!-- BEGIN:AT_A_GLANCE -->
-| Metric | Count | Notes |
-|--------|-------|-------|
-| GA features (last 30d window) | 5 | Newly GA or GA confirmations |
-| Preview items (last 30d window) | 6 | Active evaluation required |
-| Preview → GA transitions (window) | 2 | Status promotions |
-| Security / Governance related updates | 5 | Auto keyword heuristic |
-| Multimodal / Execution updates | 2 | Interpreter & file/image pipeline |
-<!-- END:AT_A_GLANCE -->
-_Counts auto-maintained; modify via refresh script._
-
-Status: ![GA](https://img.shields.io/badge/GA-4-brightgreen) ![Preview](https://img.shields.io/badge/Preview-11-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-5-blue) ![TBD](https://img.shields.io/badge/TBD-6-lightgrey)
-
-Lifecycle: ✅ GA • 🧪 Preview • 📅 Planned • 🔍 Enhancing • 💤 Dormant • ⚠ Stale (>180d Preview)
+<!-- At a Glance section removed (deprecated). -->
 
 ---
 
