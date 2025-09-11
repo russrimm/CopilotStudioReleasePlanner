@@ -49,7 +49,6 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 
 **Forward Roadmap**
 - Full Future Detail: [All Future Planned Features](./Future_Planned_Features.md)
-- Near Term (≤60d): jump to [Future (Near)](#future-planned-changes-near-term-≤60d)
 - Longer Horizon: [Future (Horizon)](./Future_Horizon_Features.md)
 
 **Governance & Risk**
