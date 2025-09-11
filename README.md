@@ -38,7 +38,7 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 **Forward Roadmap**
 - Full Future Detail: [All Future Planned Features](./Future_Planned_Features.md)
 - Near Term (≤60d): jump to [Future (Near)](#future-planned-changes-near-term-≤60d)
-- Longer Horizon: jump to [Future (Horizon)](#future-planned-changes-horizon)
+- Longer Horizon: [Future (Horizon)](./Future_Horizon_Features.md)
 
 **Governance & Risk**
 - Security Focus: [Security & Compliance](#security--compliance-focus)
@@ -201,19 +201,7 @@ High‑signal publicly disclosed upcoming items expected inside ~60 day horizon.
 <!-- END:FUTURE_NEAR -->
 
 ## Future Planned Changes (Horizon)
-Longer horizon / TBD or >60 day items (re‑verify before dependency commitments). Full backlog in [All Future Planned Features](./Future_Planned_Features.md).
-
-<!-- BEGIN:FUTURE_HORIZON -->
-| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
-|----------------|--------|--------|----------------|----------------|--------|
-| MCP server UX refinements | Late 2025 (ongoing) | 🔍 Enhancing | Lower friction for external tools | Refresh integration checklist | – |
-| Deep reasoning models | TBD GA | 🧪 Preview | Multi‑step reasoning scenarios | Identify complex workflows | – |
-| Microsoft 365 Copilot Tuning | TBD GA | 🧪 Preview | Enterprise domain adaptation | Curate labeled datasets | – |
-| Bring Your Own Models (Azure AI Foundry) | TBD GA | 🧪 Preview | Custom model extensibility | Assess governance & cost controls | – |
-| Multilingual generative orchestration expansion | TBD | 🧪 Preview | Broader language coverage | Prioritize locales & test prompts | – |
-| GPT‑4.1 mini experimental model | TBD | 🧪 Preview | Lower latency experimentation | Define benchmark metrics | – |
-| Reusable component collections | TBD | 🧪 Preview | Accelerate modular reuse | Identify high‑reuse patterns | – |
-<!-- END:FUTURE_HORIZON -->
+Moved to dedicated page for clarity and easier long-horizon curation: see [Future Horizon Features](./Future_Horizon_Features.md).
 
 <details open>
 <summary>Key Guidance</summary>
