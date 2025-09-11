@@ -179,13 +179,7 @@ _(Condensed – see dedicated horizon page for full details)_
 
 </details>
 
-## Delta Since Last Refresh
-Automated summary of changes detected between Near / Horizon future roadmap tables.
 
-<!-- BEGIN:DELTA -->
-2025-09-11 11:26 UTC - Future summary updated (hash E4E2B1CC7137842241F3387227939C3B9C780655CFBE6C77811236052464E427
- → 102FFBD45029783F1719EBA1514ACCDB2870EF4512E2C2CD64ABEE8B78C44230). Removed: Catalog governance tagging enrichment, Block maker-provided credentials, Generated answer quality analytics, WhatsApp channel publishing, 1000 files per agent | Modified: Bring Your Own Models, Deep reasoning models, MCP server UX refinements, [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts), Item (Summary), GPT-4.1 mini experimental model, Reusable component collections, [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups), MIP sensitivity labels, Multilingual orchestration, ----------------, Microsoft 365 Copilot Tuning (near term section removed; horizon only)
-<!-- END:DELTA -->
 
 ## Lifecycle Funnel
 Summary of feature counts by lifecycle stage.

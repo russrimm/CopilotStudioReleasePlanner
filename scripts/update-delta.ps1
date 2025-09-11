@@ -1,10 +1,9 @@
 <#
 .SYNOPSIS
-  Updates the Delta Since Last Refresh section in README.md with diff of future roadmap tables.
+  (Deprecated) Previously updated the Delta Since Last Refresh section in README.md.
 .DESCRIPTION
-  Historically diffed FUTURE_NEAR + FUTURE_HORIZON; after removal of the Near Term (≤60d) table it now
-  operates solely on FUTURE_HORIZON when FUTURE_NEAR markers are absent. Computes row-level adds/removals/
-  modifications keyed by feature name and persists hash & snapshot for change detection.
+  The Delta section has been removed from README. This script now no-ops if the DELTA markers or the
+  FUTURE_HORIZON / FUTURE_NEAR markers are absent. Retained temporarily for workflow backward compatibility.
 #>
 $ErrorActionPreference='Stop'
 $root = Resolve-Path (Join-Path $PSScriptRoot '..')
@@ -28,6 +27,10 @@ $horizonNote = if($near.Success){ '' } else { ' (near term section removed; hori
 $currentHash = (Get-FileHash -InputStream ([IO.MemoryStream]::new([Text.Encoding]::UTF8.GetBytes($block)))).Hash
 
 $deltaSectionPattern = '(?s)<!-- BEGIN:DELTA -->.*?<!-- END:DELTA -->'
+if($content -notmatch $deltaSectionPattern){
+  Write-Host 'Delta markers absent; skipping delta update (deprecated).'
+  exit 0
+}
 
 if(Test-Path $hashFile){
   $oldHash = Get-Content $hashFile -Raw
