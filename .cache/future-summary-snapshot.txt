@@ -1,10 +1,3 @@
-| Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Decision Needed By |
-|----------------|--------|--------|----------------|----------------|--------------------|
-| WhatsApp channel publishing | 2025-09 | 🧪 Preview | Mobile reach channel | (auto) | 2025-09-20 |
-| Block maker-provided credentials | 2025-09 | 🧪 Preview | Eliminate unmanaged credentials | (auto) | 2025-09-25 |
-| Catalog governance tagging enrichment | 2025-09 | 🧪 Preview | Metadata for discovery & compliance | (auto) | 2025-09-30 |
-| 1000 files per agent | 2025-11 | 🧪 Preview | Higher knowledge object limits | (auto) |  |
-| Generated answer quality analytics |  | ✅ GA (enhancing) | Identify low quality answer clusters | (auto) | 2025-09-18 |
 | Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
 |----------------|--------|--------|----------------|----------------|--------|
 | [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | TBD | ✅ GA | Group related files & scope instructions | (auto) | – |
