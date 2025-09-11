@@ -448,9 +448,40 @@ if (-not $json) {
   $json = Try-ConstructFromRawTables $raw
 }
 if (-not $json) {
-  Write-Error 'Model output not valid JSON (after all repair fallbacks).'
-  if ($raw.Length -lt 2000) { Write-Host $raw } else { Write-Host ($raw.Substring(0,2000) + '...') }
-  exit 1
+  Write-DebugInfo 'All JSON repair strategies failed; attempting final markdown table salvage.'
+  function Try-ExtractTablesFromRaw([string]$text){
+    if(-not $text){ return $null }
+    # Find markdown tables (header line starting with | and a separator line of |--- )
+    $lines = $text -split "`n"
+    $tables = @()
+    for($i=0;$i -lt $lines.Length-1;$i++){
+      $l = $lines[$i].TrimEnd()
+      $next = $lines[$i+1].Trim()
+      if($l -match '^\|.*\|' -and $next -match '^\|[-: ]+\|'){
+        # capture until a blank line or non-table line
+        $buf = New-Object System.Text.StringBuilder
+        [void]$buf.AppendLine($l)
+        [void]$buf.AppendLine($next)
+        for($j=$i+2;$j -lt $lines.Length;$j++){
+          $row = $lines[$j]
+          if($row -match '^\|.*\|' -and $row.Trim().Length -gt 0){ [void]$buf.AppendLine($row) } else { break }
+        }
+        $tables += ($buf.ToString().TrimEnd())
+        if($tables.Count -ge 2){ break }
+      }
+    }
+    if($tables.Count -ge 2){ return $tables[0..1] } else { return $null }
+  }
+  $salvaged = Try-ExtractTablesFromRaw $raw
+  if($salvaged){
+    Write-Host '[warn] Model JSON invalid; salvaged tables directly. Applying non-strict update if headers align.'
+    $json = [pscustomobject]@{ last30_table = $salvaged[0]; next30_table = $salvaged[1] }
+  } else {
+    Write-Error 'Model output not valid JSON (after all repair fallbacks); no salvageable tables found.'
+    if ($raw.Length -lt 1200) { Write-Host $raw } else { Write-Host ($raw.Substring(0,1200) + '...') }
+    Write-Host '[warn] Skipping update (leaving existing tables) to avoid failing entire workflow.'
+    exit 0
+  }
 }
 if (-not ($json.last30_table) -or -not ($json.next30_table)) { Write-Error 'JSON missing required keys after parse.'; exit 1 }
 
