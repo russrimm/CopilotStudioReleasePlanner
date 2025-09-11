@@ -5,12 +5,11 @@
   Uses enhanced manifest (features.json) to:
    - Partition features into Near (plannedGA within 60d OR decisionNeededBy within 60d) and Horizon (others with future activity)
    - Build FUTURE_HORIZON table (FUTURE_NEAR table generation skipped if markers absent to avoid duplication with NEXT30)
-   - Auto-calculate lifecycle funnel counts (Preview, Planned, Enhancing, GA, Dormant, Stale Preview)
    - Generate flattened list & feature IDs blocks
    - Generate policy coverage matrix (union of policy keys across features)
    - Provide risk heatmap placeholder classification by riskImpact + riskLikelihood
   Writes into README.md markers:
-    FUTURE_NEAR, FUTURE_HORIZON, LIFECYCLE_FUNNEL, FLATTENED_FEATURES, FEATURE_IDS, POLICY_MATRIX, RISK_HEATMAP
+    FUTURE_NEAR, FUTURE_HORIZON, FLATTENED_FEATURES, FEATURE_IDS, POLICY_MATRIX, RISK_HEATMAP
 #>
 param(
   [int]$NearWindowDays = 60
@@ -98,24 +97,6 @@ function Build-HorizonTable($items){
 $nearTable = Build-NearTable $near
 $horizonTable = Build-HorizonTable $horizon
 
-# Lifecycle funnel counts
-$previewCount = ($features | Where-Object { $_.lifecycleStage -eq 'Preview' }).Count
-$plannedCount = ($features | Where-Object { $_.plannedGA -and $_.lifecycleStage -notin 'GA','Enhancing','Preview' }).Count
-$enhancingCount = ($features | Where-Object { $_.lifecycleStage -match 'Enhancing' }).Count
-$gaCount = ($features | Where-Object { $_.lifecycleStage -eq 'GA' }).Count
-$dormantCount = ($features | Where-Object { $_.lastUpdateObj -and ($now - $_.lastUpdateObj).TotalDays -gt 90 }).Count
-$stalePreview = ($features | Where-Object { $_.lifecycleStage -eq 'Preview' -and $_.previewStartObj -and ($now - $_.previewStartObj).TotalDays -gt 180 }).Count
-
-$lifecycleTable = @(
-  '| Stage | Count | Notes |',
-  '|-------|-------|-------|',
-  "| 🧪 Preview | $previewCount | active early access |",
-  "| 📅 Planned | $plannedCount | date published, pre-preview |",
-  "| 🔍 Enhancing | $enhancingCount | post-GA iteration |",
-  "| ✅ GA | $gaCount | fully released |",
-  "| 💤 Dormant | $dormantCount | >90d no update |",
-  "| ⚠ Stale Preview | $stalePreview | >180d preview |"
-) -join "`n"
 
 # Flattened list
 $flatList = $features | Sort-Object name | ForEach-Object {
@@ -166,7 +147,6 @@ function Replace-Block($content,$marker,$new){
 # FUTURE_NEAR table intentionally omitted if markers not present in README (section deprecated)
 $readmeContent = Replace-Block $readmeContent 'FUTURE_NEAR' $nearTable
 $readmeContent = Replace-Block $readmeContent 'FUTURE_HORIZON' $horizonTable
-$readmeContent = Replace-Block $readmeContent 'LIFECYCLE_FUNNEL' $lifecycleTable
 $readmeContent = Replace-Block $readmeContent 'FLATTENED_FEATURES' ($flatList.TrimEnd())
 $readmeContent = Replace-Block $readmeContent 'FEATURE_IDS' $ids
 $readmeContent = Replace-Block $readmeContent 'POLICY_MATRIX' $policyTable

@@ -59,7 +59,6 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 
 **Operational Aids**
 - Prep Matrix: [Preparation Priorities](#prep-priority-matrix)
-- Lifecycle Funnel: [Lifecycle](#lifecycle-funnel)
  
 
 **Sources**
@@ -176,18 +175,7 @@ _(Condensed – see dedicated horizon page for full details)_
 
 
 
-## Lifecycle Funnel
-Summary of feature counts by lifecycle stage.
-<!-- BEGIN:LIFECYCLE_FUNNEL -->
-| Stage | Count | Notes |
-|-------|-------|-------|
-| 🧪 Preview | 11 | active early access |
-| 📅 Planned | 0 | date published, pre-preview |
-| 🔍 Enhancing | 2 | post-GA iteration |
-| ✅ GA | 2 | fully released |
-| 💤 Dormant | 0 | >90d no update |
-| ⚠ Stale Preview | 0 | >180d preview |
-<!-- END:LIFECYCLE_FUNNEL -->
+
 
 ## Policy Coverage Matrix
 Matrix of policy/controls coverage (✓ implemented / – not applicable / ◻ gap).
