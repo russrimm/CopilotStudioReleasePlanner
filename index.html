@@ -1,5 +1,5 @@
 ---
-layout: none
+layout: null
 title: Copilot Studio – Rolling Updates Hub
 ---
 <!DOCTYPE html>
@@ -14,18 +14,22 @@ title: Copilot Studio – Rolling Updates Hub
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="dark">
-  <header class="site-header">
-    <h1>Copilot Studio <span class="accent">Rolling Updates Hub</span></h1>
-    <p class="tagline">Ultra‑condensed view of what just changed and what is coming next. Deeper analytics below.</p>
-    <nav class="quick-nav">
-      <a href="#at-a-glance">At a Glance</a>
-      <a href="#timeline">Timeline</a>
-      <a href="#near-term">Near</a>
-      <a href="#horizon">Horizon</a>
-      <a href="#governance">Governance</a>
-      <a href="#risk">Risk</a>
-      <a href="#last30">Last 30 Days</a>
-    </nav>
+  <header class="site-header compact">
+    <div class="site-header-inner">
+      <div class="title-block">
+        <h1 class="site-title">Copilot Studio <span class="accent">Rolling Updates Hub</span></h1>
+        <p class="tagline">Ultra‑condensed view of recent changes and near‑term roadmap. Scroll for deeper analytics, governance & risk.</p>
+      </div>
+      <nav class="quick-nav" aria-label="Section navigation">
+        <a href="#at-a-glance">At a Glance</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#near-term">Near</a>
+        <a href="#horizon">Horizon</a>
+        <a href="#policy-matrix">Policies</a>
+        <a href="#risk">Risk</a>
+        <a href="#last30">Last 30d</a>
+      </nav>
+    </div>
   </header>
 
   <main class="container">
@@ -293,8 +297,8 @@ title: Copilot Studio – Rolling Updates Hub
 
   <footer class="site-footer">
     <span>Last updated: 2025-09-10</span>
-    <span>Theme: Modernist (custom dark override)</span>
-    <span><a href="https://github.com/russrimm/CopilotStudioReleasePlanner">Repo</a></span>
+    <span><a href="https://github.com/russrimm/CopilotStudioReleasePlanner">GitHub Repo</a></span>
+    <span>Dark custom layout (Modernist base)</span>
   </footer>
 </body>
 </html>
