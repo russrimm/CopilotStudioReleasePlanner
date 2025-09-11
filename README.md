@@ -1,10 +1,3 @@
----
-title: Copilot Studio Rolling Updates Hub
-lastUpdated: 2025-09-10
-description: Rolling 30‑day changes plus concise future roadmap summary.
-version: 1.3
----
-
 # Copilot Studio – Rolling Updates Hub
 
 Ultra‑condensed view of what just changed and what is coming next. Scroll only if you need deeper analytics, governance, or risk context.
@@ -16,7 +9,7 @@ Ultra‑condensed view of what just changed and what is coming next. Scroll only
 ## Reference Links
 Curated pointers (kept brief). Deeper analytical sections follow.
 
-**Archives**
+**Historical Updates**
 - 12‑Month Catalog: [Last 12 Months](./archive/Last_12_Months_Features.md)
 - 6‑Month Snapshot: [Last 6 Months](./archive/Last_6_Months_Features.md)
 
@@ -34,7 +27,7 @@ Curated pointers (kept brief). Deeper analytical sections follow.
 **Operational Aids**
 - Prep Matrix: [Preparation Priorities](#prep-priority-matrix)
 - Lifecycle Funnel: [Lifecycle](#lifecycle-funnel)
-- Delta Log: [Changes Since Last Refresh](#delta-since-last-refresh)
+ 
 
 **Sources**
 - What's New (Learn)  
@@ -169,12 +162,6 @@ _Auto-generated; edit via scripts or manifest._
 | Deep reasoning models | Higher operational complexity & hallucination risk | Evaluation rubric & guardrail prompts (AI Team) |
 | BYO Models | Cost overrun / drift | Budget alerts + retrain cadence (FinOps + ML) |
 | Multilingual orchestration | Quality variance across locales | Locale-specific prompt QA (Localization) |
-
-## Delta Since Last Refresh
-<!-- BEGIN:DELTA -->
-2025-09-10 18:06 UTC - Future summary updated (hash 955409FB77CC31CF97AE5488E8421FCA64585E8F4CCC79CCB6A343F414E8C85B
- → 955409FB77CC31CF97AE5488E8421FCA64585E8F4CCC79CCB6A343F414E8C85B). Modified: Reusable component collections
-<!-- END:DELTA -->
 
 ## Future Planned Changes (Concise Summary)
 High‑signal publicly disclosed upcoming items. Full backlog + categorization in [All Future Planned Features](./Future_Planned_Features.md).
