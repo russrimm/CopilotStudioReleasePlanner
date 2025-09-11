@@ -220,11 +220,7 @@ Single list for accessibility / quick grep.
 - WhatsApp channel publishing (🧪 Preview)
 <!-- END:FLATTENED_FEATURES -->
 
-## Feature IDs
-Stable slugs for scripting / referencing.
-<!-- BEGIN:FEATURE_IDS -->
-file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-channel, mip-sensitivity-labels, catalog-governance-tagging, answer-quality-analytics, mcp-server-ux, deep-reasoning-models, byo-models, multilingual-orchestration, gpt41-mini-experimental, reusable-component-collections, m365-copilot-tuning
-<!-- END:FEATURE_IDS -->
+
 
 ## Notes & Disclaimers
 – Planned GA dates can shift; always re‑validate.  

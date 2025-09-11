@@ -8,7 +8,7 @@
    - Generate flattened list & feature IDs blocks
    - Generate policy coverage matrix (union of policy keys across features)
   Writes into README.md markers:
-    FUTURE_NEAR, FUTURE_HORIZON, FLATTENED_FEATURES, FEATURE_IDS, POLICY_MATRIX
+    FUTURE_NEAR, FUTURE_HORIZON, FLATTENED_FEATURES, POLICY_MATRIX
 #>
 param(
   [int]$NearWindowDays = 60
@@ -104,8 +104,7 @@ $flatList = $features | Sort-Object name | ForEach-Object {
   "- $disp ($glyph $($_.lifecycleStage))"
 } | Out-String
 
-# Feature IDs
-$ids = ($features | ForEach-Object { $_.slug }) -join ', '
+ # Feature IDs section removed from README; IDs still derivable on demand.
 
 # Policy matrix
 $allPolicyKeys = $features | ForEach-Object { $_.policies.PSObject.Properties.Name } | Where-Object { $_ } | Sort-Object -Unique
@@ -130,7 +129,7 @@ function Replace-Block($content,$marker,$new){
 $readmeContent = Replace-Block $readmeContent 'FUTURE_NEAR' $nearTable
 $readmeContent = Replace-Block $readmeContent 'FUTURE_HORIZON' $horizonTable
 $readmeContent = Replace-Block $readmeContent 'FLATTENED_FEATURES' ($flatList.TrimEnd())
-$readmeContent = Replace-Block $readmeContent 'FEATURE_IDS' $ids
+
 $readmeContent = Replace-Block $readmeContent 'POLICY_MATRIX' $policyTable
 
 
