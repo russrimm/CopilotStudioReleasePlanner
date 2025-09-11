@@ -16,8 +16,11 @@ if(-not (Test-Path $cacheDir)){ New-Item -ItemType Directory -Path $cacheDir | O
 $content = Get-Content $readme -Raw
 $near = [regex]::Match($content,'(?s)<!-- BEGIN:FUTURE_NEAR -->(.*?)<!-- END:FUTURE_NEAR -->')
 $horizon = [regex]::Match($content,'(?s)<!-- BEGIN:FUTURE_HORIZON -->(.*?)<!-- END:FUTURE_HORIZON -->')
-if(-not ($near.Success -and $horizon.Success)){ throw 'Future near/horizon markers not found.' }
-$block = ($near.Groups[1].Value.Trim()+"`n"+$horizon.Groups[1].Value.Trim()).Trim()
+if(-not $near.Success){ throw 'Future near marker not found.' }
+$nearPart = $near.Groups[1].Value.Trim()
+$horizonPart = if($horizon.Success){ $horizon.Groups[1].Value.Trim() } else { '' }
+$block = if([string]::IsNullOrWhiteSpace($horizonPart)){ $nearPart } else { ($nearPart+"`n"+$horizonPart).Trim() }
+ $horizonNote = if($horizon.Success){ '' } else { ' (horizon section absent in README; treated as empty)' }
 $currentHash = (Get-FileHash -InputStream ([IO.MemoryStream]::new([Text.Encoding]::UTF8.GetBytes($block)))).Hash
 
 $deltaSectionPattern = '(?s)<!-- BEGIN:DELTA -->.*?<!-- END:DELTA -->'
@@ -63,12 +66,12 @@ if(Test-Path $hashFile){
     if($removed.Count -gt 0){ $deltaParts += 'Removed: ' + ($removed -join ', ') }
     if($modified.Count -gt 0){ $deltaParts += 'Modified: ' + ($modified -join ', ') }
     if(-not $deltaParts){ $deltaParts += 'Hash changed but no row-level differences detected.' }
-    $delta = "Future summary updated (hash $oldHash → $currentHash). " + ($deltaParts -join ' | ')
+    $delta = "Future summary updated (hash $oldHash → $currentHash). " + ($deltaParts -join ' | ') + $horizonNote
   } else {
-    $delta = 'No changes in future roadmap tables since last refresh.'
+    $delta = 'No changes in future roadmap tables since last refresh.' + $horizonNote
   }
 } else {
-  $delta = 'Baseline established; future changes will be tracked.'
+  $delta = 'Baseline established; future changes will be tracked.' + $horizonNote
 }
 
 Set-Content -Path $hashFile -Value $currentHash -Encoding UTF8
