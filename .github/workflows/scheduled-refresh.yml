@@ -20,6 +20,28 @@ jobs:
           ./scripts/refresh-future-roadmap.ps1
           ./scripts/update-metrics.ps1
           ./scripts/update-delta.ps1
+      - name: AI rolling window refresh
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_KEY: ${{ secrets.AZURE_OPENAI_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_MODEL: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_FORCE_RESPONSES: 'true'
+          AZURE_OPENAI_USE_JSON_SCHEMA: 'true'
+        shell: pwsh
+        run: |
+          Start-Transcript -Path ai-refresh-log.txt -Force
+          try {
+            ./scripts/ai-refresh-rolling-windows.ps1 -DebugMode
+          } finally {
+            Stop-Transcript | Out-Null
+          }
+      - name: Upload AI refresh log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-refresh-log
+          path: ai-refresh-log.txt
       - name: Commit changes if any
         shell: pwsh
         run: |
