@@ -7,21 +7,66 @@ version: 1.3
 
 # Copilot Studio – Rolling Updates Hub
 
-Operational flight deck for Copilot Studio evolution:
-1. Last 30 days shipped changes (retrospective)
-2. Concise future planned changes (supersedes narrow "next 30 days")
+Ultra‑condensed view of what just changed and what is coming next. Scroll only if you need deeper analytics, governance, or risk context.
 
-Extended references:
-• Full 12‑Month Catalog: [Last 12 Months](./archive/Last_12_Months_Features.md)  
-• 6‑Month Snapshot: [Last 6 Months](./archive/Last_6_Months_Features.md)  
-• Full Future Detail: [All Future Planned Features](./Future_Planned_Features.md)
+---
 
-Legend: **GA** = Generally Available, **Preview** = Public preview / early access, **Planned GA** = published target (month/date), **TBD** = not yet published.
+## Last 30 Days Feature Changes (2025-08-12 to 2025-09-10)
+Most recent launches, promotions, and previews (auto‑rolling window).
 
-Sources: Microsoft Learn "What's new" + public Power Platform release plans + linked feature docs. Re‑verify forward dates before gating dependencies.
+<!-- BEGIN:LAST30_TABLE -->
+| Feature | Status (Now) | Change Date (Approx) | What Changed | Why It Matters | Recommended Action |
+|---------|--------------|----------------------|--------------|---------------|-------------------|
+| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | GA | 2025-08 | GA release | Natural language → Python execution for dynamic transformations & actions | Pilot on low-risk analytic tasks; define governance limits (execution time, data scope). |
+| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | GA (was Preview) | 2025-08 | Reached GA | Cohesive organization + scoped instructions for grouped files | Refactor ad hoc single-file sources into logical groups for better grounding precision. |
+| [Generated answer rate & quality analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) | GA | 2025-08 | New analytics section GA | Surfaces unanswered & low-quality clusters | Establish weekly triage; create remediation backlog tied to knowledge gaps. |
+| [Expanded file & image upload pipeline](https://learn.microsoft.com/en-us/microsoft-copilot-studio/image-input-analysis) | GA | 2025-08 | Broader multimodal support & downstream pass-through | Unlocks richer workflows (e.g., image → extraction → action chain) | Add validation step ensuring sensitive images meet compliance before routing. |
+| [MCP server guided connection](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#add-the-mcp-server-in-copilot-studio-recommended) | GA | 2025-08 | Guided add & tool registration GA | Lowers friction to integrate external capabilities | Standardize naming & tagging of MCP tools for searchability. |
+| [Discover & install Microsoft-built agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent) | Phased GA | 2025-08 | Catalog experience maturing | In-product reuse of curated agents reduces duplicate build effort | Define review checklist (security, data scope, ownership) before catalog adoption. |
+| [Use up to 1000 files per agent uploads](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-08-18 | Preview availability | Scales knowledge ingestion dramatically | Plan taxonomy & retention policy early; avoid dumping uncurated content. |
+| [Block maker-provided credentials for authentication](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-09 | New preview control | Reduces credential sprawl & shadow auth risk | Inventory existing agents using maker creds; schedule migration to managed auth. |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Preview (Planned GA Sep 2025) | Aug–Sep 2025 | Stabilizing ahead of GA window | Expands mobile-first channel reach | Finalize messaging policy; set rate limits; test localization. |
+| [MIP sensitivity label surfacing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio) | Preview | 2025-08 (ongoing) | Incremental preview refinements | Prevents oversharing; enforces data classification boundaries | Map label taxonomy to agent knowledge sources; pilot with high-sensitivity set. |
+| SSO Consent Card (inline consent) | Preview | 2025-08 (expanding) | Wider tenant rollout | Reduces friction & support tickets for OAuth flows | Update onboarding docs to remove legacy redirect instructions. |
+| Agent catalog + governance tagging (internal refinement) | Preview → GA | 2025-08 | Metadata enrichment & search improvements | Speeds discovery; reduces duplicate logic | Enforce required metadata (owner, data scope, PII flags). |
+<!-- END:LAST30_TABLE -->
 
-## Navigation
-[At a Glance](#at-a-glance) • [Timeline](#rolling-timeline-strip) • [Last 30 Days](#last-30-days-feature-changes-2025-08-12-to-2025-09-10) • [Future (Near)](#future-planned-changes-near-term-≤60d) • [Future (Horizon)](#future-planned-changes-horizon) • [Lifecycle Funnel](#lifecycle-funnel) • [Immediate Actions](#immediate-actions-checklist) • [Security Focus](#security--compliance-focus) • [Policy Matrix](#policy-coverage-matrix) • [Churn Spotlight](#churn-spotlight-recent-status-transitions) • [Prep Matrix](#prep-priority-matrix) • [Risk Heatmap](#risk-heatmap) • [Delta](#delta-since-last-refresh) • [All Features Flat](#all-features-flattened) • [IDs](#feature-ids) • [Sources](#source-references)
+### Quick Legend
+**GA** Generally Available • **Preview** Early access • **Planned GA** Published target month/date • **TBD** Not yet published.
+
+---
+
+## Reference Links
+Curated pointers (kept brief). Deeper analytical sections follow.
+
+**Archives**
+- 12‑Month Catalog: [Last 12 Months](./archive/Last_12_Months_Features.md)
+- 6‑Month Snapshot: [Last 6 Months](./archive/Last_6_Months_Features.md)
+
+**Forward Roadmap**
+- Full Future Detail: [All Future Planned Features](./Future_Planned_Features.md)
+- Near Term (≤60d): jump to [Future (Near)](#future-planned-changes-near-term-≤60d)
+- Longer Horizon: jump to [Future (Horizon)](#future-planned-changes-horizon)
+
+**Governance & Risk**
+- Security Focus: [Security & Compliance](#security--compliance-focus)
+- Policy Coverage Matrix: [Policies](#policy-coverage-matrix)
+- Risk Heatmap: [Risk](#risk-heatmap)
+- Churn Spotlight: [Recent Transitions](#churn-spotlight-recent-status-transitions)
+
+**Operational Aids**
+- Prep Matrix: [Preparation Priorities](#prep-priority-matrix)
+- Lifecycle Funnel: [Lifecycle](#lifecycle-funnel)
+- Delta Log: [Changes Since Last Refresh](#delta-since-last-refresh)
+
+**Sources**
+- What's New (Learn)  
+- Power Platform Release Plans  
+- Individual Feature Docs (linked inline)
+
+---
+
+## At a Glance
 
 ## At a Glance
 <!-- BEGIN:AT_A_GLANCE -->
@@ -56,26 +101,6 @@ Lifecycle: ✅ GA • 🧪 Preview • 📅 Planned • 🔍 Enhancing • 💤 
 _Auto-generated; edit via scripts or manifest._
 
 ---
-
-## Last 30 Days Feature Changes (2025-08-12 to 2025-09-10)
-Digest of promotions, launches, and new previews inside the rolling 30‑day window. (Date range auto-updated daily by workflow.)
-
-<!-- BEGIN:LAST30_TABLE -->
-| Feature | Status (Now) | Change Date (Approx) | What Changed | Why It Matters | Recommended Action |
-|---------|--------------|----------------------|--------------|---------------|-------------------|
-| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | GA | 2025-08 | GA release | Natural language → Python execution for dynamic transformations & actions | Pilot on low-risk analytic tasks; define governance limits (execution time, data scope). |
-| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | GA (was Preview) | 2025-08 | Reached GA | Cohesive organization + scoped instructions for grouped files | Refactor ad hoc single-file sources into logical groups for better grounding precision. |
-| [Generated answer rate & quality analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) | GA | 2025-08 | New analytics section GA | Surfaces unanswered & low-quality clusters | Establish weekly triage; create remediation backlog tied to knowledge gaps. |
-| [Expanded file & image upload pipeline](https://learn.microsoft.com/en-us/microsoft-copilot-studio/image-input-analysis) | GA | 2025-08 | Broader multimodal support & downstream pass-through | Unlocks richer workflows (e.g., image → extraction → action chain) | Add validation step ensuring sensitive images meet compliance before routing. |
-| [MCP server guided connection](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#add-the-mcp-server-in-copilot-studio-recommended) | GA | 2025-08 | Guided add & tool registration GA | Lowers friction to integrate external capabilities | Standardize naming & tagging of MCP tools for searchability. |
-| [Discover & install Microsoft-built agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-install-agent) | Phased GA | 2025-08 | Catalog experience maturing | In-product reuse of curated agents reduces duplicate build effort | Define review checklist (security, data scope, ownership) before catalog adoption. |
-| [Use up to 1000 files per agent uploads](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-08-18 | Preview availability | Scales knowledge ingestion dramatically | Plan taxonomy & retention policy early; avoid dumping uncurated content. |
-| [Block maker-provided credentials for authentication](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | Preview | 2025-09 | New preview control | Reduces credential sprawl & shadow auth risk | Inventory existing agents using maker creds; schedule migration to managed auth. |
-| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | Preview (Planned GA Sep 2025) | Aug–Sep 2025 | Stabilizing ahead of GA window | Expands mobile-first channel reach | Finalize messaging policy; set rate limits; test localization. |
-| [MIP sensitivity label surfacing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/sensitivity-label-copilot-studio) | Preview | 2025-08 (ongoing) | Incremental preview refinements | Prevents oversharing; enforces data classification boundaries | Map label taxonomy to agent knowledge sources; pilot with high-sensitivity set. |
-| SSO Consent Card (inline consent) | Preview | 2025-08 (expanding) | Wider tenant rollout | Reduces friction & support tickets for OAuth flows | Update onboarding docs to remove legacy redirect instructions. |
-| Agent catalog + governance tagging (internal refinement) | Preview → GA | 2025-08 | Metadata enrichment & search improvements | Speeds discovery; reduces duplicate logic | Enforce required metadata (owner, data scope, PII flags). |
-<!-- END:LAST30_TABLE -->
 
 ### Key Adoption Themes (30 Days)
 <details open>

@@ -42,9 +42,12 @@ foreach($f in $features){
 $nearCutoff = $now.AddDays($NearWindowDays)
 
 $near = $features | Where-Object {
-  ($_ .plannedDateObj -and $_.plannedDateObj -le $nearCutoff) -or
+  ($_.plannedDateObj -and $_.plannedDateObj -le $nearCutoff) -or
   ($_.decisionDateObj -and $_.decisionDateObj -le $nearCutoff)
-} | Sort-Object {[int]($_.plannedDateObj -ne $null)*0 + [int]($_.decisionDateObj -ne $null)*1} -Descending, plannedDateObj
+} | Sort-Object -Property 
+  @{ Expression = { if($_.plannedDateObj){ 0 } else { 1 } }; Ascending = $true },
+  @{ Expression = { $_.plannedDateObj } ; Ascending = $true },
+  @{ Expression = { $_.decisionDateObj } ; Ascending = $true }
 
 $nearSlugs = $near.slug
 $horizon = $features | Where-Object { $nearSlugs -notcontains $_.slug }
