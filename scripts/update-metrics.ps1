@@ -56,3 +56,34 @@ if($updated -match $badgePattern){
 }
 
 if($updated -ne $content){ Set-Content -Path $readme -Value $updated -Encoding UTF8; Write-Host 'Metrics updated.' } else { Write-Host 'No metrics changes.' }
+
+# Also refresh lifecycle funnel counts if markers present (non-authoritative; main generation occurs in refresh-future-roadmap but this keeps them updated if roadmap script not run)
+try {
+  $lcMatch = [regex]::Match($updated,'(?s)<!-- BEGIN:LIFECYCLE_FUNNEL -->(.*?)<!-- END:LIFECYCLE_FUNNEL -->')
+  if($lcMatch.Success){
+    $features = $json
+    $now = Get-Date
+    function ParseDate([string]$v){
+      if([string]::IsNullOrWhiteSpace($v)){ return $null }
+      try { return [DateTime]::Parse($v, [System.Globalization.CultureInfo]::InvariantCulture) } catch { return $null }
+    }
+    $previewCount = ($features | Where-Object { $_.lifecycleStage -eq 'Preview' }).Count
+    $plannedCount = ($features | Where-Object { $_.plannedGA -and $_.plannedGA -notmatch 'TBD' -and $_.lifecycleStage -notin 'GA','Enhancing','Preview' }).Count
+    $enhancingCount = ($features | Where-Object { $_.lifecycleStage -match 'Enhancing' }).Count
+    $gaCount = ($features | Where-Object { $_.lifecycleStage -eq 'GA' }).Count
+    $dormantCount = ($features | Where-Object { $_.lastUpdate -and (ParseDate $_.lastUpdate) -and ($now - (ParseDate $_.lastUpdate)).TotalDays -gt 90 }).Count
+    $stalePreview = ($features | Where-Object { $_.lifecycleStage -eq 'Preview' -and $_.previewStart -and (ParseDate $_.previewStart) -and ($now - (ParseDate $_.previewStart)).TotalDays -gt 180 }).Count
+    $lcTable = @(
+      '| Stage | Count | Notes |',
+      '|-------|-------|-------|',
+      "| 🧪 Preview | $previewCount | active early access |",
+      "| 📅 Planned | $plannedCount | date published, pre-preview |",
+      "| 🔍 Enhancing | $enhancingCount | post-GA iteration |",
+      "| ✅ GA | $gaCount | fully released |",
+      "| 💤 Dormant | $dormantCount | >90d no update |",
+      "| ⚠ Stale Preview | $stalePreview | >180d preview |"
+    ) -join "`n"
+    $updated2 = [regex]::Replace($updated,'(?s)<!-- BEGIN:LIFECYCLE_FUNNEL -->.*?<!-- END:LIFECYCLE_FUNNEL -->',"<!-- BEGIN:LIFECYCLE_FUNNEL -->`n$lcTable`n<!-- END:LIFECYCLE_FUNNEL -->")
+    if($updated2 -ne $updated){ Set-Content -Path $readme -Value $updated2 -Encoding UTF8; Write-Host 'Lifecycle funnel refreshed.' }
+  }
+} catch { Write-Warning "Lifecycle funnel refresh failed: $($_.Exception.Message)" }

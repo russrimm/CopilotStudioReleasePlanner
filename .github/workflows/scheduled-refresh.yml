@@ -17,7 +17,7 @@ jobs:
         shell: pwsh
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force
-          ./scripts/refresh-future-summary.ps1
+          ./scripts/refresh-future-roadmap.ps1
           ./scripts/update-metrics.ps1
           ./scripts/update-delta.ps1
       - name: Commit changes if any

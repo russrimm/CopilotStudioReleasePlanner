@@ -30,12 +30,12 @@ Sources: Microsoft Learn "What's new" + public Power Platform release plans + li
 | GA features (last 30d window) | 5 | Newly GA or GA confirmations |
 | Preview items (last 30d window) | 6 | Active evaluation required |
 | Preview → GA transitions (window) | 2 | Status promotions |
-| Security / Governance related updates | 12 | Auto keyword heuristic |
+| Security / Governance related updates | 5 | Auto keyword heuristic |
 | Multimodal / Execution updates | 2 | Interpreter & file/image pipeline |
 <!-- END:AT_A_GLANCE -->
 _Counts auto-maintained; modify via refresh script._
 
-Status: ![GA](https://img.shields.io/badge/GA-3-brightgreen) ![Preview](https://img.shields.io/badge/Preview-5-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-3-blue) ![TBD](https://img.shields.io/badge/TBD-2-lightgrey) ![Freshness](https://img.shields.io/badge/Data_Freshness-0d-success) ![Source_Coverage](https://img.shields.io/badge/Source_Coverage-100%25-blue)
+Status: ![GA](https://img.shields.io/badge/GA-4-brightgreen) ![Preview](https://img.shields.io/badge/Preview-11-orange) ![Planned_GA](https://img.shields.io/badge/Planned_GA-5-blue) ![TBD](https://img.shields.io/badge/TBD-6-lightgrey)
 
 Lifecycle: ✅ GA • 🧪 Preview • 📅 Planned • 🔍 Enhancing • 💤 Dormant • ⚠ Stale (>180d Preview)
 
@@ -172,7 +172,8 @@ Digest of promotions, launches, and new previews inside the rolling 30‑day win
 
 ## Delta Since Last Refresh
 <!-- BEGIN:DELTA -->
-2025-09-10 16:44 UTC - Baseline established; future changes will be tracked.
+2025-09-10 18:06 UTC - Future summary updated (hash 955409FB77CC31CF97AE5488E8421FCA64585E8F4CCC79CCB6A343F414E8C85B
+ → 955409FB77CC31CF97AE5488E8421FCA64585E8F4CCC79CCB6A343F414E8C85B). Modified: Reusable component collections
 <!-- END:DELTA -->
 
 ## Future Planned Changes (Concise Summary)
@@ -221,12 +222,12 @@ Summary of feature counts by lifecycle stage.
 <!-- BEGIN:LIFECYCLE_FUNNEL -->
 | Stage | Count | Notes |
 |-------|-------|-------|
-| 🧪 Preview | 0 | placeholder |
-| 📅 Planned | 0 | published date, not yet preview |
-| 🔍 Enhancing | 0 | post-GA iteration |
-| ✅ GA | 0 | fully released |
-| 💤 Dormant | 0 | no update >90d |
-| ⚠ Stale Preview | 0 | preview >180d |
+| 🧪 Preview | 11 | active early access |
+| 📅 Planned | 0 | date published, pre-preview |
+| 🔍 Enhancing | 2 | post-GA iteration |
+| ✅ GA | 2 | fully released |
+| 💤 Dormant | 0 | >90d no update |
+| ⚠ Stale Preview | 0 | >180d preview |
 <!-- END:LIFECYCLE_FUNNEL -->
 
 ## Policy Coverage Matrix
@@ -289,5 +290,9 @@ file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-cha
 
 ---
 _Last updated: 2025-09-10 (automation: scheduled refresh, metrics & diff v1.2)_
+
+
+
+
 
 

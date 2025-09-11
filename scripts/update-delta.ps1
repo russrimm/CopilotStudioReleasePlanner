@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-  Updates the Delta Since Last Refresh section in README.md with diff of FUTURE_SUMMARY table.
+  Updates the Delta Since Last Refresh section in README.md with diff of FUTURE_NEAR + FUTURE_HORIZON tables.
 .DESCRIPTION
-  Stores previous snapshot (table rows) and computes added / removed / modified lines.
-  Persists hash for quick no-change detection and snapshot for detailed diff.
+  Concatenates both future roadmap tables and computes row-level adds/removals/modifications keyed by feature name.
+  Persists hash & snapshot for change detection.
 #>
 $ErrorActionPreference='Stop'
 $root = Resolve-Path (Join-Path $PSScriptRoot '..')
@@ -14,9 +14,10 @@ $snapshotFile = Join-Path $cacheDir 'future-summary-snapshot.txt'
 if(-not (Test-Path $cacheDir)){ New-Item -ItemType Directory -Path $cacheDir | Out-Null }
 
 $content = Get-Content $readme -Raw
-$match = [regex]::Match($content, '(?s)<!-- BEGIN:FUTURE_SUMMARY -->(.*?)<!-- END:FUTURE_SUMMARY -->')
-if(-not $match.Success){ throw 'Future summary markers not found.' }
-$block = $match.Groups[1].Value.Trim()
+$near = [regex]::Match($content,'(?s)<!-- BEGIN:FUTURE_NEAR -->(.*?)<!-- END:FUTURE_NEAR -->')
+$horizon = [regex]::Match($content,'(?s)<!-- BEGIN:FUTURE_HORIZON -->(.*?)<!-- END:FUTURE_HORIZON -->')
+if(-not ($near.Success -and $horizon.Success)){ throw 'Future near/horizon markers not found.' }
+$block = ($near.Groups[1].Value.Trim()+"`n"+$horizon.Groups[1].Value.Trim()).Trim()
 $currentHash = (Get-FileHash -InputStream ([IO.MemoryStream]::new([Text.Encoding]::UTF8.GetBytes($block)))).Hash
 
 $deltaSectionPattern = '(?s)<!-- BEGIN:DELTA -->.*?<!-- END:DELTA -->'
@@ -28,25 +29,43 @@ if(Test-Path $hashFile){
     $newSnapshot = $block
     $oldLines = $oldSnapshot -split "`n" | Where-Object { $_ -match '^\|' }
     $newLines = $newSnapshot -split "`n" | Where-Object { $_ -match '^\|' }
-    $added = $newLines | Where-Object { $oldLines -notcontains $_ }
-    $removed = $oldLines | Where-Object { $newLines -notcontains $_ }
-    # Modified heuristic: matching first cell but line differs
-    $modified = @()
-    foreach($n in $newLines){
-      $key = ($n -split '\|')[1].Trim()
-      $matchOld = $oldLines | Where-Object { ($_. -split '\|')[1].Trim() -eq $key }
-      if($matchOld -and ($matchOld -ne $n)){
-        $modified += "~ $key"
-      }
+
+    function Get-Key($line){
+      if(-not $line){ return $null }
+      $parts = $line -split '\|'
+      if($parts.Length -lt 3){ return $null }
+      # first element usually empty (leading pipe)
+      return $parts[1].Trim()
     }
+
+    $added = @()
+    $removed = @()
+    $modified = @()
+
+    # Build dictionaries for quick lookup
+    $oldMap = @{}
+    foreach($l in $oldLines){
+      $k = Get-Key $l
+      if($k){ $oldMap[$k] = $l }
+    }
+    $newMap = @{}
+    foreach($l in $newLines){
+      $k = Get-Key $l
+      if($k){ $newMap[$k] = $l }
+    }
+
+    foreach($k in $newMap.Keys){ if(-not $oldMap.ContainsKey($k)){ $added += $k } }
+    foreach($k in $oldMap.Keys){ if(-not $newMap.ContainsKey($k)){ $removed += $k } }
+    foreach($k in $newMap.Keys){ if($oldMap.ContainsKey($k) -and $oldMap[$k] -ne $newMap[$k]){ $modified += $k } }
+
     $deltaParts = @()
-    if($added){ $deltaParts += "Added: " + ($added | ForEach-Object { ($_. -split '\|')[1].Trim() }) -join ', ' }
-    if($removed){ $deltaParts += "Removed: " + ($removed | ForEach-Object { ($_. -split '\|')[1].Trim() }) -join ', ' }
-    if($modified){ $deltaParts += "Modified: " + ($modified | ForEach-Object { $_.Substring(2) }) -join ', ' }
+    if($added.Count -gt 0){ $deltaParts += 'Added: ' + ($added -join ', ') }
+    if($removed.Count -gt 0){ $deltaParts += 'Removed: ' + ($removed -join ', ') }
+    if($modified.Count -gt 0){ $deltaParts += 'Modified: ' + ($modified -join ', ') }
     if(-not $deltaParts){ $deltaParts += 'Hash changed but no row-level differences detected.' }
     $delta = "Future summary updated (hash $oldHash → $currentHash). " + ($deltaParts -join ' | ')
   } else {
-    $delta = 'No changes in future summary since last refresh.'
+    $delta = 'No changes in future roadmap tables since last refresh.'
   }
 } else {
   $delta = 'Baseline established; future changes will be tracked.'

@@ -7,6 +7,11 @@
 .PARAMETER TopExtra
   Number of non-imminent backlog items (Preview/TBD) to include (default 6)
 #>
+<#
+.DEPRECATED
+  This script is deprecated after README v1.3 restructuring (FUTURE_SUMMARY replaced by FUTURE_NEAR & FUTURE_HORIZON).
+  Use refresh-future-roadmap.ps1 instead. Keeping file to avoid workflow / contributor confusion.
+#>
 param(
   [int]$TopExtra = 6
 )
