@@ -1,15 +1,19 @@
 | Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Decision Needed By |
 |----------------|--------|--------|----------------|----------------|--------------------|
-| WhatsApp channel publishing | Sep 2025 (Planned GA) | 🧪 Preview | Expand mobile/global reach | Finalize localization & rate limits | 2025-09-20 |
-| Block maker-provided credentials control | Sep 2025 rollout | 🧪 Preview | Reduce credential sprawl | Inventory & migration plan | 2025-09-25 |
-| Catalog governance tagging enrichment | Sep 2025 | 🧪→✅ Transition | Improve compliant discovery | Define metadata schema | 2025-09-30 |
-| Answer quality analytics enhancements | Sep 2025 (iterative) | 🔍 Enhancing | Sharper quality attribution | Align triage cadence | 2025-09-18 |
+| WhatsApp channel publishing | 2025-09 | 🧪 Preview | Mobile reach channel | (auto) | 2025-09-20 |
+| Block maker-provided credentials | 2025-09 | 🧪 Preview | Eliminate unmanaged credentials | (auto) | 2025-09-25 |
+| Catalog governance tagging enrichment | 2025-09 | 🧪 Preview | Metadata for discovery & compliance | (auto) | 2025-09-30 |
+| 1000 files per agent | 2025-11 | 🧪 Preview | Higher knowledge object limits | (auto) |  |
+| Generated answer quality analytics |  | ✅ GA (enhancing) | Identify low quality answer clusters | (auto) | 2025-09-18 |
 | Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
 |----------------|--------|--------|----------------|----------------|--------|
-| MCP server UX refinements | Late 2025 (ongoing) | 🔍 Enhancing | Lower friction for external tools | Refresh integration checklist | – |
-| Deep reasoning models | TBD GA | 🧪 Preview | Multi‑step reasoning scenarios | Identify complex workflows | – |
-| Microsoft 365 Copilot Tuning | TBD GA | 🧪 Preview | Enterprise domain adaptation | Curate labeled datasets | – |
-| Bring Your Own Models (Azure AI Foundry) | TBD GA | 🧪 Preview | Custom model extensibility | Assess governance & cost controls | – |
-| Multilingual generative orchestration expansion | TBD | 🧪 Preview | Broader language coverage | Prioritize locales & test prompts | – |
-| GPT‑4.1 mini experimental model | TBD | 🧪 Preview | Lower latency experimentation | Define benchmark metrics | – |
-| Reusable component collections | TBD | 🧪 Preview | Accelerate modular reuse | Identify high‑reuse patterns | – |
+| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | TBD | ✅ GA | Group related files & scope instructions | (auto) | – |
+| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | TBD | ✅ GA | NL to Python execution | (auto) | – |
+| MIP sensitivity labels | 2025-12 | 🧪 Preview | Surface sensitivity labels in content | (auto) | – |
+| MCP server UX refinements | TBD | ✅ GA (enhancements) | Improve external tool onboarding | (auto) | – |
+| Deep reasoning models | TBD | 🧪 Preview | Advanced multi-step reasoning | (auto) | – |
+| Bring Your Own Models | TBD | 🧪 Preview | Custom model extensibility | (auto) | – |
+| Multilingual orchestration | TBD | 🧪 Preview | Broader language coverage | (auto) | – |
+| GPT-4.1 mini experimental model | TBD | 🧪 Preview | Lower latency experimentation | (auto) | – |
+| Reusable component collections | TBD | 🧪 Preview | Accelerate modular reuse | (auto) | – |
+| Microsoft 365 Copilot Tuning | TBD | 🧪 Preview | Enterprise domain adaptation | (auto) | – |

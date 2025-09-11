@@ -194,10 +194,11 @@ High‑signal publicly disclosed upcoming items expected inside ~60 day horizon.
 <!-- BEGIN:FUTURE_NEAR -->
 | Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Decision Needed By |
 |----------------|--------|--------|----------------|----------------|--------------------|
-| WhatsApp channel publishing | Sep 2025 (Planned GA) | 🧪 Preview | Expand mobile/global reach | Finalize localization & rate limits | 2025-09-20 |
-| Block maker-provided credentials control | Sep 2025 rollout | 🧪 Preview | Reduce credential sprawl | Inventory & migration plan | 2025-09-25 |
-| Catalog governance tagging enrichment | Sep 2025 | 🧪→✅ Transition | Improve compliant discovery | Define metadata schema | 2025-09-30 |
-| Answer quality analytics enhancements | Sep 2025 (iterative) | 🔍 Enhancing | Sharper quality attribution | Align triage cadence | 2025-09-18 |
+| WhatsApp channel publishing | 2025-09 | 🧪 Preview | Mobile reach channel | (auto) | 2025-09-20 |
+| Block maker-provided credentials | 2025-09 | 🧪 Preview | Eliminate unmanaged credentials | (auto) | 2025-09-25 |
+| Catalog governance tagging enrichment | 2025-09 | 🧪 Preview | Metadata for discovery & compliance | (auto) | 2025-09-30 |
+| 1000 files per agent | 2025-11 | 🧪 Preview | Higher knowledge object limits | (auto) |  |
+| Generated answer quality analytics |  | ✅ GA (enhancing) | Identify low quality answer clusters | (auto) | 2025-09-18 |
 <!-- END:FUTURE_NEAR -->
 
 ## Future Planned Changes (Horizon)
@@ -207,7 +208,16 @@ Moved to dedicated page for clarity and easier long-horizon curation: see [Futur
 <!-- BEGIN:FUTURE_HORIZON -->
 | Item (Summary) | Target | Status | Why It Matters | Immediate Prep | Stale? |
 |----------------|--------|--------|----------------|----------------|--------|
-| (horizon snapshot delegated to separate file) |  |  |  |  |  |
+| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | TBD | ✅ GA | Group related files & scope instructions | (auto) | – |
+| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | TBD | ✅ GA | NL to Python execution | (auto) | – |
+| MIP sensitivity labels | 2025-12 | 🧪 Preview | Surface sensitivity labels in content | (auto) | – |
+| MCP server UX refinements | TBD | ✅ GA (enhancements) | Improve external tool onboarding | (auto) | – |
+| Deep reasoning models | TBD | 🧪 Preview | Advanced multi-step reasoning | (auto) | – |
+| Bring Your Own Models | TBD | 🧪 Preview | Custom model extensibility | (auto) | – |
+| Multilingual orchestration | TBD | 🧪 Preview | Broader language coverage | (auto) | – |
+| GPT-4.1 mini experimental model | TBD | 🧪 Preview | Lower latency experimentation | (auto) | – |
+| Reusable component collections | TBD | 🧪 Preview | Accelerate modular reuse | (auto) | – |
+| Microsoft 365 Copilot Tuning | TBD | 🧪 Preview | Enterprise domain adaptation | (auto) | – |
 <!-- END:FUTURE_HORIZON -->
 
 <details open>
@@ -225,7 +235,8 @@ Moved to dedicated page for clarity and easier long-horizon curation: see [Futur
 Automated summary of changes detected between Near / Horizon future roadmap tables.
 
 <!-- BEGIN:DELTA -->
-Initializing delta tracking baseline...
+2025-09-11 15:12 UTC - Future summary updated (hash 955409FB77CC31CF97AE5488E8421FCA64585E8F4CCC79CCB6A343F414E8C85B
+ → E4E2B1CC7137842241F3387227939C3B9C780655CFBE6C77811236052464E427). Added: Generated answer quality analytics, Multilingual orchestration, [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups), Block maker-provided credentials, GPT-4.1 mini experimental model, 1000 files per agent, [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts), Bring Your Own Models, MIP sensitivity labels | Removed: Multilingual generative orchestration expansion, Block maker-provided credentials control, Answer quality analytics enhancements, Bring Your Own Models (Azure AI Foundry), GPT‑4.1 mini experimental model | Modified: Reusable component collections, ----------------, Deep reasoning models, Catalog governance tagging enrichment, Item (Summary), WhatsApp channel publishing, MCP server UX refinements, Microsoft 365 Copilot Tuning
 <!-- END:DELTA -->
 
 ## Lifecycle Funnel
@@ -244,46 +255,59 @@ Summary of feature counts by lifecycle stage.
 ## Policy Coverage Matrix
 Matrix of policy/controls coverage (✓ implemented / – not applicable / ◻ gap).
 <!-- BEGIN:POLICY_MATRIX -->
-| Feature | DLP | CMK | Logging | Labels | Auth Governance |
-|---------|-----|-----|---------|--------|-----------------|
-| File groups | ✓ | – | ✓ | – | – |
-| Credential blocking | ✓ | – | ✓ | – | ✓ |
-| MIP label surfacing | ✓ | – | ✓ | ✓ | – |
+| Feature | AuthGovernance | DLP | Labels | Logging |
+|---------|-----| -----| -----| -----|
+| [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | – | ✓ | – | ✓ |
+| [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | – | – | – | ✓ |
+| 1000 files per agent | – | – | – | – |
+| Block maker-provided credentials | ✓ | ✓ | – | ✓ |
+| WhatsApp channel publishing | – | – | – | – |
+| MIP sensitivity labels | – | ✓ | ✓ | ✓ |
+| Catalog governance tagging enrichment | – | ✓ | – | ✓ |
+| Generated answer quality analytics | – | – | – | – |
+| MCP server UX refinements | – | – | – | – |
+| Deep reasoning models | – | – | – | – |
+| Bring Your Own Models | – | – | – | – |
+| Multilingual orchestration | – | – | – | – |
+| GPT-4.1 mini experimental model | – | – | – | – |
+| Reusable component collections | – | – | – | – |
+| Microsoft 365 Copilot Tuning | – | – | – | – |
 <!-- END:POLICY_MATRIX -->
 
 ## Risk Heatmap
 Impact vs likelihood (qualitative quick scan).
 <!-- BEGIN:RISK_HEATMAP -->
-| Impact \ Likelihood | Low | Medium | High |
+| Impact \\ Likelihood | Low | Medium | High |
 |---------------------|-----|--------|------|
-| High |  | 1000-file scale | Deep reasoning models |
-| Medium |  | Credential blocking delay | BYO Models cost drift |
-| Low |  | Localization variance |  |
+| High | m365-copilot-tuning | thousand-files, deep-reasoning-models |   |
+| Medium | file-groups, whatsapp-channel, mcp-server-ux, gpt41-mini-experimental | code-interpreter, credential-blocking, catalog-governance-tagging, byo-models, reusable-component-collections |   |
+| Low | answer-quality-analytics | mip-sensitivity-labels, multilingual-orchestration |   |
 <!-- END:RISK_HEATMAP -->
 
 ## All Features (Flattened)
 Single list for accessibility / quick grep.
 <!-- BEGIN:FLATTENED_FEATURES -->
-- File groups (✅ GA)
-- Code interpreter (✅ GA)
 - 1000 files per agent (🧪 Preview)
-- Credential blocking (🧪 Preview)
-- WhatsApp channel (🧪 Preview)
-- MIP sensitivity labels (🧪 Preview)
-- Catalog governance tagging (🧪→✅ Transition)
-- Answer quality analytics (✅ GA / 🔍 Enhancing)
-- MCP server UX refinements (🔍 Enhancing)
+- Block maker-provided credentials (🧪 Preview)
+- Bring Your Own Models (🧪 Preview)
+- Catalog governance tagging enrichment (🧪 Preview)
+- [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) (✅ GA)
 - Deep reasoning models (🧪 Preview)
-- BYO Models (🧪 Preview)
+- [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) (✅ GA)
+- Generated answer quality analytics (🔍 Enhancing)
+- GPT-4.1 mini experimental model (🧪 Preview)
+- MCP server UX refinements (🔍 Enhancing)
+- Microsoft 365 Copilot Tuning (🧪 Preview)
+- MIP sensitivity labels (🧪 Preview)
 - Multilingual orchestration (🧪 Preview)
-- GPT‑4.1 mini experimental (🧪 Preview)
 - Reusable component collections (🧪 Preview)
+- WhatsApp channel publishing (🧪 Preview)
 <!-- END:FLATTENED_FEATURES -->
 
 ## Feature IDs
 Stable slugs for scripting / referencing.
 <!-- BEGIN:FEATURE_IDS -->
-file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-channel, mip-sensitivity-labels, catalog-governance-tagging, answer-quality-analytics, mcp-server-ux, deep-reasoning-models, byo-models, multilingual-orchestration, gpt41-mini-experimental, reusable-component-collections
+file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-channel, mip-sensitivity-labels, catalog-governance-tagging, answer-quality-analytics, mcp-server-ux, deep-reasoning-models, byo-models, multilingual-orchestration, gpt41-mini-experimental, reusable-component-collections, m365-copilot-tuning
 <!-- END:FEATURE_IDS -->
 
 ## Notes & Disclaimers
@@ -304,6 +328,9 @@ file-groups, code-interpreter, thousand-files, credential-blocking, whatsapp-cha
 _Last updated: 2025-09-10 (automation: scheduled refresh, metrics & diff v1.2)_
 
 Site theme: Modernist (GitHub Pages)
+
+
+
 
 
 
