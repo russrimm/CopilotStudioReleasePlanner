@@ -1,3 +1,0 @@
-[rolling] Script start
-[rolling] Loaded 15 features
-refresh-index-rolling-windows.ps1: The property 'docUrl' cannot be found on this object. Verify that the property exists.
