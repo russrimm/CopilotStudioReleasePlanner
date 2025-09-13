@@ -178,11 +178,11 @@ Matrix of policy/controls coverage (✓ implemented / – not applicable / ◻ g
 | [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) | – | ✓ | – | ✓ |
 | [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) | – | – | – | ✓ |
 | 1000 files per agent | – | – | – | – |
-| Block maker-provided credentials | ✓ | ✓ | – | ✓ |
-| WhatsApp channel publishing | – | – | – | – |
+| [Block maker-provided credentials](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) | ✓ | ✓ | – | ✓ |
+| [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) | – | – | – | – |
 | MIP sensitivity labels | – | ✓ | ✓ | ✓ |
 | Catalog governance tagging enrichment | – | ✓ | – | ✓ |
-| Generated answer quality analytics | – | – | – | – |
+| [Generated answer quality analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) | – | – | – | – |
 | MCP server UX refinements | – | – | – | – |
 | Deep reasoning models | – | – | – | – |
 | Bring Your Own Models | – | – | – | – |
@@ -198,20 +198,20 @@ Matrix of policy/controls coverage (✓ implemented / – not applicable / ◻ g
 Single list for accessibility / quick grep.
 <!-- BEGIN:FLATTENED_FEATURES -->
 - 1000 files per agent (🧪 Preview)
-- Block maker-provided credentials (🧪 Preview)
+- [Block maker-provided credentials](https://learn.microsoft.com/en-us/power-platform/release-plan/2025wave2/microsoft-copilot-studio/planned-features#copilot-configuration) (🧪 Preview)
 - Bring Your Own Models (🧪 Preview)
 - Catalog governance tagging enrichment (🧪 Preview)
 - [Code interpreter](https://learn.microsoft.com/en-us/microsoft-copilot-studio/code-interpreter-for-prompts) (✅ GA)
 - Deep reasoning models (🧪 Preview)
 - [File groups](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-file-groups) (✅ GA)
-- Generated answer quality analytics (🔍 Enhancing)
+- [Generated answer quality analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality) (🔍 Enhancing)
 - GPT-4.1 mini experimental model (🧪 Preview)
 - MCP server UX refinements (🔍 Enhancing)
 - Microsoft 365 Copilot Tuning (🧪 Preview)
 - MIP sensitivity labels (🧪 Preview)
 - Multilingual orchestration (🧪 Preview)
 - Reusable component collections (🧪 Preview)
-- WhatsApp channel publishing (🧪 Preview)
+- [WhatsApp channel publishing](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-whatsapp) (🧪 Preview)
 <!-- END:FLATTENED_FEATURES -->
 
 
@@ -234,6 +234,7 @@ Single list for accessibility / quick grep.
 _Last updated: 2025-09-11 (rolling windows)_
 
 Site theme: Modernist (GitHub Pages)
+
 
 
 
