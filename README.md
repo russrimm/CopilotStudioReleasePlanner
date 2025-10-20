@@ -5,7 +5,7 @@ Ultra‑condensed view of what just changed and what is coming next. Scroll only
 For a more interactive version of updates across the entire suite of Microsoft products, visit [MS Pulse 360](https://www.mspulse360.app)
 ---
 
-## Last 30 Days Feature Changes (2025-09-20 to 2025-10-19)
+## Last 30 Days Feature Changes (2025-09-21 to 2025-10-20)
 Most recent launches, promotions, and previews (auto‑rolling window).
 
 <!-- BEGIN:LAST30_TABLE -->
@@ -25,7 +25,7 @@ Most recent launches, promotions, and previews (auto‑rolling window).
 | Agent catalog + governance tagging (internal refinement) | Preview → GA | 2025-08 | Metadata enrichment & search improvements | Speeds discovery; reduces duplicate logic | Enforce required metadata (owner, data scope, PII flags). |
 <!-- END:LAST30_TABLE -->
 
-## Next 30 Days Planned Changes (2025-10-19 to 2025-11-17)
+## Next 30 Days Planned Changes (2025-10-20 to 2025-11-18)
 Expected public / disclosed changes inside the upcoming 30‑day window (auto‑maintained by AI refresh script).
 
 <!-- BEGIN:NEXT30_TABLE -->
