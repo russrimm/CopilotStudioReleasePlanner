@@ -5,7 +5,7 @@ Ultra‑condensed view of what just changed and what is coming next. Scroll only
 For a more interactive version of updates across the entire suite of Microsoft products, visit [MS Pulse 360](https://www.mspulse360.app)
 ---
 
-## Last 30 Days Feature Changes (2025-10-18 to 2025-11-16)
+## Last 30 Days Feature Changes (2025-10-19 to 2025-11-17)
 Most recent launches, promotions, and previews (auto‑rolling window).
 
 <!-- BEGIN:LAST30_TABLE -->
@@ -13,7 +13,7 @@ Most recent launches, promotions, and previews (auto‑rolling window).
 |---------|--------------|----------------------|--------------|---------------|-------------------|
 <!-- END:LAST30_TABLE -->
 
-## Next 30 Days Planned Changes (2025-11-16 to 2025-12-15)
+## Next 30 Days Planned Changes (2025-11-17 to 2025-12-16)
 Expected public / disclosed changes inside the upcoming 30‑day window (auto‑maintained by AI refresh script).
 
 <!-- BEGIN:NEXT30_TABLE -->
